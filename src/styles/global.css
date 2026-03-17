@@ -1,0 +1,45 @@
+:root {
+  /* 🌿 Brand Colors */
+  --primary: #6BA292;
+  --primary-dark: #5A8976;
+  --accent: #C6A664;
+
+  /* 🎨 Backgrounds */
+  --bg-main: #FAF9F7;
+  --bg-card:#ECE8E1;
+
+  /* ✍️ Text */
+  --text-dark: #333333;
+  --text-light: #777777;
+
+  /* 🔤 Fonts */
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+
+  /* 📏 Spacing */
+  --section-padding: 80px 20px;
+}
+body {
+  margin: 0;
+  background: var(--bg-main);
+  color: var(--text-dark);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+}
+/* 🌿 Global link styling (luxury feel) */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  transform: translateY(-2px);
+  text-shadow: 0 0 6px rgba(107, 162, 146, 0.3);
+}
+nav {
+  transition: all 0.4s ease;
+}
