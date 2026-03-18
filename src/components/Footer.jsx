@@ -28,7 +28,7 @@ function Footer() {
 
       {/* Contact Info */}
       <p style={{ color: "var(--text-light)", margin: "3px 0", fontSize: "13px" }}>
-        info@mournewellness.com | 07591 383215
+        beata@mourneretreat.co.uk | 07591 383215
       </p>
 
       {/* Social Links */}
