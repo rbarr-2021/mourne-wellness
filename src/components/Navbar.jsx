@@ -1,23 +1,39 @@
 import { useState, useEffect } from "react"
 import { FaHome, FaSpa, FaEnvelope, FaFacebook, FaWhatsapp, FaBars } from "react-icons/fa"
 import { Link } from "react-router-dom"
-import logo from "../assets/logo.jpg"
+import logo from "../assets/logo.png"
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 50)
+  }
+
+  window.addEventListener("scroll", handleScroll)
+  return () => window.removeEventListener("scroll", handleScroll)
+}, [])
+
+useEffect(() => {
+  const closeMenuOnScroll = () => {
+    setMenuOpen(false)
+  }
+
+  window.addEventListener("scroll", closeMenuOnScroll)
+  return () => window.removeEventListener("scroll", closeMenuOnScroll)
+}, [])
+
+
 
   return (
 <nav style={{
   position: "fixed",
-  top: 0,
+  left: 0,              // ✅ ADD THIS
+  right: 0,             // ✅ ADD THIS
   width: "100%",
+  boxSizing: "border-box", // ✅ ADD THIS
   padding: scrolled ? "15px 40px" : "25px 40px",
   display: "flex",
   alignItems: "center",
@@ -52,6 +68,7 @@ function Navbar() {
   alt="Retreat By the Mournes"
   style={{
     height: scrolled ? "35px" : "45px",
+    borderRadius: "20px", // 👈 adds rounded edges
     transition: "all 0.3s ease"
   }}
 />
@@ -67,7 +84,7 @@ function Navbar() {
 
     <div style={{ 
       fontSize: "13px", 
-      color: "var(--primary)", 
+     color: "var(--text-dark)",
       fontStyle: "italic", 
       fontFamily: "var(--font-body)" 
     }}>
@@ -75,28 +92,48 @@ function Navbar() {
     </div>
   </div>
 </Link>
+<div
+  style={{
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer"
+  }}
+  onClick={() => setMenuOpen(!menuOpen)}
+>
+  <FaBars size={26} />
+</div>
 
-      {/* Center - Icons */}
-      <div style={{
-        position: "absolute",
-        left: "50%",
-        transform: "translateX(-50%)",
-        display: "flex",
-        gap: "25px",
-        alignItems: "center",
-        flexWrap: "wrap"
-      }}>
-        <Link to="/"><FaHome size={22} /></Link>
-        <Link to="/treatments"><FaSpa size={22} /></Link>
-        <a href="#contact"><FaEnvelope size={22} /></a>
-        <a href="https://facebook.com"><FaFacebook size={22} color="#1877f2" /></a>
-        <a href="https://wa.me/447591383215"><FaWhatsapp size={22} color="#25D366" /></a>
-      </div>
+      {/* Dropdown with ICONS */}
+      {menuOpen && (
+        <div className="dropdown">
 
-      {/* Right - Mobile Menu */}
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <FaBars size={24} style={{ cursor: "pointer" }} onClick={() => setMenuOpen(!menuOpen)} />
-      </div>
+          <Link to="/" className="menu-item" onClick={() => setMenuOpen(false)}>
+            <FaHome /> Home
+          </Link>
+
+          <Link to="/treatments" className="menu-item" onClick={() => setMenuOpen(false)}>
+            <FaSpa /> Services
+          </Link>
+
+           <a href="https://wa.me/447591383215" className="menu-item" onClick={() => setMenuOpen(false)}>
+            <FaWhatsapp color="#25D366" /> Contact
+          </a>
+
+          <hr />
+
+          <a href="https://facebook.com" className="menu-item" onClick={() => setMenuOpen(false)}>
+            <FaFacebook color="#1877f2" /> Facebook
+          </a>
+
+          <a href="https://wa.me/447591383215" className="menu-item" onClick={() => setMenuOpen(false)}>
+            <FaWhatsapp color="#25D366" /> WhatsApp
+          </a>
+
+        </div>
+      )}
+
+ 
 
     </nav>
   )

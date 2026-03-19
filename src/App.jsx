@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar"
 import Home from "./pages/Home"
 import Treatments from "./pages/Treatments"
 import Footer from "./components/Footer"
-
+import ScrollToTop from "./components/ScrollToTop"
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
 
       <Navbar />
 
+<ScrollToTop /> 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/treatments" element={<Treatments />} />

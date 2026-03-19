@@ -1,5 +1,5 @@
 import { FaFacebook, FaWhatsapp } from "react-icons/fa"
-import logo from "../assets/logo.jpg"
+import logo from "../assets/logo.png"
 import "../styles/global.css"
 
 function Footer() {
@@ -12,34 +12,55 @@ function Footer() {
     }}>
       
       {/* Logo */}
-      <img 
-        src={logo} 
-        alt="Retreat By the Mournes" 
-        style={{ height: "40px", marginBottom: "10px", objectFit: "contain" }} 
-      />
+<img 
+  src={logo} 
+  alt="Retreat By the Mournes" 
+  style={{ 
+    height: "40px", 
+    marginBottom: "6px", // slightly less
+    borderRadius: "20px"
+  }} 
+/>
 
-      {/* Brand Name */}
-      <div style={{ fontFamily: "var(--font-heading)", fontSize: "16px", color: "var(--text-dark)", letterSpacing: "1px" }}>
-        RETREAT
-      </div>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: "12px", color: "var(--primary)", fontStyle: "italic", marginBottom: "10px" }}>
-        by the Mournes
-      </div>
+<div style={{ fontSize: "15px", marginBottom: "2px" }}>
+  <strong>RETREAT</strong>
+</div>
+<div style={{ fontSize: "12px", marginBottom: "10px", opacity: 0.8 }}>
+  by the Mournes
+</div>
 
-      {/* Contact Info */}
-      <p style={{ color: "var(--text-light)", margin: "3px 0", fontSize: "13px" }}>
-        beata@mourneretreat.co.uk | 07591 383215
-      </p>
+          {/* Contact Info */}
+  <div style={{ color: "var(--text-light)", fontSize: "14px" }}>
+  <p style={{ margin: "4px 0" }}>
+    Email: <a href="mailto:beata@mourneretreat.co.uk">beata@mourneretreat.co.uk</a>
+  </p>
+  <p style={{ margin: "4px 0" }}>
+    Phone: <a href="tel:+447591383215">+447591 383215</a>
+  </p>
+</div>
 
-      {/* Social Links */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "8px" }}>
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-          <FaFacebook size={20} color="#1877f2"/>
-        </a>
-        <a href="https://wa.me/447591383215" target="_blank" rel="noopener noreferrer">
-          <FaWhatsapp size={20} color="#25D366"/>
-        </a>
-      </div>
+  {/* Social Links */}
+<div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "8px" }}>
+  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+    <FaFacebook size={20} color="#1877f2"/>
+  </a>
+  <a href="https://wa.me/447591383215" target="_blank" rel="noopener noreferrer">
+    <FaWhatsapp size={20} color="#25D366"/>
+  </a>
+</div>
+
+{/* Company Info */}
+<div style={{ marginTop: "10px", fontSize: "12px", opacity: 0.7 }}>
+  RCD Software Solutions · 
+  <a 
+    href="https://yourwebsite.com" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    style={{ color: "inherit", textDecoration: "underline" }}
+  >
+    yourwebsite.com
+  </a>
+</div>
 
       {/* Copyright */}
       <p style={{ color: "var(--text-light)", marginTop: "15px", fontSize: "11px" }}>

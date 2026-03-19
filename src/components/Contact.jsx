@@ -26,12 +26,18 @@ function Contact() {
       </h2>
 
       {/* Contact Info */}
-      <p style={{ color: "var(--text-light)", margin: "5px 0" }}>
-        Email: info@mournewellness.com
-      </p>
-      <p style={{ color: "var(--text-light)", margin: "5px 0" }}>
-        Phone: 07591 383215
-      </p>
+    <p style={{ color: "var(--text-light)", margin: "5px 0" }}>
+  Email:{" "}
+  <a href="mailto:beata@mourneretreat.co.uk?subject=Booking%20Enquiry&body=Hi%20Beata,%20I%20would%20like%20to%20book...">
+    beata@mourneretreat.co.uk
+  </a>
+</p>
+  <p style={{ color: "var(--text-light)", margin: "5px 0" }}>
+  Phone:{" "}
+  <a href="tel:+447591383215">
+    +447591 383215
+  </a>
+</p>
 
       {/* Book via WhatsApp Button */}
       <button
@@ -61,6 +67,8 @@ function Contact() {
       >
         Book via WhatsApp
       </button>
+
+      
 
       {/* Optional Static Map / Location */}
       <div style={{

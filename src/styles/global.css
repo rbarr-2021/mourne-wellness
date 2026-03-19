@@ -43,3 +43,36 @@ a:hover {
 nav {
   transition: all 0.4s ease;
 }
+.burger {
+  margin-left: auto;
+  cursor: pointer;
+}
+.dropdown {
+  position: absolute;
+  top: 100%;              /* directly under navbar */
+  right: 20px;            /* align with burger */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  padding: 15px;
+  min-width: 200px;
+  z-index: 2000;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: var(--text-dark);
+  transition: 0.2s;
+}
+
+.menu-item:hover {
+  background: var(--bg-card);
+  border-radius: 8px;
+}
+a[href^="tel"] {
+  color: var(--primary);
+  font-weight: 500;
+}
