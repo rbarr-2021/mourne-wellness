@@ -6,6 +6,7 @@ import Treatments from "./pages/Treatments"
 import About from "./pages/About"
 import Footer from "./components/Footer"
 import ScrollToTop from "./components/ScrollToTop"
+import { Analytics } from "@vercel/analytics/next"
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/treatments" element={<Treatments />} />
          <Route path="/about" element={<About />} />
+         
+<Analytics />
       </Routes>
        
 <Footer /> 
