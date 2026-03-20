@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { FaHome, FaSpa, FaEnvelope, FaFacebook, FaWhatsapp, FaBars } from "react-icons/fa"
+import { FaHome, FaSpa, FaEnvelope, FaFacebook, FaWhatsapp, FaBars, FaUser } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import logo from "../assets/logo.png"
 
@@ -119,6 +119,10 @@ useEffect(() => {
            <a href="https://wa.me/447591383215" className="menu-item" onClick={() => setMenuOpen(false)}>
             <FaWhatsapp color="#25D366" /> Contact
           </a>
+    <Link to="/about" className="menu-item" onClick={() => setMenuOpen(false)}>
+            <FaUser /> About
+          </Link>
+         
 
           <hr />
 

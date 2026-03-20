@@ -58,7 +58,7 @@ function Footer() {
     rel="noopener noreferrer"
     style={{ color: "inherit", textDecoration: "underline" }}
   >
-    yourwebsite.com
+    
   </a>
 </div>
 
