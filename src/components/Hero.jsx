@@ -1,6 +1,7 @@
 import heroImg from "../assets/wellness-hero.jpg"
 import logo from "../assets/logo.jpg" // import your brand logo
 import "../styles/global.css"
+import { Link } from "react-router-dom"
 
 function Hero() {
   return (
@@ -70,31 +71,32 @@ function Hero() {
         </p>
 
         {/* 🌿 Optional CTA button for premium feel */}
-        <a
-          href="#contact"
-          style={{
-            padding: "14px 32px",
-            background: "var(--primary)",
-            color: "white",
-            borderRadius: "30px",
-            textDecoration: "none",
-            fontFamily: "var(--font-body)",
-            fontSize: "16px",
-            letterSpacing: "1px",
-            transition: "all 0.3s ease",
-            boxShadow: "0 6px 15px rgba(0,0,0,0.1)"
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = "var(--primary-dark)"
-            e.currentTarget.style.transform = "translateY(-2px)"
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = "var(--primary)"
-            e.currentTarget.style.transform = "translateY(0)"
-          }}
-        >
-          Book a Session
-        </a>
+   <Link
+  to="/treatments"
+  style={{
+    padding: "14px 32px",
+    background: "var(--primary)",
+    color: "white",
+    borderRadius: "30px",
+    textDecoration: "none",
+    fontFamily: "var(--font-body)",
+    fontSize: "16px",
+    letterSpacing: "1px",
+    transition: "all 0.3s ease",
+    boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+    display: "inline-block"
+  }}
+  onMouseEnter={e => {
+    e.currentTarget.style.background = "var(--primary-dark)"
+    e.currentTarget.style.transform = "translateY(-2px)"
+  }}
+  onMouseLeave={e => {
+    e.currentTarget.style.background = "var(--primary)"
+    e.currentTarget.style.transform = "translateY(0)"
+  }}
+>
+ Begin Your Retreat
+</Link>
       </div>
 
     </section>

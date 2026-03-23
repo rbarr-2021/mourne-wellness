@@ -1,198 +1,308 @@
 import "../styles/global.css"
+import { useState } from "react"
 
 const treatments = [
   {
-    name: "Massage Therapy",
-    description: "Relaxing full body massage inspired by the Mourne Mountains.",
+    name: "Ground & Glow",
+    description: "Neck, head & face massage that melts away tension and restores a natural glow.",
     prices: [
-      { time: "60 minutes", price: "£90" },
-      { time: "90 minutes", price: "£120" }
+      { time: "60 min", price: "£60" },
+      { time: "90 min", price: "£80" }
     ]
   },
-  {
-    name: "Holistic Healing",
-    description: "Energy healing designed to restore balance.",
-    prices: [{ time: "60 minutes", price: "£85" }]
-  },
-  {
-    name: "Reiki Session",
-    description: "Gentle energy therapy promoting deep relaxation.",
-    prices: [{ time: "60 minutes", price: "£80" }]
-  },
-  {
-    name: "Deep Tissue Massage",
-    description: "Therapeutic massage to relieve tension and muscle stress.",
-    prices: [
-      { time: "60 minutes", price: "£95" },
-      { time: "90 minutes", price: "£125" }
+   {
+    name: "Sacred Ease",
+    description: "Gentle back, neck & head massage to ease tension and restore calm.",
+    prices: [{ time: "60 min", price: "£60" },
+      { time: "90 min", price: "£80" }
     ]
-  },
-  {
-    name: "Hot Stone Massage",
-    description: "Warm stones relax muscles and improve circulation.",
-    prices: [{ time: "75 minutes", price: "£110" }]
-  },
-  {
-    name: "Mindfulness Coaching",
-    description: "Guided mindfulness and breathing sessions.",
-    prices: [{ time: "60 minutes", price: "£75" }]
-  },
-  {
-    name: "Energy Balance Session",
-    description: "Restore harmony through gentle energy techniques.",
-    prices: [{ time: "60 minutes", price: "£85" }]
-  },
-  {
-    name: "Relaxation Ritual",
-    description: "A calming combination of massage and mindfulness.",
-    prices: [{ time: "90 minutes", price: "£135" }]
   },
     {
-    name: "Ritual",
-    description: "A calming combination of massage and mindfulness.",
-    prices: [{ time: "90 minutes", price: "£135" }]
+    name: "Sacred Heat Back Ritual",
+    description: "Back, neck & head hot stone massage to release tension and calm the mind.",
+    prices: [
+      { time: "60 min", price: "£65" },
+      { time: "90 min", price: "£85" }
+    ]
+  },
+ 
+  {
+    name: "Earthen Tide",
+    description: "Full body massage with flowing, Lomi Lomi-inspired movements to restore balance.",
+    prices: [
+      { time: "60 min", price: "£60" },
+      { time: "90 min", price: "£80" }
+    ]
+  },
+  {
+    name: "Sports Therapy Massage",
+    description: "Targeted sports massage to ease tight muscles, improve movement, and aid recovery.",
+    prices: [
+      { time: "60 min", price: "£60" },
+      { time: "90 min", price: "£80" }
+    ]
+  },
+  {
+    name: "Therapeutic Massage",
+    description: "Deep full body therapy to release tension, ease aches, and restore balance.",
+    prices: [
+      { time: "60 min", price: "£65" },
+      { time: "90 min", price: "£85" }
+    ]
+  },
+  {
+    name: "Race Day Reset",
+    description: "Hot & cold sports recovery with targeted massage to reduce tension and support recovery.",
+    prices: [
+      { time: "60 min", price: "£65" },
+      { time: "90 min", price: "£85" }
+    ]
+  },
+  {
+    name: "Earth Warmth Ritual",
+    description: "Full body hot stone massage to melt tension and deeply relax the body.",
+    prices: [
+      { time: "60 min", price: "£60" },
+      { time: "90 min", price: "£80" }
+    ]
+  },
+
+  {
+    name: "Blossom & Bump",
+    description: "Nurturing pregnancy massage to support relaxation and wellbeing.",
+    prices: [
+      { time: "60 min", price: "£60" },
+      { time: "90 min", price: "£80" }
+    ]
+  },
+  {
+    name: "Natural Lift Facial Ritual",
+    description: "Facial treatment to boost circulation and enhance natural glow.",
+    prices: [{ time: "30 min", price: "£30" }]
+  },
+  {
+    name: "Tension Release Back Therapy",
+    description: "Quick treatment to relieve tension in the back, neck, and shoulders.",
+    prices: [{ time: "30 min", price: "£30" }]
+  },
+  {
+    name: "Head Massage with Essential Oils",
+    description: "Calming head massage to relax the mind and support restful sleep.",
+    prices: [{ time: "30 min", price: "£28" }]
+  },
+  {
+    name: "Grounding Foot Ritual",
+    description: "Revives tired feet and restores comfort after long days or walks.",
+    prices: [{ time: "30 min", price: "£25" }]
+  },
+  {
+    name: "Grounding Hand Ritual",
+    description: "Relieves tension in hands and wrists for improved comfort and ease.",
+    prices: [{ time: "30 min", price: "£25" }]
   }
 ]
 
 function Treatments() {
 
-  const bookTreatment = (name) => {
-    const message = `Hello, I would like to book the ${name} treatment at Retreat By the Mournes.`
-    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
-  }
+  const [selectedTreatment, setSelectedTreatment] = useState(null)
+  const [selectedOption, setSelectedOption] = useState(null)
 
-  const cardStyle = {
-    background: "var(--bg-card)",
-    padding: "35px",
-    borderRadius: "14px",
-    boxShadow: "0 8px 25px rgba(0,0,0,0.05)",
-    transition: "all 0.3s ease",
-    cursor: "pointer",
-    textAlign: "left"
+  const bookTreatment = () => {
+    if (!selectedTreatment || !selectedOption) return
+
+    const message = `Hi Beata, I’d like to book: ${selectedTreatment.name} (${selectedOption.time}) - ${selectedOption.price}.`
+
+    window.open(
+      `https://wa.me/447591383215?text=${encodeURIComponent(message)}`
+    )
   }
 
   return (
     <section style={{
-      padding: "var(--section-padding)",
-      background: "var(--bg-main)",
-      textAlign: "center"
+      padding: "100px 20px",
+      background: "linear-gradient(to bottom, #f8f8f8, #ffffff)"
     }}>
 
       <h1 style={{
-        fontSize: "clamp(28px,4vw,40px)",
-        marginBottom: "20px",
-        fontFamily: "var(--font-heading)"
+        textAlign: "center",
+        fontFamily: "var(--font-heading)",
+        marginBottom: "40px"
       }}>
-        Treatments & Pricing
+        Book Your Treatment
       </h1>
-
-      <p style={{
-        color: "var(--text-light)",
-        maxWidth: "600px",
-        margin: "0 auto 50px",
-        fontFamily: "var(--font-body)"
-      }}>
-        Relax, restore and reconnect with our carefully designed
-        wellness treatments at Retreat By the Mournes.
-      </p>
 
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px,1fr))",
-        gap: "30px",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "40px",
         maxWidth: "1100px",
-        margin: "0 auto"
+        margin: "0 auto",
+        alignItems: "start"
       }}>
 
-        {treatments.map((treatment, index) => (
-
-          <div
-            key={index}
-            style={cardStyle}
-
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-6px)"
-              e.currentTarget.style.boxShadow = "0 12px 35px rgba(0,0,0,0.12)"
-            }}
-
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.05)"
-            }}
-          >
-
-            <h3 style={{
-              fontSize: "clamp(18px,2vw,22px)",
-              fontFamily: "var(--font-heading)",
-              marginBottom: "10px"
-            }}>
-              {treatment.name}
-            </h3>
-
-            <p style={{
-              color: "var(--text-light)",
-              fontSize: "14px",
-              fontFamily: "var(--font-body)"
-            }}>
-              {treatment.description}
-            </p>
-
-            <div style={{
-              marginTop: "18px",
-              borderTop: "1px solid #eee",
-              paddingTop: "12px"
-            }}>
-
-              {treatment.prices.map((p, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "6px",
-                    fontFamily: "var(--font-body)"
-                  }}
-                >
-                  <span>{p.time}</span>
-                  <span>{p.price}</span>
-                </div>
-              ))}
-
-            </div>
-
-            <button
-              onClick={() => bookTreatment(treatment.name)}
+        {/* LEFT SIDE */}
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px"
+        }}>
+          {treatments.map((t, i) => (
+            <div
+              key={i}
+              onClick={() => {
+                setSelectedTreatment(t)
+                setSelectedOption(t.prices[0])
+              }}
               style={{
-                marginTop: "20px",
-                padding: "12px 24px",
-                border: "none",
-                background: "var(--primary)",
-                color: "white",
-                borderRadius: "30px",
-                letterSpacing: "1px",
-                cursor: "pointer",
-                transition: "all 0.3s ease"
-              }}
+  padding: "20px",
+  borderRadius: "14px",
+  background: selectedTreatment === t ? "#6f8f7a" : "#f5f5f5",
+  color: selectedTreatment === t ? "#fff" : "#2a2a2a",
+  cursor: "pointer",
+  boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
+  transition: "all 0.25s ease",
+  transform: "translateY(0) scale(1)"
+}}
 
-              onMouseEnter={(e)=>{
-                e.currentTarget.style.background="var(--primary-dark)"
-                e.currentTarget.style.transform="translateY(-2px)"
-              }}
+           onMouseEnter={(e) => {
+  if (selectedTreatment !== t) {
+    e.currentTarget.style.transform = "translateY(-6px) scale(1.02)"
+    e.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,0.10)"
+    e.currentTarget.style.background = "#eeeeee"
+  }
+}}
 
-              onMouseLeave={(e)=>{
-                e.currentTarget.style.background="var(--primary)"
-                e.currentTarget.style.transform="translateY(0)"
-              }}
+onMouseLeave={(e) => {
+  if (selectedTreatment !== t) {
+    e.currentTarget.style.transform = "translateY(0) scale(1)"
+    e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.04)"
+    e.currentTarget.style.background = "#f5f5f5"
+  }
+}}
             >
-              Book Session
-            </button>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+  <strong style={{ fontFamily: "var(--font-heading)" }}>
+    {t.name}
+  </strong>
+  <span style={{ opacity: 0.4 }}>→</span>
+</div>
 
-          </div>
+              <p style={{ fontSize: "12px", opacity: 0.6 }}>
+                {t.prices[0]?.time} — {t.prices[0]?.price}
+              </p>
 
-        ))}
+              <p style={{ fontSize: "13px", opacity: 0.8 }}>
+                {t.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div style={{
+          position: "sticky",
+          top: "100px",
+          alignSelf: "start",
+          padding: "30px",
+          borderRadius: "18px",
+          background: "rgba(255,255,255,0.8)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 10px 40px rgba(0,0,0,0.08)"
+        }}>
+
+          {!selectedTreatment ? (
+            <p style={{ color: "#777" }}>
+              Select a treatment to begin booking
+            </p>
+          ) : (
+            <>
+              <h3 style={{ fontFamily: "var(--font-heading)" }}>
+                {selectedTreatment.name}
+              </h3>
+
+              <p style={{ fontSize: "13px", color: "#666" }}>
+                {selectedTreatment.description}
+              </p>
+
+              {/* OPTIONS */}
+              <div style={{
+                display: "flex",
+                gap: "10px",
+                marginTop: "20px",
+                flexWrap: "wrap"
+              }}>
+                {selectedTreatment.prices.map((p, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedOption(p)}
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: "999px",
+                      border: selectedOption === p
+                        ? "1px solid #6f8f7a"
+                        : "1px solid #d6d6d6",
+                      background: selectedOption === p
+                        ? "#6f8f7a"
+                        : "#f7f7f7",
+                      color: selectedOption === p ? "#fff" : "#333",
+                      cursor: "pointer",
+                      transition: "all 0.25s ease"
+                    }}
+                  >
+                    {p.time} — {p.price}
+                  </button>
+                ))}
+              </div>
+
+              {/* SUMMARY */}
+              <div style={{
+                marginTop: "25px",
+                paddingTop: "15px",
+                borderTop: "1px solid #eee"
+              }}>
+                <p>
+                  <strong>Selected:</strong><br />
+                  {selectedOption?.time} — {selectedOption?.price}
+                </p>
+              </div>
+
+              {/* BUTTON */}
+              <button
+                onClick={bookTreatment}
+                style={{
+                  marginTop: "24px",
+                  width: "100%",
+                  padding: "14px 18px",
+                  borderRadius: "14px",
+                  border: "1px solid #6f8f7a",
+                  background: "#6f8f7a",
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  letterSpacing: "0.3px",
+                  transition: "all 0.25s ease"
+                }}
+
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#5f7f6c"
+                  e.currentTarget.style.transform = "translateY(-2px)"
+                }}
+
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#6f8f7a"
+                  e.currentTarget.style.transform = "translateY(0)"
+                }}
+              >
+                Confirm & Book via WhatsApp
+              </button>
+
+            </>
+          )}
+
+        </div>
 
       </div>
-
     </section>
   )
 }

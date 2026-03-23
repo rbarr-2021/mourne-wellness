@@ -1,5 +1,6 @@
 import "../styles/global.css"
 import mapImg from "../assets/location2.PNG" // use a high-quality static image of your retreat location
+import { Link } from "react-router-dom"
 
 function Contact() {
   const bookWhatsApp = () => {
@@ -22,9 +23,36 @@ function Contact() {
         fontFamily: "var(--font-heading)",
         color: "var(--text-dark)"
       }}>
-        Contact / Book a Session
+        Contact / Begin Your Retreat
       </h2>
+{/* Opening Hours */}
+<div style={{
+  marginTop: "30px",
+  fontFamily: "var(--font-body)",
+  color: "var(--text-light)"
+}}>
+  <h3 style={{
+    fontSize: "clamp(18px,2.5vw,22px)",
+    marginBottom: "10px",
+    color: "var(--text-dark)",
+    fontFamily: "var(--font-heading)"
+  }}>
+    Opening Hours
+  </h3>
 
+  <p style={{ margin: "4px 0" }}>Monday – Friday: 9:00 AM – 7:00 PM</p>
+   <p style={{ margin: "4px 0" }}>Thursday: 9:00 AM – 8:00 PM</p>
+  <p style={{ margin: "4px 0" }}>Saturday: 8:30 AM – 4:00 PM</p>
+  <p style={{ margin: "4px 0" }}>Sunday: Closed</p>
+
+  <p style={{
+    marginTop: "8px",
+    fontSize: "13px",
+    opacity: "0.8"
+  }}>
+    * By appointment only
+  </p>
+</div>
       {/* Contact Info */}
     <p style={{ color: "var(--text-light)", margin: "5px 0" }}>
   Email:{" "}
@@ -37,36 +65,36 @@ function Contact() {
   <a href="tel:+447591383215">
     +447591 383215
   </a>
+  
 </p>
 
       {/* Book via WhatsApp Button */}
-      <button
-        onClick={bookWhatsApp}
-        style={{
-          padding: "14px 32px",
-          marginTop: "20px",
-          background: "var(--primary)",
-          color: "white",
-          border: "none",
-          borderRadius: "30px",
-          fontFamily: "var(--font-body)",
-          fontSize: "16px",
-          letterSpacing: "1px",
-          cursor: "pointer",
-          transition: "all 0.3s ease",
-          boxShadow: "0 6px 15px rgba(0,0,0,0.1)"
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = "var(--primary-dark)"
-          e.currentTarget.style.transform = "translateY(-2px)"
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = "var(--primary)"
-          e.currentTarget.style.transform = "translateY(0)"
-        }}
-      >
-        Book via WhatsApp
-      </button>
+<Link
+  to="/treatments"
+  style={{
+    padding: "14px 32px",
+    background: "var(--primary)",
+    color: "white",
+    borderRadius: "30px",
+    textDecoration: "none",
+    fontFamily: "var(--font-body)",
+    fontSize: "16px",
+    letterSpacing: "1px",
+    transition: "all 0.3s ease",
+    boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+    display: "inline-block"
+  }}
+  onMouseEnter={e => {
+    e.currentTarget.style.background = "var(--primary-dark)"
+    e.currentTarget.style.transform = "translateY(-2px)"
+  }}
+  onMouseLeave={e => {
+    e.currentTarget.style.background = "var(--primary)"
+    e.currentTarget.style.transform = "translateY(0)"
+  }}
+>
+  Begin Your Retreat
+</Link>
 
       
 
@@ -105,6 +133,7 @@ function Contact() {
           }}>
           📍 View Our Location
         </a>
+        <a> 8 Church Hill, Newcastle, BT33 0JU </a>
       </div>
 
     </section>

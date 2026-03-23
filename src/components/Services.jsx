@@ -37,7 +37,7 @@ function Services() {
         fontFamily: "var(--font-heading)",
         marginBottom: "10px"
       }}>
-        Our Services
+        Retreat By The Mournes
       </h2>
 
       <p style={{
@@ -45,8 +45,9 @@ function Services() {
         maxWidth: "500px",
         margin: "0 auto 40px",
         fontFamily: "var(--font-body)"
-      }}>
-        Discover treatments designed to restore balance, calm the mind and renew your body.
+      }}>Wellness & Sports Therapy | 
+Restore balance | Reconnect with nature | Return to yourself
+
       </p>
 
       <div style={{
@@ -73,14 +74,15 @@ function Services() {
             fontFamily: "var(--font-heading)",
             fontSize: "clamp(18px,2vw,22px)"
           }}>
-            Massage Therapy
+            Signature Experiences 
           </h3>
           <p style={{
             fontFamily: "var(--font-body)",
             color: "var(--text-light)",
             fontSize: "14px"
           }}>
-            Relaxing treatments to ease tension and stress.
+            A range of restorative treatments to relax the body, release tension, and restore balance—whether 
+            you need deep muscle relief, targeted sports work, or gentle relaxation.
           </p>
         </Link>
 
@@ -101,14 +103,14 @@ function Services() {
             fontFamily: "var(--font-heading)",
             fontSize: "clamp(18px,2vw,22px)"
           }}>
-            Holistic Healing
+            Specialist Recovery
           </h3>
           <p style={{
             fontFamily: "var(--font-body)",
             color: "var(--text-light)",
             fontSize: "14px"
           }}>
-            Restore balance to mind and body.
+            Specialist treatments focused on recovery and deep relaxation, using techniques like hot and cold therapy and hot stone massage to ease muscle tension, reduce stress, and support the body’s natural healing and recovery.
           </p>
         </Link>
 
@@ -129,17 +131,43 @@ function Services() {
             fontFamily: "var(--font-heading)",
             fontSize: "clamp(18px,2vw,22px)"
           }}>
-            Wellness Sessions
+           Nurture & Restore
           </h3>
           <p style={{
             fontFamily: "var(--font-body)",
             color: "var(--text-light)",
             fontSize: "14px"
           }}>
-            Personal sessions designed for your wellbeing.
+            Gentle, nurturing treatments designed to support relaxation and wellbeing, helping to ease tension, calm the mind, and restore a sense of balance and comfort.
           </p>
         </Link>
-
+    <Link
+          to="/treatments"
+          style={cardStyle}
+          onMouseEnter={(e)=>{
+            e.currentTarget.style.transform="translateY(-6px)"
+            e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,0.1)"
+          }}
+          onMouseLeave={(e)=>{
+            e.currentTarget.style.transform="translateY(0)"
+            e.currentTarget.style.boxShadow="0 6px 20px rgba(0,0,0,0.05)"
+          }}
+        >
+          <FaSpa size={40} style={iconStyle} />
+          <h3 style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "clamp(18px,2vw,22px)"
+          }}>
+            Express Rituals — 30 Minutes
+          </h3>
+          <p style={{
+            fontFamily: "var(--font-body)",
+            color: "var(--text-light)",
+            fontSize: "14px"
+          }}>
+            Short, focused treatments designed to quickly relieve tension, refresh the body, and restore calm—perfect for relaxation and a quick reset.
+          </p>
+        </Link>
       </div>
 
     </section>

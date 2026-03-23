@@ -51,7 +51,7 @@ function Footer() {
 
 {/* Company Info */}
 <div style={{ marginTop: "10px", fontSize: "12px", opacity: 0.7 }}>
-  RCD Software Solutions · 
+ 
   <a 
     href="https://yourwebsite.com" 
     target="_blank" 
