@@ -81,8 +81,7 @@ Restore balance | Reconnect with nature | Return to yourself
             color: "var(--text-light)",
             fontSize: "14px"
           }}>
-            A range of restorative treatments to relax the body, release tension, and restore balance—whether 
-            you need deep muscle relief, targeted sports work, or gentle relaxation.
+            A collection of bespoke treatments designed to deeply relax the body, release built-up tension, and restore your natural balance. Perfect for those seeking a holistic, rejuvenating experience that addresses both body and mind.
           </p>
         </Link>
 
@@ -110,8 +109,7 @@ Restore balance | Reconnect with nature | Return to yourself
             color: "var(--text-light)",
             fontSize: "14px"
           }}>
-            Specialist treatments focused on recovery and deep relaxation, using techniques like hot and cold therapy and hot stone massage to ease muscle tension, reduce stress, and support the body’s natural healing and recovery.
-          </p>
+Focused treatments to accelerate recovery, relieve muscle tension, and support the body’s natural healing. Using advanced techniques like hot/cold therapy, deep tissue massage, and hot stone rituals, these sessions are designed for those who need targeted relief and restoration.          </p>
         </Link>
 
         <Link
@@ -131,15 +129,14 @@ Restore balance | Reconnect with nature | Return to yourself
             fontFamily: "var(--font-heading)",
             fontSize: "clamp(18px,2vw,22px)"
           }}>
-           Nurture & Restore
+        Signature Treatment 
           </h3>
           <p style={{
             fontFamily: "var(--font-body)",
             color: "var(--text-light)",
             fontSize: "14px"
           }}>
-            Gentle, nurturing treatments designed to support relaxation and wellbeing, helping to ease tension, calm the mind, and restore a sense of balance and comfort.
-          </p>
+Mourne Recovery Therapy — A tailored blend of sports massage and myofascial release, combining deep muscle work with gentle, grounding techniques to restore, rebalance, and recover.          </p>
         </Link>
     <Link
           to="/treatments"

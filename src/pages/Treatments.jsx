@@ -2,105 +2,150 @@ import "../styles/global.css"
 import { useState } from "react"
 
 const treatments = [
+  // Signature Experiences
   {
-    name: "Ground & Glow",
-    description: "Neck, head & face massage that melts away tension and restores a natural glow.",
+    category: "Signature Experiences",
+    name: "Neck, Head, and Face Massage",
+    description: "Melt away tension and restore a natural glow with a calming massage for the neck, head, and face.",
     prices: [
-      { time: "60 min", price: "£60" },
-      { time: "90 min", price: "£80" }
-    ]
-  },
-   {
-    name: "Sacred Ease",
-    description: "Gentle back, neck & head massage to ease tension and restore calm.",
-    prices: [{ time: "60 min", price: "£60" },
-      { time: "90 min", price: "£80" }
-    ]
-  },
-    {
-    name: "Sacred Heat Back Ritual",
-    description: "Back, neck & head hot stone massage to release tension and calm the mind.",
-    prices: [
-      { time: "60 min", price: "£65" },
-      { time: "90 min", price: "£85" }
-    ]
-  },
- 
-  {
-    name: "Earthen Tide",
-    description: "Full body massage with flowing, Lomi Lomi-inspired movements to restore balance.",
-    prices: [
-      { time: "60 min", price: "£60" },
-      { time: "90 min", price: "£80" }
+      { time: "60 min", price: "£50" },
+      { time: "90 min", price: "£70" }
     ]
   },
   {
-    name: "Sports Therapy Massage",
-    description: "Targeted sports massage to ease tight muscles, improve movement, and aid recovery.",
+    category: "Signature Experiences",
+    name: "Back, Neck, and Head with Hot Stone Massage",
+    description: "Release tension and calm the mind with soothing hot stones.",
     prices: [
-      { time: "60 min", price: "£60" },
-      { time: "90 min", price: "£80" }
+      { time: "60 min", price: "£55" },
+      { time: "90 min", price: "£75" }
     ]
   },
   {
-    name: "Therapeutic Massage",
-    description: "Deep full body therapy to release tension, ease aches, and restore balance.",
+    category: "Signature Experiences",
+    name: "Full Body Massage (Lomi Lomi Inspired)",
+    description: "Flowing, rhythmic movements designed to restore balance and relax the body.",
     prices: [
-      { time: "60 min", price: "£65" },
-      { time: "90 min", price: "£85" }
+      { time: "60 min", price: "£50" },
+      { time: "90 min", price: "£70" }
     ]
   },
   {
+    category: "Signature Experiences",
+    name: "Full Body Hot Stone Massage",
+    description: "Deep relaxation using heated stones to ease muscle tension.",
+    prices: [
+      { time: "70 min", price: "£65" }
+    ]
+  },
+  {
+    category: "Signature Experiences",
+    name: "Nurturing Full Body Pregnancy Massage",
+    description: "A soothing massage designed to support relaxation and wellbeing during pregnancy.",
+    prices: [
+      { time: "70 min", price: "£60" }
+    ]
+  },
+
+  // Specialist Recovery
+  {
+    category: "Specialist Recovery",
+    name: "Therapeutic Deep Tissue Full Body Therapy",
+    description: "Target deep muscle tension and restore balance. Best for stress and recovery.",
+    prices: [
+      { time: "60 min", price: "£55" },
+      { time: "90 min", price: "£75" }
+    ]
+  },
+  {
+    category: "Specialist Recovery",
+    name: "Sports Massage Therapy",
+    description: "Focused treatment to ease muscle tension and support recovery.",
+    prices: [
+      { time: "60 min", price: "£55" },
+      { time: "90 min", price: "£75" }
+    ]
+  },
+  {
+    category: "Specialist Recovery",
+    name: "Myofascial Release Therapy",
+    description: "Restorative treatment to release deep tension and improve mobility.",
+    prices: [
+      { time: "60 min", price: "£55" },
+      { time: "90 min", price: "£75" }
+    ]
+  },
+  {
+    category: "Specialist Recovery",
     name: "Race Day Reset",
-    description: "Hot & cold sports recovery with targeted massage to reduce tension and support recovery.",
+    description: "Hot & cold therapy with targeted muscle work for recovery.",
     prices: [
-      { time: "60 min", price: "£65" },
-      { time: "90 min", price: "£85" }
+      { time: "70 min", price: "£70" }
     ]
   },
+
+  // Signature Treatment
   {
-    name: "Earth Warmth Ritual",
-    description: "Full body hot stone massage to melt tension and deeply relax the body.",
+    category: "Signature Treatment",
+    name: "Mourne Recovery Therapy",
+    description: "A tailored blend of sports massage and myofascial release for full-body reset.",
     prices: [
-      { time: "60 min", price: "£60" },
       { time: "90 min", price: "£80" }
     ]
   },
 
+  // Nurture & Restore
   {
-    name: "Blossom & Bump",
-    description: "Nurturing pregnancy massage to support relaxation and wellbeing.",
+    category: "Nurture & Restore",
+    name: "Gentle Back, Neck, and Head Massage",
+    description: "Gentle treatment to ease tension and restore calm.",
     prices: [
-      { time: "60 min", price: "£60" },
-      { time: "90 min", price: "£80" }
+      { time: "60 min", price: "£50" }
     ]
   },
   {
-    name: "Natural Lift Facial Ritual",
-    description: "Facial treatment to boost circulation and enhance natural glow.",
-    prices: [{ time: "30 min", price: "£30" }]
+    category: "Nurture & Restore",
+    name: "Head & Neck Massage with Essential Oils",
+    description: "Calming massage to relax the mind and support restful sleep.",
+    prices: [
+      { time: "60 min", price: "£50" }
+    ]
   },
+
+  // Express Rituals
   {
+    category: "Express Rituals",
     name: "Tension Release Back Therapy",
-    description: "Quick treatment to relieve tension in the back, neck, and shoulders.",
-    prices: [{ time: "30 min", price: "£30" }]
+    description: "Quick treatment to relieve back, neck, and shoulder tension.",
+    prices: [
+      { time: "30 min", price: "£30" }
+    ]
   },
   {
-    name: "Head Massage with Essential Oils",
-    description: "Calming head massage to relax the mind and support restful sleep.",
-    prices: [{ time: "30 min", price: "£28" }]
+    category: "Express Rituals",
+    name: "Revitalizing Head & Face Massage",
+    description: "Relaxing treatment to ease tension and refresh your skin.",
+    prices: [
+      { time: "30 min", price: "£30" }
+    ]
   },
   {
+    category: "Express Rituals",
     name: "Grounding Foot Ritual",
-    description: "Revives tired feet and restores comfort after long days or walks.",
-    prices: [{ time: "30 min", price: "£25" }]
+    description: "Revives tired feet and restores comfort.",
+    prices: [
+      { time: "30 min", price: "£30" }
+    ]
   },
   {
+    category: "Express Rituals",
     name: "Grounding Hand Ritual",
-    description: "Relieves tension in hands and wrists for improved comfort and ease.",
-    prices: [{ time: "30 min", price: "£25" }]
+    description: "Relieves tension in hands and wrists.",
+    prices: [
+      { time: "30 min", price: "£30" }
+    ]
   }
-]
+];
 
 function Treatments() {
 
