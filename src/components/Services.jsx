@@ -45,9 +45,8 @@ function Services() {
         maxWidth: "500px",
         margin: "0 auto 40px",
         fontFamily: "var(--font-body)"
-      }}>Wellness & Sports Therapy | 
-Restore balance | Reconnect with nature | Return to yourself
-
+      }}>
+        Wellness & Sports Therapy | Restore balance | Reconnect with nature | Return to yourself
       </p>
 
       <div style={{
@@ -57,116 +56,67 @@ Restore balance | Reconnect with nature | Return to yourself
         flexWrap: "wrap"
       }}>
 
+        {/* Signature Experiences */}
         <Link
           to="/treatments"
+          state={{ targetCategory: "Signature Experiences" }}
           style={cardStyle}
-          onMouseEnter={(e)=>{
-            e.currentTarget.style.transform="translateY(-6px)"
-            e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,0.1)"
-          }}
-          onMouseLeave={(e)=>{
-            e.currentTarget.style.transform="translateY(0)"
-            e.currentTarget.style.boxShadow="0 6px 20px rgba(0,0,0,0.05)"
-          }}
         >
           <FaSpa size={40} style={iconStyle} />
-          <h3 style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(18px,2vw,22px)"
-          }}>
-            Signature Experiences 
+          <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(18px,2vw,22px)" }}>
+            Signature Experiences
           </h3>
-          <p style={{
-            fontFamily: "var(--font-body)",
-            color: "var(--text-light)",
-            fontSize: "14px"
-          }}>
-            A collection of bespoke treatments designed to deeply relax the body, release built-up tension, and restore your natural balance. Perfect for those seeking a holistic, rejuvenating experience that addresses both body and mind.
+          <p style={{ fontFamily: "var(--font-body)", color: "var(--text-light)", fontSize: "14px" }}>
+            A collection of bespoke treatments designed to deeply relax the body, release built-up tension, and restore your natural balance.
           </p>
         </Link>
 
+        {/* Specialist Recovery */}
         <Link
           to="/treatments"
+          state={{ targetCategory: "Specialist Recovery" }}
           style={cardStyle}
-          onMouseEnter={(e)=>{
-            e.currentTarget.style.transform="translateY(-6px)"
-            e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,0.1)"
-          }}
-          onMouseLeave={(e)=>{
-            e.currentTarget.style.transform="translateY(0)"
-            e.currentTarget.style.boxShadow="0 6px 20px rgba(0,0,0,0.05)"
-          }}
         >
           <GiHealing size={40} style={iconStyle} />
-          <h3 style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(18px,2vw,22px)"
-          }}>
+          <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(18px,2vw,22px)" }}>
             Specialist Recovery
           </h3>
-          <p style={{
-            fontFamily: "var(--font-body)",
-            color: "var(--text-light)",
-            fontSize: "14px"
-          }}>
-Focused treatments to accelerate recovery, relieve muscle tension, and support the body’s natural healing. Using advanced techniques like hot/cold therapy, deep tissue massage, and hot stone rituals, these sessions are designed for those who need targeted relief and restoration.          </p>
-        </Link>
-
-        <Link
-          to="/treatments"
-          style={cardStyle}
-          onMouseEnter={(e)=>{
-            e.currentTarget.style.transform="translateY(-6px)"
-            e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,0.1)"
-          }}
-          onMouseLeave={(e)=>{
-            e.currentTarget.style.transform="translateY(0)"
-            e.currentTarget.style.boxShadow="0 6px 20px rgba(0,0,0,0.05)"
-          }}
-        >
-          <MdSelfImprovement size={40} style={iconStyle} />
-          <h3 style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(18px,2vw,22px)"
-          }}>
-        Signature Treatment 
-          </h3>
-          <p style={{
-            fontFamily: "var(--font-body)",
-            color: "var(--text-light)",
-            fontSize: "14px"
-          }}>
-Mourne Recovery Therapy — A tailored blend of sports massage and myofascial release, combining deep muscle work with gentle, grounding techniques to restore, rebalance, and recover.          </p>
-        </Link>
-    <Link
-          to="/treatments"
-          style={cardStyle}
-          onMouseEnter={(e)=>{
-            e.currentTarget.style.transform="translateY(-6px)"
-            e.currentTarget.style.boxShadow="0 12px 30px rgba(0,0,0,0.1)"
-          }}
-          onMouseLeave={(e)=>{
-            e.currentTarget.style.transform="translateY(0)"
-            e.currentTarget.style.boxShadow="0 6px 20px rgba(0,0,0,0.05)"
-          }}
-        >
-          <FaSpa size={40} style={iconStyle} />
-          <h3 style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(18px,2vw,22px)"
-          }}>
-            Express Rituals — 30 Minutes
-          </h3>
-          <p style={{
-            fontFamily: "var(--font-body)",
-            color: "var(--text-light)",
-            fontSize: "14px"
-          }}>
-            Short, focused treatments designed to quickly relieve tension, refresh the body, and restore calm—perfect for relaxation and a quick reset.
+          <p style={{ fontFamily: "var(--font-body)", color: "var(--text-light)", fontSize: "14px" }}>
+            Focused treatments to accelerate recovery, relieve muscle tension, and support the body’s natural healing.
           </p>
         </Link>
-      </div>
 
+        {/* Signature Treatment */}
+        <Link
+          to="/treatments"
+          state={{ targetCategory: "Signature Treatment" }}
+          style={cardStyle}
+        >
+          <MdSelfImprovement size={40} style={iconStyle} />
+          <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(18px,2vw,22px)" }}>
+            Signature Treatment
+          </h3>
+          <p style={{ fontFamily: "var(--font-body)", color: "var(--text-light)", fontSize: "14px" }}>
+            Mourne Recovery Therapy — A tailored blend of sports massage and myofascial release.
+          </p>
+        </Link>
+
+        {/* Express Rituals */}
+        <Link
+          to="/treatments"
+          state={{ targetCategory: "Express Rituals" }}
+          style={cardStyle}
+        >
+          <FaSpa size={40} style={iconStyle} />
+          <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(18px,2vw,22px)" }}>
+            Express Rituals — 30 Minutes
+          </h3>
+          <p style={{ fontFamily: "var(--font-body)", color: "var(--text-light)", fontSize: "14px" }}>
+            Short, focused treatments designed to quickly relieve tension, refresh the body, and restore calm.
+          </p>
+        </Link>
+
+      </div>
     </section>
   )
 }
