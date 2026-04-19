@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { FaHome, FaSpa, FaFacebook, FaWhatsapp, FaBars, FaUser } from "react-icons/fa"
+import { FaHome, FaSpa, FaFacebook, FaInstagram, FaWhatsapp, FaBars, FaUser } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import logo from "../assets/logo.png"
 
@@ -120,6 +120,14 @@ function Navbar() {
           </Link>
 
           <hr />
+
+          <a
+            href="https://www.instagram.com/p/DWveVvPiNCq/"
+            className="menu-item"
+            onClick={() => setMenuOpen(false)}
+          >
+            <FaInstagram color="#c13584" /> Instagram
+          </a>
 
           <a
             href="https://www.facebook.com/people/Holistic-Sports-Therapy-by-Beata/61581068248993/"
