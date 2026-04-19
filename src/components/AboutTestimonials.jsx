@@ -3,16 +3,16 @@ import "../styles/global.css"
 function AboutTestimonials() {
   const testimonials = [
     {
-      quote: "An extraordinary sanctuary — I left feeling completely restored and renewed.",
-      author: "A. M., Belfast"
+      quote: "I’ve been going to Beata for over 16 years for deep tissue massages, and I honestly can’t recommend her highly enough. She is so professional and welcoming and always makes me feel comfortable and relaxed at every appointment. What really stands out is her consistency and attention to detail. She takes the time to listen, and makes sure you leave feeling better every single time. After so many years, I can honestly say Beata is the best, and you won’t find better",
+      author: "E. R., Newcastle"
     },
     {
-      quote: "Every detail exudes luxury and tranquility. A truly transformative experience.",
-      author: "J. K., Dublin"
+      quote: "I have been going to Beata for 10 years now for her amazing Sports massages . Her professionalism , knowledge and skill is incredible I would highly recommend her as a massage therapist",
+      author: "P. H., Newcastle"
     },
     {
-      quote: "The treatments are exquisite, and the setting is breathtaking. Highly recommended.",
-      author: "S. L., London"
+      quote: "Beata came to my rescue after a neural back & hamstring flare up when I was out running. She fitted me in so quickly and was able to pin point the areas of my body that was causing tension. The treatment not only eased my pain but also helped me relax mentally.",
+      author: "Kerry, Dundrum"
     }
   ]
 
