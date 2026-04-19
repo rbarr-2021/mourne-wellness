@@ -1,24 +1,25 @@
 :root {
-  /* 🌿 Brand Colors */
-  --primary: #6BA292;
-  --primary-dark: #5A8976;
-  --accent: #C6A664;
+  /* Brand colors */
+  --primary: #6ba292;
+  --primary-dark: #5a8976;
+  --accent: #c6a664;
 
-  /* 🎨 Backgrounds */
-  --bg-main: #FAF9F7;
-  --bg-card:#ECE8E1;
+  /* Backgrounds */
+  --bg-main: #faf9f7;
+  --bg-card: #ece8e1;
 
-  /* ✍️ Text */
+  /* Text */
   --text-dark: #333333;
   --text-light: #777777;
 
-  /* 🔤 Fonts */
+  /* Fonts */
   --font-heading: "Playfair Display", serif;
   --font-body: "Inter", sans-serif;
 
-  /* 📏 Spacing */
+  /* Spacing */
   --section-padding: 80px 20px;
 }
+
 body {
   margin: 0;
   background: var(--bg-main);
@@ -26,10 +27,14 @@ body {
   font-family: var(--font-body);
 }
 
-h1, h2, h3 .heading {
+h1,
+h2,
+h3,
+.heading {
   font-family: var(--font-heading);
 }
-/* 🌿 Global link styling (luxury feel) */
+
+/* Global link styling */
 a {
   text-decoration: none;
   color: inherit;
@@ -40,20 +45,23 @@ a:hover {
   transform: translateY(-2px);
   text-shadow: 0 0 6px rgba(107, 162, 146, 0.3);
 }
+
 nav {
   transition: all 0.4s ease;
 }
+
 .burger {
   margin-left: auto;
   cursor: pointer;
 }
+
 .dropdown {
   position: absolute;
-  top: 100%;              /* directly under navbar */
-  right: 20px;            /* align with burger */
+  top: 100%;
+  right: 20px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   padding: 15px;
   min-width: 200px;
   z-index: 2000;
@@ -72,6 +80,7 @@ nav {
   background: var(--bg-card);
   border-radius: 8px;
 }
+
 a[href^="tel"] {
   color: var(--primary);
   font-weight: 500;
