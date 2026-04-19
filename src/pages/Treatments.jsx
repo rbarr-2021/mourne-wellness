@@ -8,7 +8,7 @@ const treatments = [
     name: "Neck, Head, and Face Massage",
     description: "Melt away tension and restore a natural glow with a calming massage for the neck, head, and face.",
     prices: [
-      { time: "60 min", price: "£50" },
+      { time: "60 min", price: "£55" },
       { time: "90 min", price: "£80" },
     ],
   },
@@ -17,8 +17,8 @@ const treatments = [
     name: "Back, Neck, and Head with Hot Stone Massage",
     description: "Release tension and calm the mind with soothing hot stones.",
     prices: [
-      { time: "60 min", price: "£55" },
-      { time: "90 min", price: "£80" },
+      { time: "60 min", price: "£65" },
+   
     ],
   },
   {
@@ -26,7 +26,7 @@ const treatments = [
     name: "Full Body Massage (Lomi Lomi Inspired)",
     description: "Flowing, rhythmic movements designed to restore balance and relax the body.",
     prices: [
-      { time: "60 min", price: "£50" },
+      { time: "60 min", price: "£55" },
       { time: "90 min", price: "£80" },
     ],
   },
@@ -34,7 +34,7 @@ const treatments = [
     category: "Signature Experiences",
     name: "Full Body Hot Stone Massage",
     description: "Deep relaxation using heated stones to ease muscle tension.",
-    prices: [{ time: "70 min", price: "£65" }],
+    prices: [{ time: "70 min", price: "£70" }],
   },
   {
     category: "Signature Experiences",
@@ -85,13 +85,13 @@ const treatments = [
     category: "Nurture & Restore",
     name: "Gentle Back, Neck, and Head Massage",
     description: "Gentle treatment to ease tension and restore calm.",
-    prices: [{ time: "60 min", price: "£50" }],
+    prices: [{ time: "60 min", price: "£55" }],
   },
   {
     category: "Nurture & Restore",
     name: "Head & Neck Massage with Essential Oils",
     description: "Calming massage to relax the mind and support restful sleep.",
-    prices: [{ time: "60 min", price: "£50" }],
+    prices: [{ time: "60 min", price: "£55" }],
   },
   {
     category: "Express Rituals",
