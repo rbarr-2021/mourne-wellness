@@ -1,4 +1,4 @@
-import { FaFacebook, FaWhatsapp } from "react-icons/fa"
+import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa"
 import logo from "../assets/logo.png"
 import "../styles/global.css"
 
@@ -41,6 +41,13 @@ function Footer() {
 
   {/* Social Links */}
 <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "8px" }}>
+          <a
+            href="https://www.instagram.com/p/DWveVvPiNCq/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaInstagram size={20} color="#c13584"/>
+          </a>
           <a
             href="https://www.facebook.com/people/Holistic-Sports-Therapy-by-Beata/61581068248993/"
             target="_blank"
