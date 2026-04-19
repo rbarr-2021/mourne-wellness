@@ -72,7 +72,7 @@ function About() {
         </h1>
 
         <p style={{ color: "var(--text-light)", marginBottom: "10px" }}>
-About
+
 Inspired by the mountains and the sea, my work is rooted in balance, flow, and quiet restoration. Each treatment is designed to create a sense of calm — a space to slow down, reset, and reconnect.
 
 Blending over 20 years of clinical experience with an intuitive, restorative touch, every session is tailored to ease tension, restore lightness, and bring the body back into balance.
