@@ -3,6 +3,7 @@ import { GiHealing } from "react-icons/gi"
 import { MdSelfImprovement } from "react-icons/md"
 import "../styles/global.css"
 import hero from "../assets/hero.jpg"
+import profile from "../assets/profile.jpeg"
 import { Link } from "react-router-dom"
 
 function About() {
@@ -78,6 +79,39 @@ function About() {
           Set against the backdrop of the Mourne Mountains, each treatment is carefully tailored to support both body
           and mind, blending relaxation with a deeper sense of wellbeing.
         </p>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "10px 20px 20px",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "360px",
+            padding: "14px",
+            background: "rgba(255,255,255,0.7)",
+            borderRadius: "24px",
+            boxShadow: "0 18px 45px rgba(0,0,0,0.08)",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <img
+            src={profile}
+            alt="Portrait of Beata"
+            style={{
+              display: "block",
+              width: "100%",
+              aspectRatio: "4 / 5",
+              objectFit: "cover",
+              objectPosition: "center top",
+              borderRadius: "18px",
+            }}
+          />
+        </div>
       </div>
 
       <div
