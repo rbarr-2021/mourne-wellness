@@ -72,12 +72,23 @@ function About() {
         </h1>
 
         <p style={{ color: "var(--text-light)", marginBottom: "10px" }}>
-          A calm, restorative space designed to help you slow down, reset, and reconnect.
+Philosophy
+Inspired by the mountains and the sea, my work is centred on balance, flow, and deep restoration. I create a calm, considered space where body and mind can reset and reconnect — a place to step away, slow down, and be cared for.
+Your Experience
+Each treatment is thoughtfully tailored, blending over 20 years of clinical experience with a deeply intuitive, calming touch.
+Sessions are designed not only to relieve pain and tension, but to restore ease, lightness, and a sense of quiet strength within the body — supporting both how you feel in the moment and how you move through daily life.
+For You If…
+You’re seeking more than just a treatment — you’re ready to feel like yourself again.
+Whether you’re holding physical tension, recovering from strain or injury, or feeling the effects of long hours and postural stress, each session is designed to support your body with care and precision.
+You may be navigating hormonal change, pregnancy, fatigue, or poor sleep — or simply feeling the impact of a full, fast-paced life. You might be in need of deep relaxation, stress relief, or regular time to reset and restore.
+Wherever you are, treatments are tailored to meet you there — helping you feel lighter, calmer, and more at ease in your body.
+Background
+With over 20 years’ experience in holistic and sports therapy, my approach is shaped by both knowledge and lived experience.
+Raised in the Polish mountains and now based in County Down, nature continues to influence the way I work — steady, flowing, and deeply restorative. This connection is at the heart of every treatment I offer.
         </p>
 
         <p style={{ color: "var(--text-light)" }}>
-          Set against the backdrop of the Mourne Mountains, each treatment is carefully tailored to support both body
-          and mind, blending relaxation with a deeper sense of wellbeing.
+   
         </p>
       </div>
 
