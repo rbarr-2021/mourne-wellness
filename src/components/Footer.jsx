@@ -41,9 +41,13 @@ function Footer() {
 
   {/* Social Links */}
 <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "8px" }}>
-  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-    <FaFacebook size={20} color="#1877f2"/>
-  </a>
+          <a
+            href="https://www.facebook.com/people/Holistic-Sports-Therapy-by-Beata/61581068248993/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaFacebook size={20} color="#1877f2"/>
+          </a>
   <a href="https://wa.me/447591383215" target="_blank" rel="noopener noreferrer">
     <FaWhatsapp size={20} color="#25D366"/>
   </a>

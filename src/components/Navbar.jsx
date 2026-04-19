@@ -121,7 +121,11 @@ function Navbar() {
 
           <hr />
 
-          <a href="https://facebook.com" className="menu-item" onClick={() => setMenuOpen(false)}>
+          <a
+            href="https://www.facebook.com/people/Holistic-Sports-Therapy-by-Beata/61581068248993/"
+            className="menu-item"
+            onClick={() => setMenuOpen(false)}
+          >
             <FaFacebook color="#1877f2" /> Facebook
           </a>
 
