@@ -116,6 +116,27 @@ function AboutTestimonials() {
             </div>
           ))}
         </div>
+
+        <div style={{ marginTop: "28px" }}>
+          <a
+            href="https://share.google/SkuH2ggzHH72J7vJv"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              fontFamily: "var(--font-body)",
+              fontSize: "14px",
+              letterSpacing: "0.3px",
+              color: "var(--primary)",
+              paddingBottom: "2px",
+              borderBottom: "1px solid rgba(107, 162, 146, 0.35)",
+            }}
+          >
+            Read more reviews on Google
+          </a>
+        </div>
       </div>
     </section>
   )
