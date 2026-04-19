@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { FaHome, FaSpa, FaFacebook, FaInstagram, FaWhatsapp, FaBars, FaUser } from "react-icons/fa"
+import { FaHome, FaSpa, FaFacebook, FaInstagram, FaWhatsapp, FaUser } from "react-icons/fa"
+import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2"
 import { Link } from "react-router-dom"
 import logo from "../assets/logo.png"
 
@@ -94,11 +95,30 @@ function Navbar() {
           marginLeft: "auto",
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           cursor: "pointer",
+          width: scrolled ? "48px" : "54px",
+          height: scrolled ? "48px" : "54px",
+          borderRadius: "999px",
+          background: scrolled ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.72)",
+          border: "1px solid rgba(198, 166, 100, 0.28)",
+          boxShadow: scrolled ? "0 8px 22px rgba(0,0,0,0.08)" : "0 10px 30px rgba(0,0,0,0.06)",
+          backdropFilter: "blur(12px)",
+          transition: "all 0.3s ease",
+        }}
+        onMouseEnter={(event) => {
+          event.currentTarget.style.transform = "translateY(-1px)"
+          event.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.12)"
+          event.currentTarget.style.borderColor = "rgba(198, 166, 100, 0.45)"
+        }}
+        onMouseLeave={(event) => {
+          event.currentTarget.style.transform = "translateY(0)"
+          event.currentTarget.style.boxShadow = scrolled ? "0 8px 22px rgba(0,0,0,0.08)" : "0 10px 30px rgba(0,0,0,0.06)"
+          event.currentTarget.style.borderColor = "rgba(198, 166, 100, 0.28)"
         }}
         onClick={() => setMenuOpen(!menuOpen)}
       >
-        <FaBars size={26} />
+        <HiOutlineAdjustmentsHorizontal size={24} color="var(--text-dark)" />
       </div>
 
       {menuOpen && (
