@@ -250,9 +250,10 @@ function Treatments() {
         <div className={`treatments-list ${selectedTreatment ? "has-mobile-booking-bar" : ""}`}>
           {featuredTreatment && (
             <section className="featured-treatment">
-              <div className="featured-badge">
+              <div className="featured-label-row">
                 <span aria-hidden="true">☆</span>
                 Signature Treatment
+                <span className="treatment-new-badge">New</span>
               </div>
 
               <div className="featured-header">
@@ -347,6 +348,12 @@ function Treatments() {
                       }
                     }}
                   >
+                    {treatment.name === "Nourishing & Therapeutic Facial" && (
+                      <div className="treatment-card__eyebrow-row">
+                        <span className="treatment-card__eyebrow">Facial Treatment</span>
+                        <span className="treatment-new-badge">New</span>
+                      </div>
+                    )}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
                       {selectedTreatment === treatment ? (

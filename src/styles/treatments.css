@@ -51,6 +51,41 @@
   animation: treatmentSelectedFadeIn 0.28s ease;
 }
 
+.treatment-new-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: #6f8f7a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  animation: treatmentSelectedFadeIn 0.28s ease;
+}
+
+.treatment-card__eyebrow-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.treatment-card__eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.72;
+  font-weight: 600;
+}
+
 .featured-treatment {
   margin-bottom: 18px;
   padding: 32px;
@@ -61,19 +96,21 @@
   overflow: hidden;
 }
 
-.featured-badge {
-  display: inline-flex;
+.featured-label-row {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(198, 166, 100, 0.35);
+  justify-content: space-between;
+  gap: 12px;
   color: var(--text-dark);
   font-size: 12px;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   font-weight: 600;
+  flex-wrap: wrap;
+}
+
+.featured-label-row > span[aria-hidden="true"] {
+  display: none;
 }
 
 .featured-header {
@@ -240,6 +277,11 @@
     border-radius: 20px;
   }
 
+  .featured-label-row,
+  .treatment-card__eyebrow-row {
+    align-items: center;
+  }
+
   .featured-header {
     flex-direction: column;
     align-items: flex-start;
@@ -366,7 +408,8 @@
   .booking-confirm-button,
   .booking-option-button,
   .treatment-card,
-  .treatment-card__selected-badge {
+  .treatment-card__selected-badge,
+  .treatment-new-badge {
     animation: none !important;
     transition: none !important;
   }
