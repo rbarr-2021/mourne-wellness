@@ -39,7 +39,6 @@ function Contact() {
               Flexible appointment times may be available on request.
             </p>
           </div>
-          <p style={{ margin: "8px 0 0", fontSize: "13px", opacity: 0.8 }}>* By appointment only</p>
         </div>
 
         <div className="contact-details section-copy">

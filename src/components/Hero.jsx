@@ -1,5 +1,4 @@
 import heroImg from "../assets/wellness-hero.jpg"
-import logo from "../assets/logo.jpg"
 import "../styles/global.css"
 import { Link } from "react-router-dom"
 
@@ -7,7 +6,6 @@ function Hero() {
   return (
     <section className="hero">
       <img src={heroImg} alt="" className="hero-bg" />
-      <img src={logo} alt="Retreat By the Mournes" className="hero-logo" />
 
       <div className="hero-content">
         <h1 className="hero-title">Relax. Recover. Rebalance.</h1>
