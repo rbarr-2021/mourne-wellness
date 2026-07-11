@@ -1,0 +1,258 @@
+.treatments-page {
+  padding: 100px 20px;
+  background: linear-gradient(to bottom, #f8f8f8, #ffffff);
+}
+
+.treatments-title {
+  text-align: center;
+  font-family: var(--font-heading);
+  margin-bottom: 40px;
+}
+
+.treatments-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.treatments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 0;
+}
+
+.featured-treatment {
+  margin-bottom: 18px;
+  padding: 32px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(236, 232, 225, 0.75), rgba(255, 255, 255, 0.95));
+  border: 1px solid rgba(198, 166, 100, 0.38);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.featured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(198, 166, 100, 0.35);
+  color: var(--text-dark);
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.featured-header {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.featured-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1.12;
+  color: var(--text-dark);
+  flex: 1 1 560px;
+  min-width: 0;
+}
+
+.featured-meta {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(16px, 2vw, 18px);
+  color: var(--primary-dark);
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.featured-intro {
+  margin-top: 18px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-light);
+}
+
+.featured-description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-light);
+}
+
+.featured-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.featured-primary-button,
+.featured-secondary-button,
+.booking-confirm-button {
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.featured-primary-button {
+  padding: 14px 24px;
+  border-radius: 14px;
+  border: 1px solid #6f8f7a;
+  background: #6f8f7a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.featured-secondary-button {
+  padding: 14px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(111, 143, 122, 0.28);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text-dark);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.booking-panel {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  padding: 30px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.booking-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.booking-option-button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.booking-summary {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.booking-confirm-button {
+  margin-top: 24px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid #6f8f7a;
+  background: #6f8f7a;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 1024px) {
+  .treatments-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .booking-panel {
+    position: static;
+    top: auto;
+    order: -1;
+  }
+
+  .featured-treatment {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 767px) {
+  .treatments-page {
+    padding: 92px 16px 56px;
+    overflow-x: clip;
+  }
+
+  .treatments-title {
+    margin-bottom: 28px;
+  }
+
+  .treatments-layout {
+    gap: 22px;
+  }
+
+  .featured-treatment {
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .featured-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .featured-name {
+    width: 100%;
+    flex: 1 1 auto;
+    font-size: clamp(28px, 8vw, 34px);
+    line-height: 1.18;
+    overflow-wrap: anywhere;
+  }
+
+  .featured-meta {
+    width: 100%;
+    white-space: normal;
+  }
+
+  .featured-intro,
+  .featured-description {
+    width: 100%;
+  }
+
+  .featured-actions {
+    flex-direction: column;
+  }
+
+  .featured-primary-button,
+  .featured-secondary-button {
+    width: 100%;
+  }
+
+  .booking-panel {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .booking-options {
+    gap: 8px;
+  }
+
+  .booking-option-button {
+    width: 100%;
+  }
+}

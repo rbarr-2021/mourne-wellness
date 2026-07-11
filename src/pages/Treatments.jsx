@@ -1,4 +1,5 @@
 import "../styles/global.css"
+import "../styles/treatments.css"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
@@ -189,133 +190,32 @@ function Treatments() {
   }
 
   return (
-    <section style={{ padding: "100px 20px", background: "linear-gradient(to bottom, #f8f8f8, #ffffff)" }}>
-      <h1 style={{ textAlign: "center", fontFamily: "var(--font-heading)", marginBottom: "40px" }}>
-        Book Your Treatment
-      </h1>
+    <section className="treatments-page">
+      <h1 className="treatments-title">Book Your Treatment</h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, 0.8fr)",
-          gap: "40px",
-          maxWidth: "1100px",
-          margin: "0 auto",
-          alignItems: "start",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+      <div className="treatments-layout">
+        <div className="treatments-list">
           {featuredTreatment && (
-            <section
-              style={{
-                marginBottom: "18px",
-                padding: "32px",
-                borderRadius: "24px",
-                background: "linear-gradient(135deg, rgba(236, 232, 225, 0.75), rgba(255,255,255,0.95))",
-                border: "1px solid rgba(198, 166, 100, 0.38)",
-                boxShadow: "0 18px 45px rgba(0,0,0,0.06)",
-              }}
-            >
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "8px 14px",
-                  borderRadius: "999px",
-                  background: "rgba(255,255,255,0.72)",
-                  border: "1px solid rgba(198, 166, 100, 0.35)",
-                  color: "var(--text-dark)",
-                  fontSize: "12px",
-                  letterSpacing: "0.8px",
-                  textTransform: "uppercase",
-                  fontWeight: "600",
-                }}
-              >
+            <section className="featured-treatment">
+              <div className="featured-badge">
                 <span aria-hidden="true">☆</span>
                 Signature Treatment
               </div>
 
-              <div
-                style={{
-                  marginTop: "20px",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "baseline",
-                  justifyContent: "space-between",
-                  gap: "12px",
-                }}
-              >
-                <h2
-                  style={{
-                    margin: 0,
-                    fontFamily: "var(--font-heading)",
-                    fontSize: "clamp(30px, 4vw, 42px)",
-                    lineHeight: "1.12",
-                    color: "var(--text-dark)",
-                  }}
-                >
-                  {featuredTreatment.name}
-                </h2>
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: "var(--font-body)",
-                    fontSize: "clamp(16px, 2vw, 18px)",
-                    color: "var(--primary-dark)",
-                    letterSpacing: "0.3px",
-                    fontWeight: "600",
-                  }}
-                >
+              <div className="featured-header">
+                <h2 className="featured-name">{featuredTreatment.name}</h2>
+                <p className="featured-meta">
                   {featuredTreatment.prices[0].time} • {featuredTreatment.prices[0].price}
                 </p>
               </div>
 
-              <p
-                style={{
-                  marginTop: "18px",
-                  marginBottom: "16px",
-                  fontSize: "16px",
-                  lineHeight: "1.8",
-                  color: "var(--text-light)",
-                }}
-              >
-                {featuredIntroduction}
-              </p>
+              <p className="featured-intro">{featuredIntroduction}</p>
+              <p className="featured-description">{featuredTreatment.description}</p>
 
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "15px",
-                  lineHeight: "1.85",
-                  color: "var(--text-light)",
-                }}
-              >
-                {featuredTreatment.description}
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "14px",
-                  marginTop: "26px",
-                }}
-              >
+              <div className="featured-actions">
                 <button
+                  className="featured-primary-button"
                   onClick={bookFeaturedTreatment}
-                  style={{
-                    padding: "14px 24px",
-                    borderRadius: "14px",
-                    border: "1px solid #6f8f7a",
-                    background: "#6f8f7a",
-                    color: "#fff",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    fontWeight: "500",
-                    letterSpacing: "0.3px",
-                    transition: "all 0.25s ease",
-                  }}
                   onMouseEnter={(event) => {
                     event.currentTarget.style.background = "#5f7f6c"
                     event.currentTarget.style.transform = "translateY(-2px)"
@@ -329,19 +229,8 @@ function Treatments() {
                 </button>
 
                 <button
+                  className="featured-secondary-button"
                   onClick={() => selectTreatment(featuredTreatment)}
-                  style={{
-                    padding: "14px 24px",
-                    borderRadius: "14px",
-                    border: "1px solid rgba(111, 143, 122, 0.28)",
-                    background: "rgba(255,255,255,0.7)",
-                    color: "var(--text-dark)",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    fontWeight: "500",
-                    letterSpacing: "0.3px",
-                    transition: "all 0.25s ease",
-                  }}
                   onMouseEnter={(event) => {
                     event.currentTarget.style.background = "#ffffff"
                     event.currentTarget.style.transform = "translateY(-2px)"
@@ -409,18 +298,7 @@ function Treatments() {
           ))}
         </div>
 
-        <div
-          style={{
-            position: "sticky",
-            top: "100px",
-            alignSelf: "start",
-            padding: "30px",
-            borderRadius: "18px",
-            background: "rgba(255,255,255,0.8)",
-            backdropFilter: "blur(12px)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
-          }}
-        >
+        <div className="booking-panel">
           {!selectedTreatment ? (
             <p style={{ color: "#777" }}>Select a treatment to begin booking</p>
           ) : (
@@ -428,19 +306,16 @@ function Treatments() {
               <h3 style={{ fontFamily: "var(--font-heading)" }}>{selectedTreatment.name}</h3>
               <p style={{ fontSize: "13px", color: "#666" }}>{selectedTreatment.description}</p>
 
-              <div style={{ display: "flex", gap: "10px", marginTop: "20px", flexWrap: "wrap" }}>
+              <div className="booking-options">
                 {selectedTreatment.prices.map((priceOption) => (
                   <button
+                    className="booking-option-button"
                     key={`${selectedTreatment.name}-${priceOption.time}`}
                     onClick={() => selectTreatment(selectedTreatment, priceOption)}
                     style={{
-                      padding: "8px 14px",
-                      borderRadius: "999px",
                       border: selectedOption === priceOption ? "1px solid #6f8f7a" : "1px solid #d6d6d6",
                       background: selectedOption === priceOption ? "#6f8f7a" : "#f7f7f7",
                       color: selectedOption === priceOption ? "#fff" : "#333",
-                      cursor: "pointer",
-                      transition: "all 0.25s ease",
                     }}
                   >
                     {priceOption.time} - {priceOption.price}
@@ -448,7 +323,7 @@ function Treatments() {
                 ))}
               </div>
 
-              <div style={{ marginTop: "25px", paddingTop: "15px", borderTop: "1px solid #eee" }}>
+              <div className="booking-summary">
                 <p>
                   <strong>Selected:</strong>
                   <br />
@@ -457,21 +332,8 @@ function Treatments() {
               </div>
 
               <button
+                className="booking-confirm-button"
                 onClick={bookTreatment}
-                style={{
-                  marginTop: "24px",
-                  width: "100%",
-                  padding: "14px 18px",
-                  borderRadius: "14px",
-                  border: "1px solid #6f8f7a",
-                  background: "#6f8f7a",
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  letterSpacing: "0.3px",
-                  transition: "all 0.25s ease",
-                }}
                 onMouseEnter={(event) => {
                   event.currentTarget.style.background = "#5f7f6c"
                   event.currentTarget.style.transform = "translateY(-2px)"
