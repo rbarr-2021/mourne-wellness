@@ -5,6 +5,30 @@ import "../styles/global.css"
 import hero from "../assets/hero.jpg"
 import profile from "../assets/profile.jpeg"
 import { Link } from "react-router-dom"
+import Seo from "../components/Seo"
+
+const aboutStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About Beata | Retreat by the Mournes",
+    url: "https://www.mourneretreat.co.uk/about",
+    description:
+      "Meet Beata and discover over 20 years of experience helping clients restore body and mind through expert therapeutic treatments.",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Beata",
+    worksFor: {
+      "@type": "HealthAndBeautyBusiness",
+      name: "Retreat by the Mournes",
+    },
+    jobTitle: "Massage and Wellness Therapist",
+    description:
+      "Beata brings over 20 years of experience in therapeutic treatments focused on restoring balance, easing tension and supporting wellbeing.",
+  },
+]
 
 function About() {
   const cards = [
@@ -24,6 +48,12 @@ function About() {
 
   return (
     <div className="about-page">
+      <Seo
+        title="About Beata | Retreat by the Mournes"
+        description="Meet Beata and discover over 20 years of experience helping clients restore body and mind through expert therapeutic treatments."
+        path="/about"
+        structuredData={aboutStructuredData}
+      />
       <div className="about-hero">
         <img src={hero} alt="Mourne landscape" />
       </div>

@@ -2,6 +2,50 @@ import "../styles/global.css"
 import "../styles/treatments.css"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
+import Seo from "../components/Seo"
+
+const treatmentsStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Treatments | Retreat by the Mournes",
+    url: "https://www.mourneretreat.co.uk/treatments",
+    description:
+      "Discover therapeutic massage, sports massage, facials and signature wellness treatments using Neal's Yard Remedies Organic products.",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    name: "Retreat by the Mournes Treatments",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Mourne Rocks Retreat & Recovery",
+          description:
+            "A signature two-hour treatment combining therapeutic sports massage, hot stones and a nourishing facial.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Nourishing & Therapeutic Facial",
+          description: "A deeply relaxing facial using Neal's Yard Remedies Organic skincare.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Sports Massage Therapy",
+          description: "Focused treatment to ease muscle tension and support recovery.",
+        },
+      },
+    ],
+  },
+]
 
 const treatments = [
   {
@@ -194,6 +238,12 @@ function Treatments() {
 
   return (
     <section className="treatments-page">
+      <Seo
+        title="Treatments | Retreat by the Mournes"
+        description="Discover therapeutic massage, sports massage, facials and signature wellness treatments using Neal's Yard Remedies Organic products."
+        path="/treatments"
+        structuredData={treatmentsStructuredData}
+      />
       <h1 className="treatments-title">Book Your Treatment</h1>
 
       <div className="treatments-layout">
