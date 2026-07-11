@@ -174,19 +174,22 @@ function Treatments() {
     })
   }
 
-  const bookTreatment = () => {
-    if (!selectedTreatment || !selectedOption) return
+  const openWhatsAppBooking = (treatment, priceOption) => {
+    if (!treatment || !priceOption) return
 
-    const message = `Hi Beata, I'd like to book: ${selectedTreatment.name} (${selectedOption.time}) - ${selectedOption.price}.`
+    const message = `Hi Beata, I'd like to book: ${treatment.name} (${priceOption.time}) - ${priceOption.price}.`
     window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
+  }
+
+  const bookTreatment = () => {
+    openWhatsAppBooking(selectedTreatment, selectedOption)
   }
 
   const bookFeaturedTreatment = () => {
     if (!featuredTreatment) return
 
     const featuredOption = featuredTreatment.prices[0]
-    const message = `Hi Beata, I'd like to book: ${featuredTreatment.name} (${featuredOption.time}) - ${featuredOption.price}.`
-    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
+    openWhatsAppBooking(featuredTreatment, featuredOption)
   }
 
   return (
@@ -194,7 +197,7 @@ function Treatments() {
       <h1 className="treatments-title">Book Your Treatment</h1>
 
       <div className="treatments-layout">
-        <div className="treatments-list">
+        <div className={`treatments-list ${selectedTreatment ? "has-mobile-booking-bar" : ""}`}>
           {featuredTreatment && (
             <section className="featured-treatment">
               <div className="featured-badge">
@@ -259,6 +262,7 @@ function Treatments() {
                     key={treatment.name}
                     id={treatment.name}
                     onClick={() => selectTreatment(treatment)}
+                    className={`treatment-card ${selectedTreatment === treatment ? "is-selected" : ""}`}
                     style={{
                       padding: "20px",
                       borderRadius: "14px",
@@ -349,6 +353,31 @@ function Treatments() {
           )}
         </div>
       </div>
+
+      {selectedTreatment && selectedOption && (
+        <div className="mobile-booking-bar" aria-live="polite">
+          <div className="mobile-booking-bar__content">
+            <div className="mobile-booking-bar__details">
+              <p className="mobile-booking-bar__eyebrow">Selected Treatment</p>
+              <p className="mobile-booking-bar__title">{selectedTreatment.name}</p>
+            </div>
+
+            <button
+              type="button"
+              className="mobile-booking-bar__button"
+              onClick={bookTreatment}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.background = "#5f7f6c"
+              }}
+              onMouseLeave={(event) => {
+                event.currentTarget.style.background = "#6f8f7a"
+              }}
+            >
+              Book via WhatsApp <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

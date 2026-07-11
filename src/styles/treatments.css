@@ -25,6 +25,15 @@
   min-width: 0;
 }
 
+.treatment-card {
+  position: relative;
+}
+
+.treatment-card.is-selected {
+  border: 1px solid rgba(198, 166, 100, 0.38);
+  box-shadow: 0 16px 40px rgba(54, 74, 64, 0.16) !important;
+}
+
 .featured-treatment {
   margin-bottom: 18px;
   padding: 32px;
@@ -174,6 +183,10 @@
   letter-spacing: 0.3px;
 }
 
+.mobile-booking-bar {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .treatments-layout {
     grid-template-columns: 1fr;
@@ -244,8 +257,7 @@
   }
 
   .booking-panel {
-    padding: 22px 18px;
-    border-radius: 16px;
+    display: none;
   }
 
   .booking-options {
@@ -254,5 +266,93 @@
 
   .booking-option-button {
     width: 100%;
+  }
+
+  .treatments-list.has-mobile-booking-bar {
+    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-booking-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 950;
+    display: block;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgba(250, 249, 247, 0.96), rgba(250, 249, 247, 0));
+    pointer-events: none;
+    animation: mobileBookingBarSlideUp 0.35s ease;
+  }
+
+  .mobile-booking-bar__content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 22px 22px 0 0;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.14);
+    border: 1px solid rgba(198, 166, 100, 0.18);
+    pointer-events: auto;
+  }
+
+  .mobile-booking-bar__details {
+    min-width: 0;
+  }
+
+  .mobile-booking-bar__eyebrow {
+    margin: 0 0 4px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+
+  .mobile-booking-bar__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 20px;
+    line-height: 1.25;
+    color: var(--text-dark);
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-booking-bar__button {
+    min-height: 48px;
+    width: 100%;
+    border: 1px solid #6f8f7a;
+    border-radius: 14px;
+    background: #6f8f7a;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-booking-bar,
+  .featured-primary-button,
+  .featured-secondary-button,
+  .booking-confirm-button,
+  .booking-option-button,
+  .treatment-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes mobileBookingBarSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
