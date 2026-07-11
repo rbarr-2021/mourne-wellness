@@ -42,9 +42,12 @@ function Contact() {
           Opening Hours
         </h3>
 
-        <p style={{ margin: "4px 0" }}>Monday - Friday: 9:00 AM - 7:00 PM</p>
-        <p style={{ margin: "4px 0" }}>Thursday: 9:00 AM - 8:00 PM</p>
-        <p style={{ margin: "4px 0" }}>Saturday: 8:30 AM - 4:00 PM</p>
+        <p style={{ margin: "4px 0" }}>Monday: 8:00am - 6:00pm</p>
+        <p style={{ margin: "4px 0" }}>Tuesday: 9:00am - 7:00pm</p>
+        <p style={{ margin: "4px 0" }}>Wednesday: Closed</p>
+        <p style={{ margin: "4px 0" }}>Thursday: 9:00am - 7:00pm</p>
+        <p style={{ margin: "4px 0" }}>Friday: 10:00am - 7:00pm</p>
+        <p style={{ margin: "4px 0" }}>Saturday: 9:00am - 12:00pm</p>
         <p style={{ margin: "4px 0" }}>Sunday: Closed</p>
 
         <p

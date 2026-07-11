@@ -16,10 +16,7 @@ const treatments = [
     category: "Signature Experiences",
     name: "Back, Neck, and Head with Hot Stone Massage",
     description: "Release tension and calm the mind with soothing hot stones.",
-    prices: [
-      { time: "60 min", price: "£65" },
-   
-    ],
+    prices: [{ time: "60 min", price: "£65" }],
   },
   {
     category: "Signature Experiences",
@@ -82,6 +79,13 @@ const treatments = [
     prices: [{ time: "90 min", price: "£80" }],
   },
   {
+    category: "Signature Treatment",
+    name: "Mourne Rocks Retreat & Recovery",
+    description:
+      "A restorative two-hour treatment designed to release muscular tension while nourishing the skin and promoting deep relaxation. This signature experience combines a back sports massage with hot stones to ease tightness and stiffness in the back, shoulders, and neck, together with a Nourishing & Therapeutic Facial using Neal's Yard Remedies Organic skincare. The facial includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp to help reduce puffiness, release tension, and restore a natural glow. Perfect for those seeking both therapeutic bodywork and a deeply relaxing facial experience in the tranquil surroundings of Retreat by the Mournes.",
+    prices: [{ time: "2 hours", price: "£115" }],
+  },
+  {
     category: "Nurture & Restore",
     name: "Gentle Back, Neck, and Head Massage",
     description: "Gentle treatment to ease tension and restore calm.",
@@ -92,6 +96,13 @@ const treatments = [
     name: "Head & Neck Massage with Essential Oils",
     description: "Calming massage to relax the mind and support restful sleep.",
     prices: [{ time: "60 min", price: "£55" }],
+  },
+  {
+    category: "Nurture & Restore",
+    name: "Nourishing & Therapeutic Facial",
+    description:
+      "A deeply relaxing facial designed to nourish your skin while easing tension and promoting overall wellbeing. Using Neal's Yard Remedies Organic skincare, this treatment includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp. The extended neck, shoulder, and head massage helps to ease stiffness, release built-up tension, and encourage deep relaxation. Perfect for reducing puffiness, relieving stress, and leaving your skin feeling hydrated, refreshed, and naturally radiant.",
+    prices: [{ time: "75 min", price: "£75" }],
   },
   {
     category: "Express Rituals",
@@ -127,12 +138,16 @@ const categories = [
   "Express Rituals",
 ]
 
+const featuredIntroduction =
+  "Our signature two-hour treatment combining therapeutic sports massage, soothing hot stone therapy and a deeply nourishing Neal's Yard Remedies Organic facial. Designed to restore tired muscles, calm the mind and leave you feeling completely refreshed."
+
 function Treatments() {
   const location = useLocation()
   const targetCategory = location.state?.targetCategory ?? null
   const defaultTreatment = targetCategory
     ? treatments.find((treatment) => treatment.category === targetCategory) ?? null
     : null
+  const featuredTreatment = treatments.find((treatment) => treatment.name === "Mourne Rocks Retreat & Recovery")
 
   const [manualSelection, setManualSelection] = useState(null)
   const selectionMatchesCategory = manualSelection?.category === targetCategory
@@ -150,10 +165,26 @@ function Treatments() {
     window.scrollTo({ top: y, behavior: "smooth" })
   }, [targetCategory])
 
+  const selectTreatment = (treatment, priceOption = treatment.prices[0]) => {
+    setManualSelection({
+      category: targetCategory,
+      treatment,
+      option: priceOption,
+    })
+  }
+
   const bookTreatment = () => {
     if (!selectedTreatment || !selectedOption) return
 
     const message = `Hi Beata, I'd like to book: ${selectedTreatment.name} (${selectedOption.time}) - ${selectedOption.price}.`
+    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
+  }
+
+  const bookFeaturedTreatment = () => {
+    if (!featuredTreatment) return
+
+    const featuredOption = featuredTreatment.prices[0]
+    const message = `Hi Beata, I'd like to book: ${featuredTreatment.name} (${featuredOption.time}) - ${featuredOption.price}.`
     window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
   }
 
@@ -166,7 +197,7 @@ function Treatments() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, 0.8fr)",
           gap: "40px",
           maxWidth: "1100px",
           margin: "0 auto",
@@ -174,6 +205,158 @@ function Treatments() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          {featuredTreatment && (
+            <section
+              style={{
+                marginBottom: "18px",
+                padding: "32px",
+                borderRadius: "24px",
+                background: "linear-gradient(135deg, rgba(236, 232, 225, 0.75), rgba(255,255,255,0.95))",
+                border: "1px solid rgba(198, 166, 100, 0.38)",
+                boxShadow: "0 18px 45px rgba(0,0,0,0.06)",
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 14px",
+                  borderRadius: "999px",
+                  background: "rgba(255,255,255,0.72)",
+                  border: "1px solid rgba(198, 166, 100, 0.35)",
+                  color: "var(--text-dark)",
+                  fontSize: "12px",
+                  letterSpacing: "0.8px",
+                  textTransform: "uppercase",
+                  fontWeight: "600",
+                }}
+              >
+                <span aria-hidden="true">☆</span>
+                Signature Treatment
+              </div>
+
+              <div
+                style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
+                  justifyContent: "space-between",
+                  gap: "12px",
+                }}
+              >
+                <h2
+                  style={{
+                    margin: 0,
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "clamp(30px, 4vw, 42px)",
+                    lineHeight: "1.12",
+                    color: "var(--text-dark)",
+                  }}
+                >
+                  {featuredTreatment.name}
+                </h2>
+                <p
+                  style={{
+                    margin: 0,
+                    fontFamily: "var(--font-body)",
+                    fontSize: "clamp(16px, 2vw, 18px)",
+                    color: "var(--primary-dark)",
+                    letterSpacing: "0.3px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {featuredTreatment.prices[0].time} • {featuredTreatment.prices[0].price}
+                </p>
+              </div>
+
+              <p
+                style={{
+                  marginTop: "18px",
+                  marginBottom: "16px",
+                  fontSize: "16px",
+                  lineHeight: "1.8",
+                  color: "var(--text-light)",
+                }}
+              >
+                {featuredIntroduction}
+              </p>
+
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "15px",
+                  lineHeight: "1.85",
+                  color: "var(--text-light)",
+                }}
+              >
+                {featuredTreatment.description}
+              </p>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "14px",
+                  marginTop: "26px",
+                }}
+              >
+                <button
+                  onClick={bookFeaturedTreatment}
+                  style={{
+                    padding: "14px 24px",
+                    borderRadius: "14px",
+                    border: "1px solid #6f8f7a",
+                    background: "#6f8f7a",
+                    color: "#fff",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    letterSpacing: "0.3px",
+                    transition: "all 0.25s ease",
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.background = "#5f7f6c"
+                    event.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.background = "#6f8f7a"
+                    event.currentTarget.style.transform = "translateY(0)"
+                  }}
+                >
+                  Book This Treatment
+                </button>
+
+                <button
+                  onClick={() => selectTreatment(featuredTreatment)}
+                  style={{
+                    padding: "14px 24px",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(111, 143, 122, 0.28)",
+                    background: "rgba(255,255,255,0.7)",
+                    color: "var(--text-dark)",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    letterSpacing: "0.3px",
+                    transition: "all 0.25s ease",
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.background = "#ffffff"
+                    event.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.background = "rgba(255,255,255,0.7)"
+                    event.currentTarget.style.transform = "translateY(0)"
+                  }}
+                >
+                  View In Booking Panel
+                </button>
+              </div>
+            </section>
+          )}
+
           {categories.map((category) => (
             <div key={category}>
               <h2 id={category} style={{ margin: "20px 0 10px", fontFamily: "var(--font-heading)" }}>
@@ -186,13 +369,7 @@ function Treatments() {
                   <div
                     key={treatment.name}
                     id={treatment.name}
-                    onClick={() => {
-                      setManualSelection({
-                        category: targetCategory,
-                        treatment,
-                        option: treatment.prices[0],
-                      })
-                    }}
+                    onClick={() => selectTreatment(treatment)}
                     style={{
                       padding: "20px",
                       borderRadius: "14px",
@@ -255,13 +432,7 @@ function Treatments() {
                 {selectedTreatment.prices.map((priceOption) => (
                   <button
                     key={`${selectedTreatment.name}-${priceOption.time}`}
-                    onClick={() =>
-                      setManualSelection({
-                        category: targetCategory,
-                        treatment: selectedTreatment,
-                        option: priceOption,
-                      })
-                    }
+                    onClick={() => selectTreatment(selectedTreatment, priceOption)}
                     style={{
                       padding: "8px 14px",
                       borderRadius: "999px",
