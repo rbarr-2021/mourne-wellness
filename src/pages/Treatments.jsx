@@ -262,6 +262,15 @@ function Treatments() {
                     key={treatment.name}
                     id={treatment.name}
                     onClick={() => selectTreatment(treatment)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault()
+                        selectTreatment(treatment)
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={selectedTreatment === treatment}
                     className={`treatment-card ${selectedTreatment === treatment ? "is-selected" : ""}`}
                     style={{
                       padding: "20px",
@@ -290,7 +299,11 @@ function Treatments() {
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
-                      <span style={{ opacity: 0.4 }}>&rarr;</span>
+                      {selectedTreatment === treatment ? (
+                        <span className="treatment-card__selected-badge">&#10003; Selected</span>
+                      ) : (
+                        <span style={{ opacity: 0.4 }}>&rarr;</span>
+                      )}
                     </div>
                     <p style={{ fontSize: "12px", opacity: 0.6 }}>
                       {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
@@ -358,8 +371,11 @@ function Treatments() {
         <div className="mobile-booking-bar" aria-live="polite">
           <div className="mobile-booking-bar__content">
             <div className="mobile-booking-bar__details">
-              <p className="mobile-booking-bar__eyebrow">Selected Treatment</p>
+              <p className="mobile-booking-bar__eyebrow">Ready to Book</p>
               <p className="mobile-booking-bar__title">{selectedTreatment.name}</p>
+              <p className="mobile-booking-bar__meta">
+                {selectedOption.time} &bull; {selectedOption.price}
+              </p>
             </div>
 
             <button

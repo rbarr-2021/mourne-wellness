@@ -4,12 +4,12 @@ import { Link } from "react-router-dom"
 
 function Contact() {
   const openingHours = [
-    "Monday: 8:00am - 6:00pm",
-    "Tuesday: 9:00am - 7:00pm",
+    "Monday: 10:00am - 9:00pm",
+    "Tuesday: 10:00am - 9:00pm",
     "Wednesday: Closed",
-    "Thursday: 9:00am - 7:00pm",
-    "Friday: 10:00am - 7:00pm",
-    "Saturday: 9:00am - 12:00pm",
+    "Thursday: 10:00am - 9:00pm",
+    "Friday: 10:00am - 4:00pm",
+    "Saturday: 9:00am - 1:00pm",
     "Sunday: Closed",
   ]
 
@@ -27,6 +27,18 @@ function Contact() {
               {item}
             </p>
           ))}
+          <div style={{ marginTop: "14px" }}>
+            <p style={{ margin: "0 0 6px", color: "var(--text-dark)", fontWeight: "500" }}>
+              Can't see a time that works for you?
+            </p>
+            <p style={{ margin: 0, fontSize: "15px", lineHeight: "1.75" }}>
+              We understand that life can be busy. If our opening hours don't suit, please get in touch and
+              we'll do our very best to arrange an appointment that fits your schedule.
+            </p>
+            <p style={{ margin: "8px 0 0", fontSize: "14px", lineHeight: "1.7", color: "var(--text-light)" }}>
+              Flexible appointment times may be available on request.
+            </p>
+          </div>
           <p style={{ margin: "8px 0 0", fontSize: "13px", opacity: 0.8 }}>* By appointment only</p>
         </div>
 

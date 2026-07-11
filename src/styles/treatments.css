@@ -34,6 +34,23 @@
   box-shadow: 0 16px 40px rgba(54, 74, 64, 0.16) !important;
 }
 
+.treatment-card__selected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  animation: treatmentSelectedFadeIn 0.28s ease;
+}
+
 .featured-treatment {
   margin-bottom: 18px;
   padding: 32px;
@@ -319,6 +336,15 @@
     overflow-wrap: anywhere;
   }
 
+  .mobile-booking-bar__meta {
+    margin: 6px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--primary-dark);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
   .mobile-booking-bar__button {
     min-height: 48px;
     width: 100%;
@@ -339,7 +365,8 @@
   .featured-secondary-button,
   .booking-confirm-button,
   .booking-option-button,
-  .treatment-card {
+  .treatment-card,
+  .treatment-card__selected-badge {
     animation: none !important;
     transition: none !important;
   }
@@ -349,6 +376,18 @@
   from {
     opacity: 0;
     transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes treatmentSelectedFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
   }
 
   to {
