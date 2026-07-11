@@ -6,6 +6,7 @@ import hero from "../assets/hero.jpg"
 import profile from "../assets/profile.jpeg"
 import { Link } from "react-router-dom"
 import Seo from "../components/Seo"
+import WhatsAppButton from "../components/WhatsAppButton"
 
 const aboutStructuredData = [
   {
@@ -117,6 +118,8 @@ function About() {
           </div>
         </div>
       </div>
+
+      <WhatsAppButton />
     </div>
   )
 }

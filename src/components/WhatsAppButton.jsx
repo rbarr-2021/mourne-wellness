@@ -1,7 +1,14 @@
 import "./WhatsAppButton.css"
 import { FaWhatsapp } from "react-icons/fa"
+import { useLocation } from "react-router-dom"
 
 function WhatsAppButton() {
+  const location = useLocation()
+
+  if (location.pathname === "/treatments") {
+    return null
+  }
+
   return (
     <a
       href="https://wa.me/447591383215"
