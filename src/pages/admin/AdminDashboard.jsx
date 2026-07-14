@@ -7,8 +7,8 @@ function AdminDashboard() {
       <div className="admin-panel">
         <h2 className="admin-panel__title">Dashboard</h2>
         <p className="section-copy admin-panel__copy">
-          Phase 1 establishes the secure foundation for concierge bookings. Booking requests, calendar logic and
-          payment workflows will be added in later phases.
+          The administrator dashboard now manages business configuration and treatments centrally, ready for the
+          availability engine and concierge booking workflow in later phases.
         </p>
 
         <div className="admin-placeholder-grid">
@@ -17,12 +17,12 @@ function AdminDashboard() {
             <p className="section-copy">Administrator sign-in, session persistence and protected routing are now in place.</p>
           </article>
           <article className="admin-placeholder-card">
-            <h3>Database foundation</h3>
-            <p className="section-copy">Business settings, treatments and availability exceptions are prepared via SQL migrations.</p>
+            <h3>Business settings</h3>
+            <p className="section-copy">Opening hours, booking rules and deposit defaults can now be managed without editing code.</p>
           </article>
           <article className="admin-placeholder-card">
-            <h3>Next phase</h3>
-            <p className="section-copy">Booking requests and availability management can now be built on top of this secure structure.</p>
+            <h3>Treatments</h3>
+            <p className="section-copy">Draft, active and inactive treatments now live in Supabase as the source of truth for the website.</p>
           </article>
         </div>
       </div>

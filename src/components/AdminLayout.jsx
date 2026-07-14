@@ -5,9 +5,10 @@ import Seo from "./Seo"
 
 const adminLinks = [
   { to: "/admin", label: "Dashboard", end: true },
+  { to: "/admin/settings", label: "Business Settings" },
+  { to: "/admin/treatments", label: "Treatments" },
   { to: "/admin/availability", label: "Availability" },
   { to: "/admin/bookings", label: "Bookings" },
-  { to: "/admin/settings", label: "Settings" },
 ]
 
 function AdminLayout() {

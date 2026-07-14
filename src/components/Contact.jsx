@@ -1,17 +1,24 @@
 import "../styles/global.css"
+import { useEffect, useState } from "react"
 import mapImg from "../assets/location2.PNG"
 import { Link } from "react-router-dom"
+import { DEFAULT_OPENING_HOURS, formatOpeningHoursList } from "../lib/businessSettings"
+import { getBusinessSettings } from "../lib/supabase/database"
 
 function Contact() {
-  const openingHours = [
-    "Monday: 10:00am - 9:00pm",
-    "Tuesday: 10:00am - 9:00pm",
-    "Wednesday: Closed",
-    "Thursday: 10:00am - 9:00pm",
-    "Friday: 10:00am - 4:00pm",
-    "Saturday: 9:00am - 1:00pm",
-    "Sunday: Closed",
-  ]
+  const [openingHours, setOpeningHours] = useState(formatOpeningHoursList(DEFAULT_OPENING_HOURS))
+
+  useEffect(() => {
+    const loadBusinessSettings = async () => {
+      const { data } = await getBusinessSettings()
+
+      if (data?.opening_hours) {
+        setOpeningHours(formatOpeningHoursList(data.opening_hours))
+      }
+    }
+
+    loadBusinessSettings()
+  }, [])
 
   return (
     <section id="contact" className="site-section" style={{ background: "var(--bg-main)" }}>
@@ -29,11 +36,11 @@ function Contact() {
           ))}
           <div style={{ marginTop: "14px" }}>
             <p style={{ margin: "0 0 6px", color: "var(--text-dark)", fontWeight: "500" }}>
-              Can't see a time that works for you?
+              Can&apos;t see a time that works for you?
             </p>
             <p style={{ margin: 0, fontSize: "15px", lineHeight: "1.75" }}>
-              We understand that life can be busy. If our opening hours don't suit, please get in touch and
-              we'll do our very best to arrange an appointment that fits your schedule.
+              We understand that life can be busy. If our opening hours don&apos;t suit, please get in touch and
+              we&apos;ll do our very best to arrange an appointment that fits your schedule.
             </p>
             <p style={{ margin: "8px 0 0", fontSize: "14px", lineHeight: "1.7", color: "var(--text-light)" }}>
               Flexible appointment times may be available on request.

@@ -1,203 +1,91 @@
 import "../styles/global.css"
 import "../styles/treatments.css"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useLocation } from "react-router-dom"
 import Seo from "../components/Seo"
+import { listPublicTreatments } from "../lib/supabase/database"
+import {
+  buildTreatmentsStructuredData,
+  FACIAL_TREATMENT_NAME,
+  FEATURED_INTRODUCTION,
+  FEATURED_TREATMENT_NAME,
+  LEGACY_TREATMENTS,
+  mapTreatmentToPublicTreatment,
+} from "../lib/treatments"
 
-const treatmentsStructuredData = [
-  {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Treatments | Retreat by the Mournes",
-    url: "https://www.mourneretreat.co.uk/treatments",
-    description:
-      "Discover therapeutic massage, sports massage, facials and signature wellness treatments using Neal's Yard Remedies Organic products.",
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "OfferCatalog",
-    name: "Retreat by the Mournes Treatments",
-    itemListElement: [
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Mourne Rocks Retreat & Recovery",
-          description:
-            "A signature two-hour treatment combining therapeutic sports massage, hot stones and a nourishing facial.",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Nourishing & Therapeutic Facial",
-          description: "A deeply relaxing facial using Neal's Yard Remedies Organic skincare.",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Sports Massage Therapy",
-          description: "Focused treatment to ease muscle tension and support recovery.",
-        },
-      },
-    ],
-  },
-]
-
-const treatments = [
-  {
-    category: "Signature Experiences",
-    name: "Neck, Head, and Face Massage",
-    description: "Melt away tension and restore a natural glow with a calming massage for the neck, head, and face.",
-    prices: [
-      { time: "60 min", price: "£55" },
-      { time: "90 min", price: "£80" },
-    ],
-  },
-  {
-    category: "Signature Experiences",
-    name: "Back, Neck, and Head with Hot Stone Massage",
-    description: "Release tension and calm the mind with soothing hot stones.",
-    prices: [{ time: "60 min", price: "£65" }],
-  },
-  {
-    category: "Signature Experiences",
-    name: "Full Body Massage (Lomi Lomi Inspired)",
-    description: "Flowing, rhythmic movements designed to restore balance and relax the body.",
-    prices: [
-      { time: "60 min", price: "£55" },
-      { time: "90 min", price: "£80" },
-    ],
-  },
-  {
-    category: "Signature Experiences",
-    name: "Full Body Hot Stone Massage",
-    description: "Deep relaxation using heated stones to ease muscle tension.",
-    prices: [{ time: "70 min", price: "£70" }],
-  },
-  {
-    category: "Signature Experiences",
-    name: "Nurturing Full Body Pregnancy Massage",
-    description: "A soothing massage designed to support relaxation and wellbeing during pregnancy.",
-    prices: [{ time: "70 min", price: "£60" }],
-  },
-  {
-    category: "Specialist Recovery",
-    name: "Therapeutic Deep Tissue Full Body Therapy",
-    description: "Target deep muscle tension and restore balance. Best for stress and recovery.",
-    prices: [
-      { time: "60 min", price: "£55" },
-      { time: "90 min", price: "£80" },
-    ],
-  },
-  {
-    category: "Specialist Recovery",
-    name: "Sports Massage Therapy",
-    description: "Focused treatment to ease muscle tension and support recovery.",
-    prices: [
-      { time: "60 min", price: "£55" },
-      { time: "90 min", price: "£80" },
-    ],
-  },
-  {
-    category: "Specialist Recovery",
-    name: "Myofascial Release Therapy",
-    description: "Restorative treatment to release deep tension and improve mobility.",
-    prices: [
-      { time: "60 min", price: "£55" },
-      { time: "90 min", price: "£80" },
-    ],
-  },
-  {
-    category: "Specialist Recovery",
-    name: "Race Day Reset",
-    description: "Hot and cold therapy with targeted muscle work for recovery.",
-    prices: [{ time: "70 min", price: "£70" }],
-  },
-  {
-    category: "Signature Treatment",
-    name: "Mourne Recovery Therapy",
-    description: "A tailored blend of sports massage and myofascial release for full-body reset.",
-    prices: [{ time: "90 min", price: "£80" }],
-  },
-  {
-    category: "Signature Treatment",
-    name: "Mourne Rocks Retreat & Recovery",
-    description:
-      "A restorative two-hour treatment designed to release muscular tension while nourishing the skin and promoting deep relaxation. This signature experience combines a back sports massage with hot stones to ease tightness and stiffness in the back, shoulders, and neck, together with a Nourishing & Therapeutic Facial using Neal's Yard Remedies Organic skincare. The facial includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp to help reduce puffiness, release tension, and restore a natural glow. Perfect for those seeking both therapeutic bodywork and a deeply relaxing facial experience in the tranquil surroundings of Retreat by the Mournes.",
-    prices: [{ time: "2 hours", price: "£115" }],
-  },
-  {
-    category: "Nurture & Restore",
-    name: "Gentle Back, Neck, and Head Massage",
-    description: "Gentle treatment to ease tension and restore calm.",
-    prices: [{ time: "60 min", price: "£55" }],
-  },
-  {
-    category: "Nurture & Restore",
-    name: "Head & Neck Massage with Essential Oils",
-    description: "Calming massage to relax the mind and support restful sleep.",
-    prices: [{ time: "60 min", price: "£55" }],
-  },
-  {
-    category: "Nurture & Restore",
-    name: "Nourishing & Therapeutic Facial",
-    description:
-      "A deeply relaxing facial designed to nourish your skin while easing tension and promoting overall wellbeing. Using Neal's Yard Remedies Organic skincare, this treatment includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp. The extended neck, shoulder, and head massage helps to ease stiffness, release built-up tension, and encourage deep relaxation. Perfect for reducing puffiness, relieving stress, and leaving your skin feeling hydrated, refreshed, and naturally radiant.",
-    prices: [{ time: "75 min", price: "£75" }],
-  },
-  {
-    category: "Express Rituals",
-    name: "Tension Release Back Therapy",
-    description: "Quick treatment to relieve back, neck, and shoulder tension.",
-    prices: [{ time: "30 min", price: "£30" }],
-  },
-  {
-    category: "Express Rituals",
-    name: "Revitalizing Head & Face Massage",
-    description: "Relaxing treatment to ease tension and refresh your skin.",
-    prices: [{ time: "30 min", price: "£30" }],
-  },
-  {
-    category: "Express Rituals",
-    name: "Grounding Foot Ritual",
-    description: "Revives tired feet and restores comfort.",
-    prices: [{ time: "30 min", price: "£30" }],
-  },
-  {
-    category: "Express Rituals",
-    name: "Grounding Hand Ritual",
-    description: "Relieves tension in hands and wrists.",
-    prices: [{ time: "30 min", price: "£30" }],
-  },
-]
-
-const categories = [
-  "Signature Experiences",
-  "Specialist Recovery",
-  "Signature Treatment",
-  "Nurture & Restore",
-  "Express Rituals",
-]
-
-const featuredIntroduction =
-  "Our signature two-hour treatment combining therapeutic sports massage, soothing hot stone therapy and a deeply nourishing Neal's Yard Remedies Organic facial. Designed to restore tired muscles, calm the mind and leave you feeling completely refreshed."
+const fallbackTreatments = LEGACY_TREATMENTS.map(mapTreatmentToPublicTreatment)
 
 function Treatments() {
   const location = useLocation()
   const targetCategory = location.state?.targetCategory ?? null
-  const defaultTreatment = targetCategory
-    ? treatments.find((treatment) => treatment.category === targetCategory) ?? null
-    : null
-  const featuredTreatment = treatments.find((treatment) => treatment.name === "Mourne Rocks Retreat & Recovery")
-
+  const [treatments, setTreatments] = useState(fallbackTreatments)
   const [manualSelection, setManualSelection] = useState(null)
-  const selectionMatchesCategory = manualSelection?.category === targetCategory
-  const selectedTreatment = selectionMatchesCategory ? manualSelection.treatment : defaultTreatment
-  const selectedOption = selectionMatchesCategory ? manualSelection.option : defaultTreatment?.prices[0] ?? null
+
+  useEffect(() => {
+    const loadTreatments = async () => {
+      const { data } = await listPublicTreatments()
+
+      if (data?.length) {
+        setTreatments(data.map(mapTreatmentToPublicTreatment))
+      }
+    }
+
+    loadTreatments()
+  }, [])
+
+  const structuredData = useMemo(
+    () => buildTreatmentsStructuredData(treatments.length ? treatments : fallbackTreatments),
+    [treatments]
+  )
+
+  const featuredTreatment = useMemo(
+    () =>
+      treatments.find((treatment) => treatment.name === FEATURED_TREATMENT_NAME) ??
+      treatments.find((treatment) => treatment.featured) ??
+      null,
+    [treatments]
+  )
+
+  const defaultTreatment = useMemo(() => {
+    if (!targetCategory) return null
+
+    return treatments.find((treatment) => treatment.category === targetCategory) ?? null
+  }, [targetCategory, treatments])
+
+  const categoryGroups = useMemo(() => {
+    const groups = []
+    const byCategory = new Map()
+
+    treatments.forEach((treatment) => {
+      if (!byCategory.has(treatment.category)) {
+        const group = { category: treatment.category, treatments: [] }
+        byCategory.set(treatment.category, group)
+        groups.push(group)
+      }
+
+      byCategory.get(treatment.category).treatments.push(treatment)
+    })
+
+    return groups
+  }, [treatments])
+
+  const selectedTreatment = useMemo(() => {
+    if (manualSelection?.treatmentId) {
+      return treatments.find((treatment) => treatment.id === manualSelection.treatmentId) ?? defaultTreatment
+    }
+
+    return defaultTreatment
+  }, [defaultTreatment, manualSelection?.treatmentId, treatments])
+
+  const selectedOption = useMemo(() => {
+    if (!selectedTreatment) return null
+
+    if (manualSelection?.optionId) {
+      return selectedTreatment.prices.find((option) => option.id === manualSelection.optionId) ?? selectedTreatment.prices[0] ?? null
+    }
+
+    return selectedTreatment.prices[0] ?? null
+  }, [manualSelection?.optionId, selectedTreatment])
 
   useEffect(() => {
     if (!targetCategory) return
@@ -212,14 +100,13 @@ function Treatments() {
 
   const selectTreatment = (treatment, priceOption = treatment.prices[0]) => {
     setManualSelection({
-      category: targetCategory,
-      treatment,
-      option: priceOption,
+      treatmentId: treatment.id,
+      optionId: priceOption?.id ?? null,
     })
   }
 
   const openWhatsAppBooking = (treatment, priceOption) => {
-    if (!treatment || !priceOption) return
+    if (!treatment || !priceOption || treatment.bookingEnabled === false) return
 
     const message = `Hi Beata, I'd like to book: ${treatment.name} (${priceOption.time}) - ${priceOption.price}.`
     window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
@@ -232,8 +119,7 @@ function Treatments() {
   const bookFeaturedTreatment = () => {
     if (!featuredTreatment) return
 
-    const featuredOption = featuredTreatment.prices[0]
-    openWhatsAppBooking(featuredTreatment, featuredOption)
+    openWhatsAppBooking(featuredTreatment, featuredTreatment.prices[0] ?? null)
   }
 
   return (
@@ -242,16 +128,15 @@ function Treatments() {
         title="Treatments | Retreat by the Mournes"
         description="Discover therapeutic massage, sports massage, facials and signature wellness treatments using Neal's Yard Remedies Organic products."
         path="/treatments"
-        structuredData={treatmentsStructuredData}
+        structuredData={structuredData}
       />
       <h1 className="treatments-title">Book Your Treatment</h1>
 
       <div className="treatments-layout">
         <div className={`treatments-list ${selectedTreatment ? "has-mobile-booking-bar" : ""}`}>
-          {featuredTreatment && (
+          {featuredTreatment ? (
             <section className="featured-treatment">
               <div className="featured-label-row">
-                <span aria-hidden="true">☆</span>
                 Signature Treatment
                 <span className="treatment-new-badge">New</span>
               </div>
@@ -259,115 +144,92 @@ function Treatments() {
               <div className="featured-header">
                 <h2 className="featured-name">{featuredTreatment.name}</h2>
                 <p className="featured-meta">
-                  {featuredTreatment.prices[0].time} • {featuredTreatment.prices[0].price}
+                  {featuredTreatment.prices[0]?.time} • {featuredTreatment.prices[0]?.price}
                 </p>
               </div>
 
-              <p className="featured-intro">{featuredIntroduction}</p>
+              <p className="featured-intro">{FEATURED_INTRODUCTION}</p>
               <p className="featured-description">{featuredTreatment.description}</p>
 
               <div className="featured-actions">
-                <button
-                  className="featured-primary-button"
-                  onClick={bookFeaturedTreatment}
-                  onMouseEnter={(event) => {
-                    event.currentTarget.style.background = "#5f7f6c"
-                    event.currentTarget.style.transform = "translateY(-2px)"
-                  }}
-                  onMouseLeave={(event) => {
-                    event.currentTarget.style.background = "#6f8f7a"
-                    event.currentTarget.style.transform = "translateY(0)"
-                  }}
-                >
-                  Book This Treatment
+                <button className="featured-primary-button" onClick={bookFeaturedTreatment} disabled={featuredTreatment.bookingEnabled === false}>
+                  {featuredTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Book This Treatment"}
                 </button>
 
-                <button
-                  className="featured-secondary-button"
-                  onClick={() => selectTreatment(featuredTreatment)}
-                  onMouseEnter={(event) => {
-                    event.currentTarget.style.background = "#ffffff"
-                    event.currentTarget.style.transform = "translateY(-2px)"
-                  }}
-                  onMouseLeave={(event) => {
-                    event.currentTarget.style.background = "rgba(255,255,255,0.7)"
-                    event.currentTarget.style.transform = "translateY(0)"
-                  }}
-                >
+                <button className="featured-secondary-button" onClick={() => selectTreatment(featuredTreatment)}>
                   View In Booking Panel
                 </button>
               </div>
             </section>
-          )}
+          ) : null}
 
-          {categories.map((category) => (
-            <div key={category}>
-              <h2 id={category} style={{ margin: "20px 0 10px", fontFamily: "var(--font-heading)" }}>
-                {category}
+          {categoryGroups.map((group) => (
+            <div key={group.category}>
+              <h2 id={group.category} style={{ margin: "20px 0 10px", fontFamily: "var(--font-heading)" }}>
+                {group.category}
               </h2>
 
-              {treatments
-                .filter((treatment) => treatment.category === category)
-                .map((treatment) => (
-                  <div
-                    key={treatment.name}
-                    id={treatment.name}
-                    onClick={() => selectTreatment(treatment)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault()
-                        selectTreatment(treatment)
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    aria-pressed={selectedTreatment === treatment}
-                    className={`treatment-card ${selectedTreatment === treatment ? "is-selected" : ""}`}
-                    style={{
-                      padding: "20px",
-                      borderRadius: "14px",
-                      background: selectedTreatment === treatment ? "#6f8f7a" : "#f5f5f5",
-                      color: selectedTreatment === treatment ? "#fff" : "#2a2a2a",
-                      cursor: "pointer",
-                      boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
-                      transition: "all 0.25s ease",
-                      transform: "translateY(0) scale(1)",
-                    }}
-                    onMouseEnter={(event) => {
-                      if (selectedTreatment !== treatment) {
-                        event.currentTarget.style.transform = "translateY(-6px) scale(1.02)"
-                        event.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,0.10)"
-                        event.currentTarget.style.background = "#eeeeee"
-                      }
-                    }}
-                    onMouseLeave={(event) => {
-                      if (selectedTreatment !== treatment) {
-                        event.currentTarget.style.transform = "translateY(0) scale(1)"
-                        event.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.04)"
-                        event.currentTarget.style.background = "#f5f5f5"
-                      }
-                    }}
-                  >
-                    {treatment.name === "Nourishing & Therapeutic Facial" && (
-                      <div className="treatment-card__eyebrow-row">
-                        <span className="treatment-card__eyebrow">Facial Treatment</span>
-                        <span className="treatment-new-badge">New</span>
-                      </div>
-                    )}
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
-                      {selectedTreatment === treatment ? (
-                        <span className="treatment-card__selected-badge">&#10003; Selected</span>
-                      ) : (
-                        <span style={{ opacity: 0.4 }}>&rarr;</span>
-                      )}
+              {group.treatments.map((treatment) => (
+                <div
+                  key={treatment.id}
+                  id={treatment.name}
+                  onClick={() => selectTreatment(treatment)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault()
+                      selectTreatment(treatment)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={selectedTreatment?.id === treatment.id}
+                  className={`treatment-card ${selectedTreatment?.id === treatment.id ? "is-selected" : ""}`}
+                  style={{
+                    padding: "20px",
+                    borderRadius: "14px",
+                    background: selectedTreatment?.id === treatment.id ? "#6f8f7a" : "#f5f5f5",
+                    color: selectedTreatment?.id === treatment.id ? "#fff" : "#2a2a2a",
+                    cursor: "pointer",
+                    boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
+                    transition: "all 0.25s ease",
+                    transform: "translateY(0) scale(1)",
+                  }}
+                  onMouseEnter={(event) => {
+                    if (selectedTreatment?.id !== treatment.id) {
+                      event.currentTarget.style.transform = "translateY(-6px) scale(1.02)"
+                      event.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,0.10)"
+                      event.currentTarget.style.background = "#eeeeee"
+                    }
+                  }}
+                  onMouseLeave={(event) => {
+                    if (selectedTreatment?.id !== treatment.id) {
+                      event.currentTarget.style.transform = "translateY(0) scale(1)"
+                      event.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.04)"
+                      event.currentTarget.style.background = "#f5f5f5"
+                    }
+                  }}
+                >
+                  {treatment.name === FACIAL_TREATMENT_NAME ? (
+                    <div className="treatment-card__eyebrow-row">
+                      <span className="treatment-card__eyebrow">Facial Treatment</span>
+                      <span className="treatment-new-badge">New</span>
                     </div>
-                    <p style={{ fontSize: "12px", opacity: 0.6 }}>
-                      {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
-                    </p>
-                    <p style={{ fontSize: "13px", opacity: 0.8 }}>{treatment.description}</p>
+                  ) : null}
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
+                    {selectedTreatment?.id === treatment.id ? (
+                      <span className="treatment-card__selected-badge">&#10003; Selected</span>
+                    ) : (
+                      <span style={{ opacity: 0.4 }}>&rarr;</span>
+                    )}
                   </div>
-                ))}
+                  <p style={{ fontSize: "12px", opacity: 0.6 }}>
+                    {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
+                  </p>
+                  <p style={{ fontSize: "13px", opacity: 0.8 }}>{treatment.description}</p>
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -384,12 +246,12 @@ function Treatments() {
                 {selectedTreatment.prices.map((priceOption) => (
                   <button
                     className="booking-option-button"
-                    key={`${selectedTreatment.name}-${priceOption.time}`}
+                    key={`${selectedTreatment.id}-${priceOption.id}`}
                     onClick={() => selectTreatment(selectedTreatment, priceOption)}
                     style={{
-                      border: selectedOption === priceOption ? "1px solid #6f8f7a" : "1px solid #d6d6d6",
-                      background: selectedOption === priceOption ? "#6f8f7a" : "#f7f7f7",
-                      color: selectedOption === priceOption ? "#fff" : "#333",
+                      border: selectedOption?.id === priceOption.id ? "1px solid #6f8f7a" : "1px solid #d6d6d6",
+                      background: selectedOption?.id === priceOption.id ? "#6f8f7a" : "#f7f7f7",
+                      color: selectedOption?.id === priceOption.id ? "#fff" : "#333",
                     }}
                   >
                     {priceOption.time} - {priceOption.price}
@@ -403,28 +265,20 @@ function Treatments() {
                   <br />
                   {selectedOption?.time} - {selectedOption?.price}
                 </p>
+                {selectedTreatment.bookingEnabled === false ? (
+                  <p style={{ marginBottom: 0, color: "#8a4d4d" }}>This treatment is visible on the site but not currently open for booking.</p>
+                ) : null}
               </div>
 
-              <button
-                className="booking-confirm-button"
-                onClick={bookTreatment}
-                onMouseEnter={(event) => {
-                  event.currentTarget.style.background = "#5f7f6c"
-                  event.currentTarget.style.transform = "translateY(-2px)"
-                }}
-                onMouseLeave={(event) => {
-                  event.currentTarget.style.background = "#6f8f7a"
-                  event.currentTarget.style.transform = "translateY(0)"
-                }}
-              >
-                Confirm & Book via WhatsApp
+              <button className="booking-confirm-button" onClick={bookTreatment} disabled={selectedTreatment.bookingEnabled === false}>
+                {selectedTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Confirm & Book via WhatsApp"}
               </button>
             </>
           )}
         </div>
       </div>
 
-      {selectedTreatment && selectedOption && (
+      {selectedTreatment && selectedOption ? (
         <div className="mobile-booking-bar" aria-live="polite">
           <div className="mobile-booking-bar__content">
             <div className="mobile-booking-bar__details">
@@ -435,22 +289,13 @@ function Treatments() {
               </p>
             </div>
 
-            <button
-              type="button"
-              className="mobile-booking-bar__button"
-              onClick={bookTreatment}
-              onMouseEnter={(event) => {
-                event.currentTarget.style.background = "#5f7f6c"
-              }}
-              onMouseLeave={(event) => {
-                event.currentTarget.style.background = "#6f8f7a"
-              }}
-            >
-              Book via WhatsApp <span aria-hidden="true">→</span>
+            <button type="button" className="mobile-booking-bar__button" onClick={bookTreatment} disabled={selectedTreatment.bookingEnabled === false}>
+              {selectedTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Book via WhatsApp "}
+              {selectedTreatment.bookingEnabled === false ? null : <span aria-hidden="true">&rarr;</span>}
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </section>
   )
 }

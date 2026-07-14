@@ -15,6 +15,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard"
 import AdminAvailability from "./pages/admin/AdminAvailability"
 import AdminBookings from "./pages/admin/AdminBookings"
 import AdminSettings from "./pages/admin/AdminSettings"
+import AdminTreatments from "./pages/admin/AdminTreatments"
 import "./styles/site.css"
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
               <Route path="availability" element={<AdminAvailability />} />
               <Route path="bookings" element={<AdminBookings />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="treatments" element={<AdminTreatments />} />
             </Route>
           </Route>
 
