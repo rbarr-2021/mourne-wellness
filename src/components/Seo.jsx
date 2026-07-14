@@ -30,7 +30,15 @@ function ensureLink(selector, attributes) {
   })
 }
 
-function Seo({ title, description, path = "/", type = "website", image = DEFAULT_IMAGE, structuredData = [] }) {
+function Seo({
+  title,
+  description,
+  path = "/",
+  type = "website",
+  image = DEFAULT_IMAGE,
+  structuredData = [],
+  robots = "index, follow",
+}) {
   useEffect(() => {
     const canonical = `${BASE_URL}${path}`
     const socialTitle = title || SITE_NAME
@@ -39,7 +47,7 @@ function Seo({ title, description, path = "/", type = "website", image = DEFAULT
     document.documentElement.lang = "en-GB"
 
     ensureMeta('meta[name="description"]', { name: "description", content: description })
-    ensureMeta('meta[name="robots"]', { name: "robots", content: "index, follow" })
+    ensureMeta('meta[name="robots"]', { name: "robots", content: robots })
     ensureMeta('meta[name="author"]', { name: "author", content: SITE_NAME })
     ensureMeta('meta[name="theme-color"]', { name: "theme-color", content: "#faf9f7" })
     ensureMeta('meta[name="application-name"]', { name: "application-name", content: SITE_NAME })
@@ -80,7 +88,7 @@ function Seo({ title, description, path = "/", type = "website", image = DEFAULT
       script.text = JSON.stringify(structuredData.length === 1 ? structuredData[0] : structuredData)
       document.head.appendChild(script)
     }
-  }, [description, image, path, structuredData, title, type])
+  }, [description, image, path, robots, structuredData, title, type])
 
   return null
 }

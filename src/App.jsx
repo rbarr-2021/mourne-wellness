@@ -1,28 +1,45 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-
-import Navbar from "./components/Navbar"
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import Treatments from "./pages/Treatments"
 import About from "./pages/About"
-import Footer from "./components/Footer"
 import ScrollToTop from "./components/ScrollToTop"
+import AuthProvider from "./components/AuthProvider"
+import PublicLayout from "./components/PublicLayout"
+import ProtectedRoute from "./components/ProtectedRoute"
+import AdminLayout from "./components/AdminLayout"
+import AdminLogin from "./pages/AdminLogin"
+import AdminDashboard from "./pages/admin/AdminDashboard"
+import AdminAvailability from "./pages/admin/AdminAvailability"
+import AdminBookings from "./pages/admin/AdminBookings"
+import AdminSettings from "./pages/admin/AdminSettings"
 import "./styles/site.css"
 
 function App() {
   return (
     <Router>
-      <div className="app-shell">
-      <Navbar />
-      <ScrollToTop />
-        <main className="app-main">
-          <Routes>
+      <AuthProvider>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="availability" element={<AdminAvailability />} />
+              <Route path="bookings" element={<AdminBookings />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
+          </Route>
+
+          <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/treatments" element={<Treatments />} />
             <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
     </Router>
   )
 }
