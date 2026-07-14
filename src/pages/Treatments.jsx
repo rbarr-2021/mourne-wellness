@@ -3,7 +3,9 @@ import "../styles/treatments.css"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation } from "react-router-dom"
 import Seo from "../components/Seo"
-import { listPublicTreatments } from "../lib/supabase/database"
+import { createBookingRequest, getRequestableSlots } from "../lib/booking-service"
+import { BOOKING_SOURCE, formatBookingDate } from "../lib/bookings"
+import { getBusinessSettings, listBookingReservations, listPublicAvailabilityPeriods, listPublicTreatments } from "../lib/supabase/database"
 import {
   buildTreatmentsStructuredData,
   FACIAL_TREATMENT_NAME,
@@ -14,20 +16,61 @@ import {
 } from "../lib/treatments"
 
 const fallbackTreatments = LEGACY_TREATMENTS.map(mapTreatmentToPublicTreatment)
+const BOOKING_STEPS = ["Duration", "Date", "Time", "Details", "Health", "Review"]
+
+function getEmptyBookingForm() {
+  return {
+    requestedDate: "",
+    startTime: "",
+    clientName: "",
+    clientEmail: "",
+    clientPhone: "",
+    pregnant: "no",
+    injuries: "",
+    medicalConditions: "",
+    anythingElse: "",
+    additionalNotes: "",
+  }
+}
+
+function getStepIndex(step) {
+  return BOOKING_STEPS.indexOf(step)
+}
 
 function Treatments() {
   const location = useLocation()
   const targetCategory = location.state?.targetCategory ?? null
   const [treatments, setTreatments] = useState(fallbackTreatments)
+  const [businessSettings, setBusinessSettings] = useState(null)
+  const [availabilityPeriods, setAvailabilityPeriods] = useState([])
+  const [reservations, setReservations] = useState([])
   const [manualSelection, setManualSelection] = useState(null)
+  const [bookingForm, setBookingForm] = useState(getEmptyBookingForm())
+  const [bookingStep, setBookingStep] = useState("Duration")
+  const [availableSlots, setAvailableSlots] = useState([])
+  const [availabilityMessage, setAvailabilityMessage] = useState("")
+  const [isAvailabilityLoading, setIsAvailabilityLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState("")
+  const [successBooking, setSuccessBooking] = useState(null)
+  const [isMobileWizardOpen, setIsMobileWizardOpen] = useState(false)
 
   useEffect(() => {
     const loadTreatments = async () => {
-      const { data } = await listPublicTreatments()
+      const [{ data: treatmentData }, { data: settingsData }, { data: periodsData }, { data: reservationsData }] = await Promise.all([
+        listPublicTreatments(),
+        getBusinessSettings(),
+        listPublicAvailabilityPeriods(),
+        listBookingReservations(),
+      ])
 
-      if (data?.length) {
-        setTreatments(data.map(mapTreatmentToPublicTreatment))
+      if (treatmentData?.length) {
+        setTreatments(treatmentData.map(mapTreatmentToPublicTreatment))
       }
+
+      setBusinessSettings(settingsData ?? null)
+      setAvailabilityPeriods(periodsData ?? [])
+      setReservations(reservationsData ?? [])
     }
 
     loadTreatments()
@@ -69,23 +112,26 @@ function Treatments() {
     return groups
   }, [treatments])
 
+  const selectedTreatmentId = manualSelection?.treatmentId ?? null
+  const selectedOptionId = manualSelection?.optionId ?? null
+
   const selectedTreatment = useMemo(() => {
-    if (manualSelection?.treatmentId) {
-      return treatments.find((treatment) => treatment.id === manualSelection.treatmentId) ?? defaultTreatment
+    if (selectedTreatmentId) {
+      return treatments.find((treatment) => treatment.id === selectedTreatmentId) ?? defaultTreatment
     }
 
     return defaultTreatment
-  }, [defaultTreatment, manualSelection?.treatmentId, treatments])
+  }, [defaultTreatment, selectedTreatmentId, treatments])
 
   const selectedOption = useMemo(() => {
     if (!selectedTreatment) return null
 
-    if (manualSelection?.optionId) {
-      return selectedTreatment.prices.find((option) => option.id === manualSelection.optionId) ?? selectedTreatment.prices[0] ?? null
+    if (selectedOptionId) {
+      return selectedTreatment.prices.find((option) => option.id === selectedOptionId) ?? selectedTreatment.prices[0] ?? null
     }
 
     return selectedTreatment.prices[0] ?? null
-  }, [manualSelection?.optionId, selectedTreatment])
+  }, [selectedOptionId, selectedTreatment])
 
   useEffect(() => {
     if (!targetCategory) return
@@ -98,28 +144,412 @@ function Treatments() {
     window.scrollTo({ top: y, behavior: "smooth" })
   }, [targetCategory])
 
-  const selectTreatment = (treatment, priceOption = treatment.prices[0]) => {
+  useEffect(() => {
+    const loadSlots = async () => {
+      if (!selectedTreatment || !selectedOption || !bookingForm.requestedDate || !businessSettings) {
+        setAvailableSlots([])
+        return
+      }
+
+      setIsAvailabilityLoading(true)
+      setFeedbackMessage("")
+
+      try {
+        const slots = await getRequestableSlots({
+          requestedDate: bookingForm.requestedDate,
+          treatmentId: selectedTreatment.id,
+          treatmentOptionId: selectedOption.id,
+          businessSettings,
+          availabilityExceptions: availabilityPeriods,
+          reservations,
+        })
+
+        setAvailableSlots(slots)
+        setAvailabilityMessage(
+          slots.length > 0
+            ? ""
+            : "This date has no available appointment times for the selected treatment. Please choose another date."
+        )
+      } catch (error) {
+        setAvailableSlots([])
+        setAvailabilityMessage(error.message || "We couldn't load appointment times just now.")
+      }
+
+      setIsAvailabilityLoading(false)
+    }
+
+    loadSlots()
+  }, [availabilityPeriods, bookingForm.requestedDate, businessSettings, reservations, selectedOption, selectedTreatment])
+
+  const selectTreatment = (treatment, priceOption = null, openWizard = false) => {
+    const nextOption = priceOption ?? treatment.prices[0] ?? null
+
     setManualSelection({
       treatmentId: treatment.id,
-      optionId: priceOption?.id ?? null,
+      optionId: nextOption?.id ?? null,
     })
+    setBookingForm(getEmptyBookingForm())
+    setBookingStep("Duration")
+    setAvailableSlots([])
+    setAvailabilityMessage("")
+    setFeedbackMessage("")
+    setSuccessBooking(null)
+    setIsMobileWizardOpen(openWizard)
   }
 
-  const openWhatsAppBooking = (treatment, priceOption) => {
-    if (!treatment || !priceOption || treatment.bookingEnabled === false) return
-
-    const message = `Hi Beata, I'd like to book: ${treatment.name} (${priceOption.time}) - ${priceOption.price}.`
-    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
+  const selectOption = (priceOption) => {
+    setManualSelection((current) => ({
+      treatmentId: current?.treatmentId ?? selectedTreatment?.id ?? null,
+      optionId: priceOption.id,
+    }))
+    setBookingForm((current) => ({
+      ...current,
+      startTime: "",
+    }))
+    setAvailableSlots([])
+    setAvailabilityMessage("")
+    setBookingStep("Date")
   }
 
-  const bookTreatment = () => {
-    openWhatsAppBooking(selectedTreatment, selectedOption)
+  const updateBookingForm = (field, value) => {
+    setBookingForm((current) => ({
+      ...current,
+      [field]: value,
+    }))
+    setFeedbackMessage("")
   }
 
-  const bookFeaturedTreatment = () => {
-    if (!featuredTreatment) return
+  const chooseDate = (value) => {
+    updateBookingForm("requestedDate", value)
+    updateBookingForm("startTime", "")
+    setBookingStep("Time")
+  }
 
-    openWhatsAppBooking(featuredTreatment, featuredTreatment.prices[0] ?? null)
+  const chooseTime = (slot) => {
+    updateBookingForm("startTime", slot.label)
+    setBookingStep("Details")
+  }
+
+  const validateDetailsStep = () => {
+    if (!bookingForm.clientName.trim()) {
+      setFeedbackMessage("Please enter your full name.")
+      return false
+    }
+
+    if (!bookingForm.clientEmail.trim()) {
+      setFeedbackMessage("Please enter your email address.")
+      return false
+    }
+
+    if (!bookingForm.clientPhone.trim()) {
+      setFeedbackMessage("Please enter your mobile number.")
+      return false
+    }
+
+    return true
+  }
+
+  const goToReview = () => {
+    if (!validateDetailsStep()) {
+      return
+    }
+
+    setBookingStep("Health")
+  }
+
+  const continueToReview = () => {
+    setBookingStep("Review")
+  }
+
+  const goBackStep = () => {
+    const currentIndex = getStepIndex(bookingStep)
+
+    if (currentIndex <= 0) {
+      return
+    }
+
+    setBookingStep(BOOKING_STEPS[currentIndex - 1])
+  }
+
+  const submitBookingRequest = async () => {
+    if (!selectedTreatment || !selectedOption) {
+      setFeedbackMessage("Please choose a treatment and duration first.")
+      return
+    }
+
+    setIsSubmitting(true)
+    setFeedbackMessage("")
+
+    try {
+      const booking = await createBookingRequest({
+        treatmentId: selectedTreatment.id,
+        treatmentOptionId: selectedOption.id,
+        requestedDate: bookingForm.requestedDate,
+        startTime: bookingForm.startTime,
+        clientName: bookingForm.clientName,
+        clientEmail: bookingForm.clientEmail,
+        clientPhone: bookingForm.clientPhone,
+        healthInformation: {
+          pregnant: bookingForm.pregnant,
+          injuries: bookingForm.injuries,
+          medicalConditions: bookingForm.medicalConditions,
+          anythingElse: bookingForm.anythingElse,
+        },
+        additionalNotes: bookingForm.additionalNotes,
+        source: BOOKING_SOURCE.WEBSITE,
+        businessSettings,
+        availabilityExceptions: availabilityPeriods,
+        reservations,
+      })
+
+      setReservations((current) => [booking, ...current])
+      setSuccessBooking(booking)
+      setBookingStep("Review")
+      setIsMobileWizardOpen(true)
+    } catch (error) {
+      setFeedbackMessage(error.message || "We couldn't send your booking request just now.")
+    }
+
+    setIsSubmitting(false)
+  }
+
+  const openMobileWizard = () => {
+    if (!selectedTreatment || !selectedOption) return
+
+    setIsMobileWizardOpen(true)
+  }
+
+  const closeMobileWizard = () => {
+    setIsMobileWizardOpen(false)
+  }
+
+  const activeStepIndex = Math.max(getStepIndex(bookingStep), 0)
+
+  const renderWizardContent = () => {
+    if (!selectedTreatment || !selectedOption) {
+      return <p className="booking-panel__placeholder">Select a treatment to begin your booking request.</p>
+    }
+
+    if (successBooking) {
+      return (
+        <div className="booking-success-card">
+          <p className="booking-success-card__eyebrow">Booking Request Received</p>
+          <h3 className="booking-success-card__title">Thank you.</h3>
+          <p className="section-copy">
+            Your booking request has been received.
+          </p>
+          <p className="section-copy">
+            Beata will personally review your request and contact you shortly regarding confirmation and deposit payment.
+          </p>
+          <p className="section-copy">
+            Your requested appointment time has been temporarily reserved while your request is being reviewed.
+          </p>
+        </div>
+      )
+    }
+
+    return (
+      <>
+        <div className="booking-panel__header">
+          <p className="booking-panel__eyebrow">Booking Request</p>
+          <h3 className="booking-panel__title">{selectedTreatment.name}</h3>
+          <p className="booking-panel__description">{selectedTreatment.description}</p>
+        </div>
+
+        <div className="booking-progress" aria-label="Booking progress">
+          {BOOKING_STEPS.map((step, index) => (
+            <span key={step} className={`booking-progress__step ${index <= activeStepIndex ? "is-active" : ""}`}>
+              {step}
+            </span>
+          ))}
+        </div>
+
+        <div className="booking-panel__section">
+          {bookingStep === "Duration" ? (
+            <>
+              <h4 className="booking-panel__section-title">Choose your duration</h4>
+              <div className="booking-options">
+                {selectedTreatment.prices.map((priceOption) => (
+                  <button
+                    type="button"
+                    className={`booking-option-button ${selectedOption?.id === priceOption.id ? "is-selected" : ""}`}
+                    key={`${selectedTreatment.id}-${priceOption.id}`}
+                    onClick={() => selectOption(priceOption)}
+                  >
+                    {priceOption.time} - {priceOption.price}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : null}
+
+          {bookingStep === "Date" ? (
+            <>
+              <h4 className="booking-panel__section-title">Choose a preferred date</h4>
+              <label className="booking-field">
+                <span>Date</span>
+                <input
+                  className="booking-input"
+                  type="date"
+                  value={bookingForm.requestedDate}
+                  min={new Date().toISOString().slice(0, 10)}
+                  onChange={(event) => chooseDate(event.target.value)}
+                />
+              </label>
+            </>
+          ) : null}
+
+          {bookingStep === "Time" ? (
+            <>
+              <h4 className="booking-panel__section-title">Choose an available time</h4>
+              <label className="booking-field">
+                <span>Date</span>
+                <input
+                  className="booking-input"
+                  type="date"
+                  value={bookingForm.requestedDate}
+                  min={new Date().toISOString().slice(0, 10)}
+                  onChange={(event) => chooseDate(event.target.value)}
+                />
+              </label>
+
+              {isAvailabilityLoading ? <p className="booking-helper-copy">Loading available appointment times...</p> : null}
+              {availabilityMessage ? <p className="booking-error-message">{availabilityMessage}</p> : null}
+
+              {availableSlots.length > 0 ? (
+                <div className="booking-time-grid">
+                  {availableSlots.map((slot) => (
+                    <button type="button" key={slot.start.toISOString()} className="booking-time-button" onClick={() => chooseTime(slot)}>
+                      {slot.label}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </>
+          ) : null}
+
+          {bookingStep === "Details" ? (
+            <>
+              <h4 className="booking-panel__section-title">Your details</h4>
+              <div className="booking-form-grid">
+                <label className="booking-field">
+                  <span>Full Name</span>
+                  <input className="booking-input" value={bookingForm.clientName} onChange={(event) => updateBookingForm("clientName", event.target.value)} />
+                </label>
+                <label className="booking-field">
+                  <span>Email Address</span>
+                  <input className="booking-input" type="email" value={bookingForm.clientEmail} onChange={(event) => updateBookingForm("clientEmail", event.target.value)} />
+                </label>
+                <label className="booking-field">
+                  <span>Mobile Number</span>
+                  <input className="booking-input" type="tel" value={bookingForm.clientPhone} onChange={(event) => updateBookingForm("clientPhone", event.target.value)} />
+                </label>
+              </div>
+
+              <div className="booking-panel__actions">
+                <button type="button" className="featured-secondary-button" onClick={goBackStep}>
+                  Back
+                </button>
+                <button type="button" className="featured-primary-button" onClick={goToReview}>
+                  Continue
+                </button>
+              </div>
+            </>
+          ) : null}
+
+          {bookingStep === "Health" ? (
+            <>
+              <h4 className="booking-panel__section-title">Health information</h4>
+              <div className="booking-form-grid">
+                <label className="booking-field">
+                  <span>Are you pregnant?</span>
+                  <select className="booking-input" value={bookingForm.pregnant} onChange={(event) => updateBookingForm("pregnant", event.target.value)}>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                  </select>
+                </label>
+                <label className="booking-field">
+                  <span>Do you have any injuries?</span>
+                  <textarea className="booking-input booking-textarea" value={bookingForm.injuries} onChange={(event) => updateBookingForm("injuries", event.target.value)} />
+                </label>
+                <label className="booking-field">
+                  <span>Any medical conditions?</span>
+                  <textarea className="booking-input booking-textarea" value={bookingForm.medicalConditions} onChange={(event) => updateBookingForm("medicalConditions", event.target.value)} />
+                </label>
+                <label className="booking-field">
+                  <span>Anything else Beata should know?</span>
+                  <textarea className="booking-input booking-textarea" value={bookingForm.anythingElse} onChange={(event) => updateBookingForm("anythingElse", event.target.value)} />
+                </label>
+                <label className="booking-field">
+                  <span>Additional notes (optional)</span>
+                  <textarea className="booking-input booking-textarea" value={bookingForm.additionalNotes} onChange={(event) => updateBookingForm("additionalNotes", event.target.value)} />
+                </label>
+              </div>
+
+              <div className="booking-panel__actions">
+                <button type="button" className="featured-secondary-button" onClick={goBackStep}>
+                  Back
+                </button>
+                <button type="button" className="featured-primary-button" onClick={continueToReview}>
+                  Review Booking
+                </button>
+              </div>
+            </>
+          ) : null}
+
+          {bookingStep === "Review" ? (
+            <>
+              <h4 className="booking-panel__section-title">Review your booking request</h4>
+              <div className="booking-review-card">
+                <div className="booking-review-card__section">
+                  <strong>Treatment</strong>
+                  <span>{selectedTreatment.name}</span>
+                  <span>
+                    {selectedOption.time} - {selectedOption.price}
+                  </span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Appointment</strong>
+                  <span>{formatBookingDate(bookingForm.requestedDate)}</span>
+                  <span>{bookingForm.startTime}</span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Customer</strong>
+                  <span>{bookingForm.clientName}</span>
+                  <span>{bookingForm.clientEmail}</span>
+                  <span>{bookingForm.clientPhone}</span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Health Information</strong>
+                  <span>Pregnant: {bookingForm.pregnant}</span>
+                  <span>Injuries: {bookingForm.injuries || "None provided"}</span>
+                  <span>Medical conditions: {bookingForm.medicalConditions || "None provided"}</span>
+                  <span>Anything else: {bookingForm.anythingElse || "None provided"}</span>
+                  {bookingForm.additionalNotes ? <span>Additional notes: {bookingForm.additionalNotes}</span> : null}
+                </div>
+              </div>
+
+              {feedbackMessage ? <p className="booking-error-message">{feedbackMessage}</p> : null}
+
+              <div className="booking-panel__actions">
+                <button type="button" className="featured-secondary-button" onClick={goBackStep}>
+                  Back
+                </button>
+                <button type="button" className="featured-primary-button" onClick={submitBookingRequest} disabled={isSubmitting}>
+                  {isSubmitting ? "Sending..." : "Send Booking Request"}
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        {feedbackMessage && bookingStep !== "Review" ? <p className="booking-error-message">{feedbackMessage}</p> : null}
+      </>
+    )
   }
 
   return (
@@ -152,8 +582,12 @@ function Treatments() {
               <p className="featured-description">{featuredTreatment.description}</p>
 
               <div className="featured-actions">
-                <button className="featured-primary-button" onClick={bookFeaturedTreatment} disabled={featuredTreatment.bookingEnabled === false}>
-                  {featuredTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Book This Treatment"}
+                <button
+                  className="featured-primary-button"
+                  onClick={() => selectTreatment(featuredTreatment, featuredTreatment.prices[0] ?? null, true)}
+                  disabled={featuredTreatment.bookingEnabled === false}
+                >
+                  {featuredTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Request This Treatment"}
                 </button>
 
                 <button className="featured-secondary-button" onClick={() => selectTreatment(featuredTreatment)}>
@@ -234,51 +668,10 @@ function Treatments() {
           ))}
         </div>
 
-        <div className="booking-panel">
-          {!selectedTreatment ? (
-            <p style={{ color: "#777" }}>Select a treatment to begin booking</p>
-          ) : (
-            <>
-              <h3 style={{ fontFamily: "var(--font-heading)" }}>{selectedTreatment.name}</h3>
-              <p style={{ fontSize: "13px", color: "#666" }}>{selectedTreatment.description}</p>
-
-              <div className="booking-options">
-                {selectedTreatment.prices.map((priceOption) => (
-                  <button
-                    className="booking-option-button"
-                    key={`${selectedTreatment.id}-${priceOption.id}`}
-                    onClick={() => selectTreatment(selectedTreatment, priceOption)}
-                    style={{
-                      border: selectedOption?.id === priceOption.id ? "1px solid #6f8f7a" : "1px solid #d6d6d6",
-                      background: selectedOption?.id === priceOption.id ? "#6f8f7a" : "#f7f7f7",
-                      color: selectedOption?.id === priceOption.id ? "#fff" : "#333",
-                    }}
-                  >
-                    {priceOption.time} - {priceOption.price}
-                  </button>
-                ))}
-              </div>
-
-              <div className="booking-summary">
-                <p>
-                  <strong>Selected:</strong>
-                  <br />
-                  {selectedOption?.time} - {selectedOption?.price}
-                </p>
-                {selectedTreatment.bookingEnabled === false ? (
-                  <p style={{ marginBottom: 0, color: "#8a4d4d" }}>This treatment is visible on the site but not currently open for booking.</p>
-                ) : null}
-              </div>
-
-              <button className="booking-confirm-button" onClick={bookTreatment} disabled={selectedTreatment.bookingEnabled === false}>
-                {selectedTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Confirm & Book via WhatsApp"}
-              </button>
-            </>
-          )}
-        </div>
+        <div className="booking-panel">{renderWizardContent()}</div>
       </div>
 
-      {selectedTreatment && selectedOption ? (
+      {selectedTreatment && selectedOption && !successBooking ? (
         <div className="mobile-booking-bar" aria-live="polite">
           <div className="mobile-booking-bar__content">
             <div className="mobile-booking-bar__details">
@@ -289,10 +682,24 @@ function Treatments() {
               </p>
             </div>
 
-            <button type="button" className="mobile-booking-bar__button" onClick={bookTreatment} disabled={selectedTreatment.bookingEnabled === false}>
-              {selectedTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Book via WhatsApp "}
-              {selectedTreatment.bookingEnabled === false ? null : <span aria-hidden="true">&rarr;</span>}
+            <button type="button" className="mobile-booking-bar__button" onClick={openMobileWizard} disabled={selectedTreatment.bookingEnabled === false}>
+              {selectedTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Request Appointment"}
             </button>
+          </div>
+        </div>
+      ) : null}
+
+      {isMobileWizardOpen ? (
+        <div className="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+          <div className="booking-modal__backdrop" onClick={closeMobileWizard} />
+          <div className="booking-modal__panel">
+            <div className="booking-modal__header">
+              <h2 id="booking-modal-title">Booking Request</h2>
+              <button type="button" className="featured-secondary-button" onClick={closeMobileWizard}>
+                Close
+              </button>
+            </div>
+            {renderWizardContent()}
           </div>
         </div>
       ) : null}

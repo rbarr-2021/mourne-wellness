@@ -1310,6 +1310,18 @@
   background: rgba(144, 150, 156, 0.18);
 }
 
+.admin-calendar-event--pending {
+  background: rgba(214, 189, 113, 0.28);
+}
+
+.admin-calendar-event--ready {
+  background: rgba(210, 143, 88, 0.24);
+}
+
+.admin-calendar-event--confirmed {
+  background: rgba(111, 143, 122, 0.2);
+}
+
 .admin-calendar-event--other,
 .admin-availability-pill--other {
   background: rgba(164, 171, 158, 0.18);
@@ -1423,6 +1435,86 @@
   display: none;
 }
 
+.admin-bookings-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.admin-booking-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-booking-card {
+  width: 100%;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(198, 166, 100, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  text-align: left;
+  color: var(--text-dark);
+}
+
+.admin-booking-card.is-active {
+  border-color: rgba(111, 143, 122, 0.34);
+  box-shadow: 0 10px 24px rgba(42, 74, 64, 0.08);
+}
+
+.admin-booking-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.admin-booking-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+.admin-booking-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.admin-booking-status-pill--pending {
+  background: rgba(214, 189, 113, 0.28);
+}
+
+.admin-booking-status-pill--ready {
+  background: rgba(210, 143, 88, 0.24);
+}
+
+.admin-booking-status-pill--confirmed,
+.admin-booking-status-pill--completed {
+  background: rgba(111, 143, 122, 0.2);
+}
+
+.admin-booking-status-pill--declined,
+.admin-booking-status-pill--cancelled {
+  background: rgba(181, 92, 92, 0.16);
+}
+
+.admin-booking-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 @media (max-width: 1024px) {
   .navbar-inner {
     width: calc(100% - 24px);
@@ -1529,6 +1621,7 @@
 
   .admin-dashboard-summary,
   .admin-dashboard-grid,
+  .admin-bookings-layout,
   .admin-form-grid--two-column,
   .admin-form-grid--four-column,
   .admin-availability-layout,

@@ -1,6 +1,7 @@
 import supabase from "./client"
 import { buildBusinessSettingsPayload, normalizeBusinessSettingsRecord } from "../businessSettings"
 import { normalizeAvailabilityException } from "../availability"
+import { normalizeBookingRecord, normalizeBookingReservations } from "../bookings"
 import { normalizeTreatmentRecord, sortTreatments } from "../treatments"
 
 export async function getBusinessSettings() {
@@ -68,6 +69,20 @@ export async function listPublicTreatments() {
     .order("created_at", { ascending: true })
 
   return normalizeTreatmentsResponse(response)
+}
+
+export async function listTreatmentsForIds(ids = []) {
+  let query = supabase
+    .from("treatments")
+    .select("*, treatment_options(*)")
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true })
+
+  if (ids.length > 0) {
+    query = query.in("id", ids)
+  }
+
+  return normalizeTreatmentsResponse(await query)
 }
 
 export async function saveTreatmentWithOptions({ treatment, options }) {
@@ -142,6 +157,19 @@ export async function listAvailabilityExceptions({ from, to } = {}) {
   return response
 }
 
+export async function listPublicAvailabilityPeriods() {
+  const response = await supabase.from("public_availability_periods").select("*").order("start_datetime", { ascending: true })
+
+  if (response.data) {
+    return {
+      ...response,
+      data: response.data.map(normalizeAvailabilityException),
+    }
+  }
+
+  return response
+}
+
 export async function upsertAvailabilityException(payload) {
   const response = await supabase.from("availability_exceptions").upsert(payload).select().single()
 
@@ -167,6 +195,81 @@ export async function setAvailabilityExceptionStatus(id, status) {
     return {
       ...response,
       data: normalizeAvailabilityException(response.data),
+    }
+  }
+
+  return response
+}
+
+function normalizeBookingsResponse(response) {
+  if (!response.data) {
+    return response
+  }
+
+  const normalizedData = Array.isArray(response.data)
+    ? response.data.map(normalizeBookingRecord)
+    : normalizeBookingRecord(response.data)
+
+  return {
+    ...response,
+    data: normalizedData,
+  }
+}
+
+export async function listBookings() {
+  const response = await supabase
+    .from("bookings")
+    .select("*, treatment:treatments(*, treatment_options(*)), treatment_option:treatment_options(*)")
+    .order("created_at", { ascending: false })
+
+  return normalizeBookingsResponse(response)
+}
+
+export async function getBookingById(id) {
+  const response = await supabase
+    .from("bookings")
+    .select("*, treatment:treatments(*, treatment_options(*)), treatment_option:treatment_options(*)")
+    .eq("id", id)
+    .single()
+
+  return normalizeBookingsResponse(response)
+}
+
+export async function createBookingRecord(payload) {
+  const response = await supabase.from("bookings").insert(payload)
+
+  if (!response.error) {
+    return {
+      ...response,
+      data: payload,
+    }
+  }
+
+  return response
+}
+
+export async function updateBookingRecord(id, payload) {
+  const response = await supabase
+    .from("bookings")
+    .update(payload)
+    .eq("id", id)
+    .select("*, treatment:treatments(*, treatment_options(*)), treatment_option:treatment_options(*)")
+    .single()
+
+  return normalizeBookingsResponse(response)
+}
+
+export async function listBookingReservations() {
+  const response = await supabase
+    .from("public_booking_reservations")
+    .select("*")
+    .order("requested_date", { ascending: true })
+    .order("start_time", { ascending: true })
+
+  if (response.data) {
+    return {
+      ...response,
+      data: normalizeBookingReservations(response.data),
     }
   }
 
