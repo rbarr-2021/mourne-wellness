@@ -15,6 +15,7 @@ function AdminLayout() {
   const navigate = useNavigate()
   const { signOut, user } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [isMobileEditing, setIsMobileEditing] = useState(false)
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -25,7 +26,7 @@ function AdminLayout() {
   return (
     <>
       <Seo title="Admin | Retreat by the Mournes" description="Secure administrator area." path="/admin" robots="noindex, nofollow" />
-      <section className="admin-shell">
+      <section className={`admin-shell ${isMobileEditing ? "is-mobile-editing" : ""}`}>
         <div className="admin-shell__inner">
           <header className="admin-topbar">
             <div className="admin-topbar__content">
@@ -57,7 +58,7 @@ function AdminLayout() {
           </nav>
 
           <div className="admin-content">
-            <Outlet />
+            <Outlet context={{ isMobileEditing, setIsMobileEditing }} />
           </div>
         </div>
 
