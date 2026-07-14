@@ -197,6 +197,73 @@
   margin: 0 0 30px;
 }
 
+.trust-section {
+  background: var(--bg-main);
+}
+
+.trust-section__container {
+  width: min(940px, 100%);
+}
+
+.trust-section__intro {
+  text-align: center;
+  margin-bottom: 38px;
+}
+
+.trust-section__title {
+  margin-bottom: 14px;
+}
+
+.trust-section__lead {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.trust-section__items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(24px, 4vw, 54px);
+  row-gap: 18px;
+  margin: 0 auto;
+  padding: 28px 0 0;
+  border-top: 1px solid rgba(198, 166, 100, 0.28);
+}
+
+.trust-section__item {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.trust-section__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: rgba(90, 137, 118, 0.88);
+}
+
+.trust-section__item-text {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.trust-section__supporting-copy {
+  max-width: 720px;
+  margin: 34px auto 0;
+  text-align: center;
+}
+
+.trust-section__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
 .services-grid,
 .testimonials-grid,
 .about-cards {
@@ -454,6 +521,30 @@
 
   .hero-copy {
     line-height: 1.7;
+  }
+
+  .trust-section__intro {
+    margin-bottom: 30px;
+  }
+
+  .trust-section__items {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+    padding-top: 24px;
+  }
+
+  .trust-section__item {
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .trust-section__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .trust-section__supporting-copy {
+    margin-top: 28px;
   }
 
   .cta-button,

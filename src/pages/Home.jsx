@@ -1,4 +1,5 @@
 import Hero from "../components/Hero"
+import TrustSection from "../components/TrustSection"
 import Services from "../components/Services"
 import Contact from "../components/Contact"
 import WhatsAppButton from "../components/WhatsAppButton"
@@ -62,6 +63,7 @@ function Home() {
         structuredData={homeStructuredData}
       />
       <Hero />
+      <TrustSection />
       <Services />
       <AboutTestimonials />
       <Contact />
