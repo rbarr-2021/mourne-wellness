@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
+import LoadingMessage from "../../components/LoadingMessage"
 import Seo from "../../components/Seo"
+import StatusMessage from "../../components/StatusMessage"
 import {
   buildBusinessSettingsPayload,
   BUSINESS_DAYS,
@@ -95,7 +97,7 @@ function AdminSettings() {
     }
 
     setSettings(normalizeBusinessSettingsRecord(data))
-    setFeedback("Business settings saved successfully.")
+    setFeedback("Business settings updated.")
     setIsSaving(false)
   }
 
@@ -113,19 +115,19 @@ function AdminSettings() {
           <div>
             <h2 className="admin-panel__title">Business Settings</h2>
             <p className="section-copy admin-panel__copy">
-              Manage the opening hours, booking rules and deposit defaults that future booking functionality will rely upon.
+              Manage your opening hours, booking rules and default deposit settings in one place.
             </p>
           </div>
         </div>
 
         {isLoading || !settings ? (
-          <p className="section-copy admin-panel__copy">Loading business settings...</p>
+          <LoadingMessage message="Loading your business settings..." className="admin-panel__status" />
         ) : (
           <form className="admin-form-grid" onSubmit={handleSubmit}>
             <section className="admin-subpanel admin-subpanel--full">
               <div className="admin-subpanel__header">
                 <h3 className="admin-subpanel__title">Opening Hours</h3>
-                <p className="section-copy admin-subpanel__copy">Each day can be opened, closed or marked as unavailable.</p>
+                <p className="section-copy admin-subpanel__copy">Set when you are available to accept appointment requests.</p>
               </div>
 
               <div className="admin-opening-hours">
@@ -233,7 +235,7 @@ function AdminSettings() {
             <section className="admin-subpanel">
               <div className="admin-subpanel__header">
                 <h3 className="admin-subpanel__title">Default Deposit</h3>
-                <p className="section-copy admin-subpanel__copy">Choose a fixed amount or a percentage for future booking deposits.</p>
+                <p className="section-copy admin-subpanel__copy">Choose whether your usual deposit is a fixed amount or a percentage.</p>
               </div>
 
               <label className="admin-field">
@@ -244,7 +246,7 @@ function AdminSettings() {
                   value={settings.default_deposit_type}
                   onChange={handleChange}
                 >
-                  <option value="fixed">Fixed Amount (£)</option>
+                  <option value="fixed">Fixed amount (&pound;)</option>
                   <option value="percentage">Percentage (%)</option>
                 </select>
               </label>
@@ -268,9 +270,9 @@ function AdminSettings() {
             </section>
 
             <div className="admin-form-actions admin-form-actions--sticky-mobile admin-subpanel--full">
-              {feedback ? <p className={feedback.includes("successfully") ? "admin-auth-success" : "admin-auth-error"}>{feedback}</p> : null}
+              {feedback ? <StatusMessage tone={feedback.includes("couldn't") ? "error" : "success"}>{feedback}</StatusMessage> : null}
               <button type="submit" className="cta-button admin-auth-submit" disabled={isSaving}>
-                {isSaving ? "Saving business settings..." : "Save Business Settings"}
+                {isSaving ? "Saving business settings..." : "Save business settings"}
               </button>
             </div>
           </form>

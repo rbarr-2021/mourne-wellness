@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom"
+import RouteLoading from "./RouteLoading"
 import { useAuth } from "./useAuth"
 
 function ProtectedRoute() {
@@ -6,15 +7,7 @@ function ProtectedRoute() {
   const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
-    return (
-      <section className="admin-auth-shell">
-        <div className="admin-auth-card">
-          <p className="section-copy" style={{ margin: 0 }}>
-            Loading secure administrator area...
-          </p>
-        </div>
-      </section>
-    )
+    return <RouteLoading message="Loading the secure administrator area..." />
   }
 
   if (!isAuthenticated) {

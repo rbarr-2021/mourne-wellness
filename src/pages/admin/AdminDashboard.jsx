@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
+import AdminEmptyState from "../../components/AdminEmptyState"
+import LoadingMessage from "../../components/LoadingMessage"
 import Seo from "../../components/Seo"
 import { AVAILABILITY_STATUS, formatAvailabilityException, getEventsForDate } from "../../lib/availability"
 import {
@@ -39,20 +41,26 @@ function formatDayState(settings, activeExceptions, today = new Date()) {
   const hours = settings.opening_hours[todayKey]
   const todayDateKey = getTodayKey(today)
 
-  const holiday = activeExceptions.find((entry) => entry.kind === "HOLIDAY" && entry.start_datetime.slice(0, 10) <= todayDateKey && entry.end_datetime.slice(0, 10) >= todayDateKey)
+  const holiday = activeExceptions.find(
+    (entry) => entry.kind === "HOLIDAY" && entry.start_datetime.slice(0, 10) <= todayDateKey && entry.end_datetime.slice(0, 10) >= todayDateKey
+  )
   if (holiday) {
     return { label: "Holiday today", tone: "holiday" }
   }
 
-  const lunch = activeExceptions.find((entry) => entry.kind === "LUNCH_BREAK" && entry.start_datetime.slice(0, 10) <= todayDateKey && entry.end_datetime.slice(0, 10) >= todayDateKey)
+  const lunch = activeExceptions.find(
+    (entry) => entry.kind === "LUNCH_BREAK" && entry.start_datetime.slice(0, 10) <= todayDateKey && entry.end_datetime.slice(0, 10) >= todayDateKey
+  )
   if (lunch) {
     return {
-      label: `Open today · Lunch ${new Date(lunch.start_datetime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`,
+      label: `Open today • Lunch ${new Date(lunch.start_datetime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`,
       tone: "open",
     }
   }
 
-  const blocked = activeExceptions.find((entry) => entry.kind === "BLOCKED_TIME" && entry.start_datetime.slice(0, 10) <= todayDateKey && entry.end_datetime.slice(0, 10) >= todayDateKey)
+  const blocked = activeExceptions.find(
+    (entry) => entry.kind === "BLOCKED_TIME" && entry.start_datetime.slice(0, 10) <= todayDateKey && entry.end_datetime.slice(0, 10) >= todayDateKey
+  )
   if (blocked) {
     return { label: "Blocked time today", tone: "blocked" }
   }
@@ -82,8 +90,8 @@ function buildAttentionItems(bookings, now = new Date()) {
   if (readyForDeposit.length > 0) {
     items.push({
       id: "ready-deposit",
-      title: "Deposit needed",
-      detail: `${readyForDeposit.length} booking${readyForDeposit.length === 1 ? "" : "s"} are ready for deposit.`,
+      title: "Awaiting deposit",
+      detail: `${readyForDeposit.length} booking${readyForDeposit.length === 1 ? "" : "s"} are waiting for the deposit request to be completed.`,
       actionLabel: "Open",
       link: "/admin/bookings",
     })
@@ -200,7 +208,7 @@ function AdminDashboard() {
         </div>
 
         {summary.isLoading ? (
-          <p className="section-copy admin-panel__copy">Loading today&apos;s dashboard...</p>
+          <LoadingMessage message="Loading today's dashboard..." className="admin-panel__status" />
         ) : (
           <div className="admin-dashboard-flow">
             <section className="admin-subpanel admin-dashboard-priority-card">
@@ -226,10 +234,7 @@ function AdminDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="admin-empty-state">
-                  <strong>You&apos;re all caught up</strong>
-                  <p className="section-copy">No booking requests need your attention right now.</p>
-                </div>
+                <AdminEmptyState title="You're all caught up">No booking requests need your attention right now.</AdminEmptyState>
               )}
             </section>
 
@@ -250,10 +255,7 @@ function AdminDashboard() {
                   <DashboardStatusPill status={nextAppointment.status} />
                 </Link>
               ) : (
-                <div className="admin-empty-state">
-                  <strong>No appointments today.</strong>
-                  <p className="section-copy">Enjoy your day.</p>
-                </div>
+                <AdminEmptyState title="No appointments today.">You have no appointments scheduled for today.</AdminEmptyState>
               )}
             </section>
 
@@ -270,7 +272,7 @@ function AdminDashboard() {
                   {todayBookings.map((booking) => (
                     <Link key={booking.id} className="admin-compact-list__item admin-compact-list__item--link" to="/admin/bookings">
                       <strong>
-                        {formatBookingTime(booking.start_time)} · {booking.treatment?.name}
+                        {formatBookingTime(booking.start_time)} {" • "} {booking.treatment?.name}
                       </strong>
                       <span>{booking.client_name}</span>
                       <DashboardStatusPill status={booking.status} />
@@ -278,18 +280,15 @@ function AdminDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="admin-empty-state">
-                  <strong>No appointments today.</strong>
-                  <p className="section-copy">Enjoy your day.</p>
-                </div>
+                <AdminEmptyState title="No appointments today.">You have no appointments scheduled for today.</AdminEmptyState>
               )}
             </section>
 
             <section className="admin-dashboard-grid" aria-label="Dashboard queues">
               <article className="admin-summary-card">
-                <p className="admin-summary-card__label">Ready for Deposit</p>
+                <p className="admin-summary-card__label">Awaiting Deposit</p>
                 <h3 className="admin-summary-card__value">{readyForDeposit.length}</h3>
-                <p className="section-copy admin-summary-card__copy">Bookings waiting for the next payment step.</p>
+                <p className="section-copy admin-summary-card__copy">Requests reviewed and waiting for the deposit stage.</p>
                 <Link className="ghost-button" to="/admin/bookings">
                   Open
                 </Link>
@@ -363,9 +362,13 @@ function AdminDashboard() {
               {agendaEvents.length > 0 ? (
                 <div className="admin-compact-list">
                   {agendaEvents.map((event) => (
-                    <Link key={`${event.id}-${event.start_datetime}`} className="admin-compact-list__item admin-compact-list__item--link" to={event.colorClass === "blocked" || event.colorClass === "holiday" || event.colorClass === "lunch" ? "/admin/availability" : "/admin/bookings"}>
+                    <Link
+                      key={`${event.id}-${event.start_datetime}`}
+                      className="admin-compact-list__item admin-compact-list__item--link"
+                      to={event.colorClass === "blocked" || event.colorClass === "holiday" || event.colorClass === "lunch" ? "/admin/availability" : "/admin/bookings"}
+                    >
                       <strong>
-                        {new Date(event.start_datetime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} · {event.label}
+                        {new Date(event.start_datetime).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} {" • "} {event.label}
                       </strong>
                       <span>{event.reason || formatBookingDateShort(event.start_datetime.slice(0, 10))}</span>
                       <span>{event.timeLabel}</span>
@@ -373,10 +376,9 @@ function AdminDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="admin-empty-state">
-                  <strong>No appointments today.</strong>
-                  <p className="section-copy">Enjoy your day.</p>
-                </div>
+                <AdminEmptyState title="No appointments today.">
+                  You have no appointments or blocked periods scheduled for today.
+                </AdminEmptyState>
               )}
             </section>
           </div>

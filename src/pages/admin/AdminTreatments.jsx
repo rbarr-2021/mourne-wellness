@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useOutletContext } from "react-router-dom"
 import AdminEditingHeader from "../../components/AdminEditingHeader"
+import LoadingMessage from "../../components/LoadingMessage"
 import Seo from "../../components/Seo"
+import StatusMessage from "../../components/StatusMessage"
 import { useAuth } from "../../components/useAuth"
 import { getBusinessSettings, listAdminTreatments, saveTreatmentWithOptions } from "../../lib/supabase/database"
 import {
@@ -281,7 +283,7 @@ function AdminTreatments() {
             <div>
               <h2 className="admin-panel__title">Treatment Management</h2>
               <p className="section-copy admin-panel__copy">
-                Create, edit and control how treatments appear on the website without touching code.
+                Create, edit and manage how treatments appear on the website without touching code.
               </p>
             </div>
 
@@ -296,7 +298,7 @@ function AdminTreatments() {
           </div>
 
           {isLoading || !draft ? (
-            <p className="section-copy admin-panel__copy">Loading treatments...</p>
+            <LoadingMessage message="Loading your treatments..." className="admin-panel__status" />
           ) : (
             <div className="admin-treatments-layout admin-treatments-layout--browsing">
               <aside className="admin-subpanel admin-treatments-list">
@@ -455,7 +457,7 @@ function AdminTreatments() {
                 </div>
 
                 <div className="admin-form-actions">
-                  {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
+                  {feedback ? <StatusMessage tone={feedback.includes("couldn't") ? "error" : "success"}>{feedback}</StatusMessage> : null}
 
                   <div className="admin-action-row">
                     <button type="button" className="ghost-button" disabled={isSaving} onClick={() => persistTreatment()}>
@@ -473,7 +475,7 @@ function AdminTreatments() {
                         className="ghost-button"
                         disabled={isSaving}
                         onClick={() => {
-                          if (window.confirm("Set this treatment to inactive? It will be hidden from the public website but preserved in Supabase.")) {
+                          if (window.confirm("Set this treatment to inactive? It will be hidden from the public website but kept safely in the system.")) {
                             persistTreatment(TREATMENT_STATUS.INACTIVE)
                           }
                         }}
@@ -512,7 +514,7 @@ function AdminTreatments() {
                   type="button"
                   className="admin-editing-menu__item"
                   onClick={() => {
-                    if (window.confirm("Set this treatment to inactive? It will be hidden from the public website but preserved in Supabase.")) {
+                    if (window.confirm("Set this treatment to inactive? It will be hidden from the public website but kept safely in the system.")) {
                       persistTreatment(TREATMENT_STATUS.INACTIVE)
                     }
                   }}
@@ -522,7 +524,7 @@ function AdminTreatments() {
               ) : null}
             </AdminEditingHeader>
 
-            {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
+            {feedback ? <StatusMessage tone={feedback.includes("couldn't") ? "error" : "success"}>{feedback}</StatusMessage> : null}
 
             <section className="admin-subpanel admin-subpanel--editing">
               <div className="admin-editing-status">

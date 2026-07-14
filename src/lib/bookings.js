@@ -16,6 +16,25 @@ export const BOOKING_DEPOSIT_STATUS = {
   REFUNDED: "REFUNDED",
 }
 
+export const BOOKING_DEPOSIT_STATUS_META = {
+  [BOOKING_DEPOSIT_STATUS.NOT_REQUIRED]: {
+    label: "Not Required",
+    shortLabel: "Not Required",
+  },
+  [BOOKING_DEPOSIT_STATUS.PENDING]: {
+    label: "Awaiting Deposit",
+    shortLabel: "Awaiting Deposit",
+  },
+  [BOOKING_DEPOSIT_STATUS.PAID]: {
+    label: "Deposit Received",
+    shortLabel: "Paid",
+  },
+  [BOOKING_DEPOSIT_STATUS.REFUNDED]: {
+    label: "Deposit Refunded",
+    shortLabel: "Refunded",
+  },
+}
+
 export const BOOKING_SOURCE = {
   WEBSITE: "WEBSITE",
   ADMINISTRATOR: "ADMINISTRATOR",
@@ -31,8 +50,8 @@ export const BOOKING_STATUS_META = {
     icon: "Request",
   },
   [BOOKING_STATUS.READY_FOR_DEPOSIT]: {
-    label: "Ready for Deposit",
-    shortLabel: "Deposit",
+    label: "Awaiting Deposit",
+    shortLabel: "Awaiting Deposit",
     colorClass: "ready",
     icon: "Deposit",
   },
@@ -96,6 +115,10 @@ export function addHours(date, hours) {
 
 export function getBookingStatusMeta(status) {
   return BOOKING_STATUS_META[status] ?? BOOKING_STATUS_META[BOOKING_STATUS.PENDING_REVIEW]
+}
+
+export function getBookingDepositStatusMeta(status) {
+  return BOOKING_DEPOSIT_STATUS_META[status] ?? BOOKING_DEPOSIT_STATUS_META[BOOKING_DEPOSIT_STATUS.PENDING]
 }
 
 export function isBookingSlotReserved(booking, now = new Date()) {

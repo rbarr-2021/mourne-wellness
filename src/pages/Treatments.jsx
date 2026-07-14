@@ -1,8 +1,11 @@
 import "../styles/global.css"
 import "../styles/treatments.css"
 import { useEffect, useMemo, useState } from "react"
+import LoadingMessage from "../components/LoadingMessage"
 import { useLocation } from "react-router-dom"
 import Seo from "../components/Seo"
+import StatusMessage from "../components/StatusMessage"
+import { formatCurrencyAmount, formatDepositRequirement } from "../lib/businessSettings"
 import { createBookingRequest, getRequestableSlots } from "../lib/booking-service"
 import { BOOKING_SOURCE, formatBookingDate } from "../lib/bookings"
 import { getBusinessSettings, listBookingReservations, listPublicAvailabilityPeriods, listPublicTreatments } from "../lib/supabase/database"
@@ -44,6 +47,8 @@ function Treatments() {
   const [businessSettings, setBusinessSettings] = useState(null)
   const [availabilityPeriods, setAvailabilityPeriods] = useState([])
   const [reservations, setReservations] = useState([])
+  const [isPageLoading, setIsPageLoading] = useState(true)
+  const [pageError, setPageError] = useState("")
   const [manualSelection, setManualSelection] = useState(null)
   const [bookingForm, setBookingForm] = useState(getEmptyBookingForm())
   const [bookingStep, setBookingStep] = useState("Duration")
@@ -57,20 +62,29 @@ function Treatments() {
 
   useEffect(() => {
     const loadTreatments = async () => {
-      const [{ data: treatmentData }, { data: settingsData }, { data: periodsData }, { data: reservationsData }] = await Promise.all([
-        listPublicTreatments(),
-        getBusinessSettings(),
-        listPublicAvailabilityPeriods(),
-        listBookingReservations(),
-      ])
+      setIsPageLoading(true)
+      setPageError("")
 
-      if (treatmentData?.length) {
-        setTreatments(treatmentData.map(mapTreatmentToPublicTreatment))
+      try {
+        const [{ data: treatmentData }, { data: settingsData }, { data: periodsData }, { data: reservationsData }] = await Promise.all([
+          listPublicTreatments(),
+          getBusinessSettings(),
+          listPublicAvailabilityPeriods(),
+          listBookingReservations(),
+        ])
+
+        if (treatmentData?.length) {
+          setTreatments(treatmentData.map(mapTreatmentToPublicTreatment))
+        }
+
+        setBusinessSettings(settingsData ?? null)
+        setAvailabilityPeriods(periodsData ?? [])
+        setReservations(reservationsData ?? [])
+      } catch (error) {
+        setPageError(error.message || "We couldn't load the booking page just now.")
+      } finally {
+        setIsPageLoading(false)
       }
-
-      setBusinessSettings(settingsData ?? null)
-      setAvailabilityPeriods(periodsData ?? [])
-      setReservations(reservationsData ?? [])
     }
 
     loadTreatments()
@@ -324,6 +338,15 @@ function Treatments() {
   }
 
   const activeStepIndex = Math.max(getStepIndex(bookingStep), 0)
+  const depositDisplay = formatDepositRequirement(businessSettings, selectedOption?.rawPrice ?? null)
+  const selectedPriceDisplay = selectedOption ? formatCurrencyAmount(selectedOption.rawPrice ?? 0) : ""
+  const bookingProcessSteps = [
+    "Booking request submitted",
+    "Beata reviews your request",
+    "Secure payment link sent",
+    "Deposit received",
+    "Appointment confirmed",
+  ]
 
   const renderWizardContent = () => {
     if (!selectedTreatment || !selectedOption) {
@@ -344,6 +367,15 @@ function Treatments() {
           <p className="section-copy">
             Your requested appointment time has been temporarily reserved while your request is being reviewed.
           </p>
+          <p className="section-copy">
+            If your request is accepted you will receive a secure payment link for your {depositDisplay} deposit.
+          </p>
+          <p className="section-copy">
+            Your appointment will be confirmed once the deposit has been received.
+          </p>
+          <p className="section-copy">
+            We will contact you as soon as possible.
+          </p>
         </div>
       )
     }
@@ -354,6 +386,16 @@ function Treatments() {
           <p className="booking-panel__eyebrow">Booking Request</p>
           <h3 className="booking-panel__title">{selectedTreatment.name}</h3>
           <p className="booking-panel__description">{selectedTreatment.description}</p>
+        </div>
+
+        <div className="booking-information-card">
+          <strong>How booking works</strong>
+          <ol className="booking-information-card__list">
+            <li>Send your booking request.</li>
+            <li>Beata personally reviews every request.</li>
+            <li>If accepted you will receive a secure payment link.</li>
+            <li>Your appointment is confirmed once your {depositDisplay} deposit has been received.</li>
+          </ol>
         </div>
 
         <div className="booking-progress" aria-label="Booking progress">
@@ -379,6 +421,16 @@ function Treatments() {
                     {priceOption.time} - {priceOption.price}
                   </button>
                 ))}
+              </div>
+              <div className="booking-price-card">
+                <div className="booking-price-card__row">
+                  <span>Treatment price</span>
+                  <strong>{selectedPriceDisplay}</strong>
+                </div>
+                <div className="booking-price-card__row">
+                  <span>Deposit to confirm booking</span>
+                  <strong>{depositDisplay}</strong>
+                </div>
               </div>
             </>
           ) : null}
@@ -413,8 +465,8 @@ function Treatments() {
                 />
               </label>
 
-              {isAvailabilityLoading ? <p className="booking-helper-copy">Loading available appointment times...</p> : null}
-              {availabilityMessage ? <p className="booking-error-message">{availabilityMessage}</p> : null}
+              {isAvailabilityLoading ? <LoadingMessage message="Loading available appointment times..." className="booking-status-message" /> : null}
+              {availabilityMessage ? <StatusMessage tone="error" className="booking-status-message">{availabilityMessage}</StatusMessage> : null}
 
               {availableSlots.length > 0 ? (
                 <div className="booking-time-grid">
@@ -505,13 +557,25 @@ function Treatments() {
                 <div className="booking-review-card__section">
                   <strong>Treatment</strong>
                   <span>{selectedTreatment.name}</span>
-                  <span>
-                    {selectedOption.time} - {selectedOption.price}
-                  </span>
                 </div>
 
                 <div className="booking-review-card__section">
-                  <strong>Appointment</strong>
+                  <strong>Duration</strong>
+                  <span>{selectedOption.time}</span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Price</strong>
+                  <span>{selectedPriceDisplay}</span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Deposit Required</strong>
+                  <span>{depositDisplay}</span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Requested Appointment</strong>
                   <span>{formatBookingDate(bookingForm.requestedDate)}</span>
                   <span>{bookingForm.startTime}</span>
                 </div>
@@ -531,9 +595,18 @@ function Treatments() {
                   <span>Anything else: {bookingForm.anythingElse || "None provided"}</span>
                   {bookingForm.additionalNotes ? <span>Additional notes: {bookingForm.additionalNotes}</span> : null}
                 </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Booking Process</strong>
+                  <div className="booking-process-list">
+                    {bookingProcessSteps.map((step) => (
+                      <span key={step}>&#10003; {step}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {feedbackMessage ? <p className="booking-error-message">{feedbackMessage}</p> : null}
+              {feedbackMessage ? <StatusMessage tone="error" className="booking-status-message">{feedbackMessage}</StatusMessage> : null}
 
               <div className="booking-panel__actions">
                 <button type="button" className="featured-secondary-button" onClick={goBackStep}>
@@ -547,7 +620,7 @@ function Treatments() {
           ) : null}
         </div>
 
-        {feedbackMessage && bookingStep !== "Review" ? <p className="booking-error-message">{feedbackMessage}</p> : null}
+        {feedbackMessage && bookingStep !== "Review" ? <StatusMessage tone="error" className="booking-status-message">{feedbackMessage}</StatusMessage> : null}
       </>
     )
   }
@@ -562,6 +635,18 @@ function Treatments() {
       />
       <h1 className="treatments-title">Book Your Treatment</h1>
 
+      {isPageLoading ? (
+        <div className="treatments-status-wrap">
+          <LoadingMessage message="Loading treatments and booking options..." />
+        </div>
+      ) : null}
+
+      {!isPageLoading && pageError ? (
+        <div className="treatments-status-wrap">
+          <StatusMessage tone="error">{pageError}</StatusMessage>
+        </div>
+      ) : null}
+
       <div className="treatments-layout">
         <div className={`treatments-list ${selectedTreatment ? "has-mobile-booking-bar" : ""}`}>
           {featuredTreatment ? (
@@ -574,12 +659,22 @@ function Treatments() {
               <div className="featured-header">
                 <h2 className="featured-name">{featuredTreatment.name}</h2>
                 <p className="featured-meta">
-                  {featuredTreatment.prices[0]?.time} • {featuredTreatment.prices[0]?.price}
+                  {featuredTreatment.prices[0]?.time} &bull; {featuredTreatment.prices[0]?.price}
                 </p>
               </div>
 
               <p className="featured-intro">{FEATURED_INTRODUCTION}</p>
               <p className="featured-description">{featuredTreatment.description}</p>
+              <div className="treatment-pricing-summary">
+                <div>
+                  <span>Treatment price</span>
+                  <strong>{featuredTreatment.prices[0]?.price}</strong>
+                </div>
+                <div>
+                  <span>Deposit to confirm booking</span>
+                  <strong>{formatDepositRequirement(businessSettings, featuredTreatment.prices[0]?.rawPrice ?? null)}</strong>
+                </div>
+              </div>
 
               <div className="featured-actions">
                 <button
@@ -661,6 +756,9 @@ function Treatments() {
                   <p style={{ fontSize: "12px", opacity: 0.6 }}>
                     {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
                   </p>
+                  <p style={{ fontSize: "12px", opacity: 0.75, margin: "4px 0 0" }}>
+                    Deposit to confirm booking {formatDepositRequirement(businessSettings, treatment.prices[0]?.rawPrice ?? null)}
+                  </p>
                   <p style={{ fontSize: "13px", opacity: 0.8 }}>{treatment.description}</p>
                 </div>
               ))}
@@ -680,6 +778,7 @@ function Treatments() {
               <p className="mobile-booking-bar__meta">
                 {selectedOption.time} &bull; {selectedOption.price}
               </p>
+              <p className="mobile-booking-bar__deposit">Deposit to confirm booking {depositDisplay}</p>
             </div>
 
             <button type="button" className="mobile-booking-bar__button" onClick={openMobileWizard} disabled={selectedTreatment.bookingEnabled === false}>
@@ -708,3 +807,4 @@ function Treatments() {
 }
 
 export default Treatments
+

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import LoadingMessage from "../components/LoadingMessage"
 import Seo from "../components/Seo"
+import StatusMessage from "../components/StatusMessage"
 import { exchangeCodeForSession, getSession, onAuthStateChange } from "../lib/supabase/auth"
 import { getAuthErrorMessage } from "../lib/supabase/helpers"
 
@@ -114,15 +116,13 @@ function AdminAuthCallback() {
             <>
               <p className="admin-kicker">Administrator Access</p>
               <h1 className="admin-auth-title">Verifying your secure reset link</h1>
-              <p className="section-copy admin-auth-copy">
-                Please wait while we confirm your request and prepare your password reset.
-              </p>
+              <LoadingMessage message="Please wait while we confirm your request and prepare your password reset." />
             </>
           ) : (
             <>
               <p className="admin-kicker">Administrator Access</p>
               <h1 className="admin-auth-title">This reset link can&apos;t be used</h1>
-              <p className="admin-auth-error">{errorMessage}</p>
+              <StatusMessage tone="error">{errorMessage}</StatusMessage>
               <div className="admin-auth-actions" style={{ marginTop: "24px" }}>
                 <Link className="cta-button admin-auth-secondary" to="/admin/forgot-password">
                   Request a new reset link

@@ -9,6 +9,11 @@
   margin-bottom: 40px;
 }
 
+.treatments-status-wrap {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto 28px;
+}
+
 .treatments-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
@@ -239,6 +244,62 @@
   color: var(--text-light);
 }
 
+.booking-information-card,
+.booking-price-card,
+.treatment-pricing-summary {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(198, 166, 100, 0.16);
+  background: rgba(248, 249, 247, 0.72);
+}
+
+.booking-information-card {
+  display: grid;
+  gap: 12px;
+}
+
+.booking-information-card strong {
+  color: var(--text-dark);
+}
+
+.booking-information-card__list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.booking-price-card,
+.treatment-pricing-summary {
+  display: grid;
+  gap: 12px;
+}
+
+.booking-price-card__row,
+.treatment-pricing-summary > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.booking-price-card__row span,
+.treatment-pricing-summary span {
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.booking-price-card__row strong,
+.treatment-pricing-summary strong {
+  color: var(--text-dark);
+  font-size: 16px;
+}
+
 .booking-progress {
   display: flex;
   flex-wrap: wrap;
@@ -338,6 +399,10 @@
   line-height: 1.7;
 }
 
+.booking-status-message {
+  margin-bottom: 12px;
+}
+
 .booking-helper-copy {
   color: var(--text-light);
 }
@@ -393,6 +458,20 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.booking-process-list {
+  display: grid;
+  gap: 8px;
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.booking-process-list span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .booking-success-card__eyebrow {
@@ -531,6 +610,17 @@
     width: 100%;
   }
 
+  .booking-information-card,
+  .booking-price-card,
+  .treatment-pricing-summary {
+    padding: 16px;
+  }
+
+  .booking-price-card__row,
+  .treatment-pricing-summary > div {
+    flex-wrap: wrap;
+  }
+
   .featured-actions {
     flex-direction: column;
   }
@@ -623,6 +713,13 @@
     color: var(--primary-dark);
     font-weight: 600;
     letter-spacing: 0.02em;
+  }
+
+  .mobile-booking-bar__deposit {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-light);
   }
 
   .mobile-booking-bar__button {

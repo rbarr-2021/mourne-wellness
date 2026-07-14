@@ -67,6 +67,51 @@
   color: var(--text-light);
 }
 
+:where(a, button, input, select, textarea, [role="button"]):focus-visible {
+  outline: 2px solid rgba(111, 143, 122, 0.72);
+  outline-offset: 3px;
+}
+
+.status-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(198, 166, 100, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.status-message--success {
+  background: rgba(107, 162, 146, 0.12);
+  border-color: rgba(107, 162, 146, 0.22);
+}
+
+.status-message--error {
+  background: rgba(181, 92, 92, 0.1);
+  border-color: rgba(181, 92, 92, 0.2);
+  color: #7b4040;
+}
+
+.status-message--loading {
+  background: rgba(248, 249, 247, 0.94);
+}
+
+.status-message__spinner {
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  border-radius: 999px;
+  border: 2px solid rgba(111, 143, 122, 0.18);
+  border-top-color: rgba(111, 143, 122, 0.72);
+  flex: 0 0 auto;
+  animation: statusSpinner 0.9s linear infinite;
+}
+
 .navbar {
   position: fixed;
   left: 0;
@@ -453,24 +498,6 @@
   background: rgba(255, 255, 255, 0.6);
 }
 
-.whatsapp-button {
-  position: fixed;
-  right: max(16px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  background: #25d366;
-  color: white;
-  border-radius: 50%;
-  font-size: 24px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
-  animation: pulse 2s infinite;
-  z-index: 900;
-}
-
 .admin-auth-shell,
 .admin-shell {
   min-height: 100vh;
@@ -550,22 +577,10 @@
   font-size: 16px;
 }
 
-.admin-auth-error {
-  margin: 0;
-  color: #8a4d4d;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.admin-auth-success {
-  margin: 0;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(107, 162, 146, 0.12);
-  border: 1px solid rgba(107, 162, 146, 0.22);
-  color: var(--text-dark);
-  font-size: 14px;
-  line-height: 1.7;
+.admin-auth-error,
+.admin-auth-success,
+.admin-panel__status {
+  margin: 0 0 20px;
 }
 
 .admin-auth-note {
@@ -2098,18 +2113,12 @@
   }
 }
 
-@keyframes pulse {
+@keyframes statusSpinner {
   0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-  }
-
-  70% {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+    transform: rotate(0deg);
   }
 
   100% {
-    transform: scale(1);
+    transform: rotate(360deg);
   }
 }

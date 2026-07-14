@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import LoadingMessage from "../components/LoadingMessage"
 import Seo from "../components/Seo"
+import StatusMessage from "../components/StatusMessage"
 import { useAuth } from "../components/useAuth"
 import { getAuthErrorMessage } from "../lib/supabase/helpers"
 
@@ -48,9 +50,9 @@ function AdminResetPassword() {
           <div className="admin-auth-card">
             <p className="admin-kicker">Administrator Access</p>
             <h1 className="admin-auth-title">Your reset session is no longer available</h1>
-            <p className="admin-auth-error">
+            <StatusMessage tone="error">
               This password reset link is invalid, expired or has already been used. Please request a fresh link to continue.
-            </p>
+            </StatusMessage>
             <div className="admin-auth-actions" style={{ marginTop: "24px" }}>
               <Link className="cta-button admin-auth-secondary" to="/admin/forgot-password">
                 Request a new reset link
@@ -79,7 +81,7 @@ function AdminResetPassword() {
           <div className="admin-auth-card">
             <p className="admin-kicker">Administrator Access</p>
             <h1 className="admin-auth-title">Preparing your password reset</h1>
-            <p className="section-copy admin-auth-copy">Please wait while we verify your secure reset session.</p>
+            <LoadingMessage message="Please wait while we verify your secure reset session." />
           </div>
         </section>
       </>
@@ -163,7 +165,7 @@ function AdminResetPassword() {
 
             <p className="admin-auth-note">Minimum 12 characters. Use a strong, unique password for administrator access.</p>
 
-            {errorMessage ? <p className="admin-auth-error">{errorMessage}</p> : null}
+            {errorMessage ? <StatusMessage tone="error">{errorMessage}</StatusMessage> : null}
 
             <button type="submit" className="cta-button admin-auth-submit" disabled={isSubmitting}>
               {isSubmitting ? "Updating password..." : "Update password"}

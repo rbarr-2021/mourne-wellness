@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from "react"
+import AdminEmptyState from "../../components/AdminEmptyState"
+import LoadingMessage from "../../components/LoadingMessage"
 import Seo from "../../components/Seo"
+import StatusMessage from "../../components/StatusMessage"
+import { formatCurrencyAmount, formatDepositRequirement } from "../../lib/businessSettings"
 import { approveBooking, createBookingRequest, declineBooking, getRequestableSlots, suggestAlternative } from "../../lib/booking-service"
 import {
+  BOOKING_DEPOSIT_STATUS,
   BOOKING_SOURCE,
   BOOKING_STATUS,
   buildBookingCalendarEvent,
   formatBookingDate,
   formatBookingTime,
+  getBookingDepositStatusMeta,
   getBookingStatusMeta,
 } from "../../lib/bookings"
 import { formatAvailabilityException, getMonthGrid, getEventsForDate, toDateInputValue } from "../../lib/availability"
@@ -39,6 +45,18 @@ function BookingStatusPill({ status }) {
   const meta = getBookingStatusMeta(status)
 
   return <span className={`admin-booking-status-pill admin-booking-status-pill--${meta.colorClass}`}>{meta.label}</span>
+}
+
+function getDepositStatusForBooking(booking) {
+  if (!booking) {
+    return BOOKING_DEPOSIT_STATUS.PENDING
+  }
+
+  if (booking.status === BOOKING_STATUS.READY_FOR_DEPOSIT && booking.deposit_status === BOOKING_DEPOSIT_STATUS.PENDING) {
+    return BOOKING_DEPOSIT_STATUS.PENDING
+  }
+
+  return booking.deposit_status
 }
 
 function AdminBookings() {
@@ -246,10 +264,10 @@ function AdminBookings() {
         availabilityExceptions,
         reservations,
       })
-      setFeedback("Booking approved.")
+      setFeedback("Deposit requested.")
       await loadData()
     } catch (error) {
-      setFeedback(error.message || "We couldn't approve this booking request just now.")
+      setFeedback(error.message || "We couldn't request this deposit just now.")
     }
 
     setIsSaving(false)
@@ -334,6 +352,12 @@ function AdminBookings() {
   }
 
   const selectedManualTreatment = treatments.find((treatment) => treatment.id === manualBooking.treatmentId) ?? null
+  const selectedManualOption = selectedManualTreatment?.options?.find((option) => option.id === manualBooking.treatmentOptionId) ?? null
+  const manualDepositDisplay = formatDepositRequirement(businessSettings, selectedManualOption?.price ?? null)
+  const selectedBookingPrice = Number(selectedBooking?.treatment_option?.price ?? 0)
+  const selectedBookingDepositDisplay = formatDepositRequirement(businessSettings, selectedBookingPrice || null)
+  const selectedBookingStatusMeta = selectedBooking ? getBookingStatusMeta(selectedBooking.status) : null
+  const selectedBookingDepositMeta = selectedBooking ? getBookingDepositStatusMeta(getDepositStatusForBooking(selectedBooking)) : null
 
   return (
     <>
@@ -343,7 +367,7 @@ function AdminBookings() {
           <div>
             <h2 className="admin-panel__title">Booking Requests</h2>
             <p className="section-copy admin-panel__copy">
-              Review new requests, approve the ones you want to accept, or suggest a better appointment time.
+              Review new requests, request the deposit for the ones you want to accept, or suggest a better appointment time.
             </p>
           </div>
 
@@ -354,10 +378,10 @@ function AdminBookings() {
           </div>
         </div>
 
-        {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
+        {feedback ? <StatusMessage tone={feedback.includes("couldn't") ? "error" : "success"}>{feedback}</StatusMessage> : null}
 
         {isLoading ? (
-          <p className="section-copy admin-panel__copy">Loading booking requests...</p>
+          <LoadingMessage message="Loading booking requests..." className="admin-panel__status" />
         ) : (
           <>
             <section className="admin-dashboard-summary">
@@ -367,14 +391,14 @@ function AdminBookings() {
                 <p className="section-copy admin-summary-card__copy">Requests waiting for your review.</p>
               </article>
               <article className="admin-summary-card">
-                <p className="admin-summary-card__label">Ready for Deposit</p>
+                <p className="admin-summary-card__label">Awaiting Deposit</p>
                 <h3 className="admin-summary-card__value">{readyCount}</h3>
-                <p className="section-copy admin-summary-card__copy">Approved requests ready for the next payment phase.</p>
+                <p className="section-copy admin-summary-card__copy">Requests reviewed and waiting for the deposit request to be completed.</p>
               </article>
               <article className="admin-summary-card">
                 <p className="admin-summary-card__label">Total Requests</p>
                 <h3 className="admin-summary-card__value">{bookings.length}</h3>
-                <p className="section-copy admin-summary-card__copy">Every booking request stored in Supabase.</p>
+                <p className="section-copy admin-summary-card__copy">Every booking request currently in your inbox.</p>
               </article>
             </section>
 
@@ -384,7 +408,7 @@ function AdminBookings() {
                   <div>
                     <h3 className="admin-subpanel__title">Manual Booking Request</h3>
                     <p className="section-copy admin-subpanel__copy">
-                      Create a booking request on behalf of a client using the same workflow as the website.
+                      Create a booking request for a client using the same booking rules as the website.
                     </p>
                   </div>
                 </div>
@@ -411,6 +435,14 @@ function AdminBookings() {
                       ))}
                     </select>
                   </label>
+
+                  {selectedManualOption ? (
+                    <article className="admin-compact-list__item admin-field admin-field--full">
+                      <strong>Treatment Summary</strong>
+                      <span>Price: {formatCurrencyAmount(selectedManualOption.price ?? 0)}</span>
+                      <span>Deposit required: {manualDepositDisplay}</span>
+                    </article>
+                  ) : null}
 
                   <label className="admin-field">
                     <span className="admin-field__label">Preferred date</span>
@@ -488,15 +520,15 @@ function AdminBookings() {
                   <div>
                     <h3 className="admin-subpanel__title">Booking Queue</h3>
                     <p className="section-copy admin-subpanel__copy">
-                      Newest requests appear first. Tap one to review it properly.
+                      Newest requests appear first. Select one to review the details.
                     </p>
                   </div>
                 </div>
 
                 {bookings.length === 0 ? (
-                  <p className="section-copy admin-subpanel__copy">
-                    No booking requests yet. When customers send booking requests they will appear here.
-                  </p>
+                  <AdminEmptyState title="No booking requests yet.">
+                    New booking requests will appear here as soon as a client sends one.
+                  </AdminEmptyState>
                 ) : (
                   <div className="admin-booking-queue">
                     {bookings.map((booking) => (
@@ -526,13 +558,15 @@ function AdminBookings() {
                   <div>
                     <h3 className="admin-subpanel__title">Review Request</h3>
                     <p className="section-copy admin-subpanel__copy">
-                      Focus on what needs to happen next: approve, suggest another time, or decline.
+                      Focus on what needs to happen next: request the deposit, suggest another time, or decline.
                     </p>
                   </div>
                 </div>
 
                 {!selectedBooking ? (
-                  <p className="section-copy admin-subpanel__copy">Select a booking request to review it.</p>
+                  <AdminEmptyState title="Choose a booking request.">
+                    Select a request from the queue to review it here.
+                  </AdminEmptyState>
                 ) : (
                   <div className="admin-booking-detail">
                     <div className="admin-dashboard-grid">
@@ -551,6 +585,12 @@ function AdminBookings() {
                       </article>
 
                       <article className="admin-compact-list__item">
+                        <strong>Booking Status</strong>
+                        <span>{selectedBookingStatusMeta?.label}</span>
+                        <span>Deposit status: {selectedBookingDepositMeta?.label}</span>
+                      </article>
+
+                      <article className="admin-compact-list__item">
                         <strong>Appointment</strong>
                         <span>{formatBookingDate(selectedBooking.requested_date)}</span>
                         <span>
@@ -562,6 +602,12 @@ function AdminBookings() {
                             {new Date(selectedBooking.proposed_start_time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                           </span>
                         ) : null}
+                      </article>
+
+                      <article className="admin-compact-list__item">
+                        <strong>Pricing</strong>
+                        <span>Treatment price: {selectedBooking.treatment_option ? formatCurrencyAmount(selectedBooking.treatment_option.price ?? 0) : "Not available"}</span>
+                        <span>Deposit required: {selectedBookingDepositDisplay}</span>
                       </article>
 
                       <article className="admin-compact-list__item">
@@ -582,7 +628,7 @@ function AdminBookings() {
 
                     <div className="admin-form-actions">
                       <button type="button" className="cta-button" onClick={handleApprove} disabled={isSaving}>
-                        {isSaving ? "Saving..." : "Approve Request"}
+                        {isSaving ? "Saving..." : "Request Deposit"}
                       </button>
                       <button type="button" className="ghost-button" onClick={handleDecline} disabled={isSaving}>
                         Decline Request
@@ -628,7 +674,7 @@ function AdminBookings() {
                 <div>
                   <h3 className="admin-subpanel__title">Booking Calendar</h3>
                   <p className="section-copy admin-subpanel__copy">
-                    Yellow shows requests waiting for review, amber shows requests ready for deposit, and red shows blocked availability.
+                    Yellow shows requests waiting for review, amber shows requests awaiting deposit, and red shows blocked availability.
                   </p>
                 </div>
               </div>

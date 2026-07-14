@@ -25,7 +25,42 @@ export const DEFAULT_BUSINESS_SETTINGS = {
   maximum_booking_days: 90,
   appointment_gap_minutes: 0,
   default_deposit_type: "fixed",
-  default_deposit_value: 0,
+  default_deposit_value: 20,
+}
+
+export function getDefaultDepositValue(settings) {
+  return Number(settings?.default_deposit_value ?? DEFAULT_BUSINESS_SETTINGS.default_deposit_value)
+}
+
+export function getDefaultDepositType(settings) {
+  return settings?.default_deposit_type ?? DEFAULT_BUSINESS_SETTINGS.default_deposit_type
+}
+
+export function formatCurrencyAmount(value) {
+  const numericValue = Number(value ?? 0)
+
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: Number.isInteger(numericValue) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(numericValue)
+}
+
+export function formatDepositRequirement(settings, treatmentPrice) {
+  const depositType = getDefaultDepositType(settings)
+  const depositValue = getDefaultDepositValue(settings)
+
+  if (depositType === "percentage") {
+    if (typeof treatmentPrice === "number" && Number.isFinite(treatmentPrice)) {
+      const calculatedAmount = (treatmentPrice * depositValue) / 100
+      return `${depositValue}% (${formatCurrencyAmount(calculatedAmount)})`
+    }
+
+    return `${depositValue}%`
+  }
+
+  return formatCurrencyAmount(depositValue)
 }
 
 export function normalizeOpeningHours(openingHours = {}) {

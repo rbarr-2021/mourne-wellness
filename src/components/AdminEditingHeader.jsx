@@ -14,7 +14,7 @@ function AdminEditingHeader({
     <header className="admin-editing-header">
       <div className="admin-editing-header__bar">
         <button type="button" className="admin-editing-header__back" onClick={onBack}>
-          <span aria-hidden="true">←</span>
+          <span aria-hidden="true">&larr;</span>
           <span>{parentLabel}</span>
         </button>
 
@@ -31,7 +31,7 @@ function AdminEditingHeader({
               aria-label={menuLabel}
               onClick={onToggleMenu}
             >
-              •••
+              More
             </button>
 
             {menuOpen ? <div className="admin-editing-menu__panel">{children}</div> : null}

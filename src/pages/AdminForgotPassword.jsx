@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import Seo from "../components/Seo"
+import StatusMessage from "../components/StatusMessage"
 import { useAuth } from "../components/useAuth"
 import { getAuthErrorMessage } from "../lib/supabase/helpers"
 
@@ -47,7 +48,7 @@ function AdminForgotPassword() {
           </p>
 
           <form className="admin-auth-form" onSubmit={handleSubmit}>
-            {successMessage ? <p className="admin-auth-success">{successMessage}</p> : null}
+            {successMessage ? <StatusMessage tone="success">{successMessage}</StatusMessage> : null}
 
             <label className="admin-field">
               <span className="admin-field__label">Email</span>
@@ -62,7 +63,7 @@ function AdminForgotPassword() {
               />
             </label>
 
-            {errorMessage ? <p className="admin-auth-error">{errorMessage}</p> : null}
+            {errorMessage ? <StatusMessage tone="error">{errorMessage}</StatusMessage> : null}
 
             <button type="submit" className="cta-button admin-auth-submit" disabled={isSubmitting}>
               {isSubmitting ? "Sending reset link..." : "Send reset link"}

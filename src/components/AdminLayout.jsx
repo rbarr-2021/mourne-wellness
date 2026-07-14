@@ -1,14 +1,14 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { useAuth } from "./useAuth"
+import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import Seo from "./Seo"
+import { useAuth } from "./useAuth"
 
 const adminLinks = [
-  { to: "/admin", label: "Dashboard", shortLabel: "Home", icon: "●", end: true },
-  { to: "/admin/settings", label: "Business Settings", shortLabel: "Settings", icon: "◌" },
-  { to: "/admin/treatments", label: "Treatments", shortLabel: "Treatments", icon: "✦" },
-  { to: "/admin/availability", label: "Availability", shortLabel: "Calendar", icon: "◫" },
-  { to: "/admin/bookings", label: "Bookings", shortLabel: "More", icon: "···" },
+  { to: "/admin", label: "Dashboard", shortLabel: "Home", icon: "D", end: true },
+  { to: "/admin/settings", label: "Business Settings", shortLabel: "Settings", icon: "S" },
+  { to: "/admin/treatments", label: "Treatments", shortLabel: "Treatments", icon: "T" },
+  { to: "/admin/availability", label: "Availability", shortLabel: "Calendar", icon: "A" },
+  { to: "/admin/bookings", label: "Bookings", shortLabel: "Bookings", icon: "B" },
 ]
 
 function AdminLayout() {
@@ -32,14 +32,12 @@ function AdminLayout() {
             <div className="admin-topbar__content">
               <p className="admin-kicker">Secure Administrator Area</p>
               <h1 className="admin-title">Retreat by the Mournes Admin</h1>
-              <p className="section-copy admin-subtitle">
-                Signed in as {user?.email ?? "administrator"}.
-              </p>
+              <p className="section-copy admin-subtitle">Signed in as {user?.email ?? "administrator"}.</p>
             </div>
 
             <div className="admin-topbar__actions">
               <button type="button" className="ghost-button admin-logout" onClick={handleLogout} disabled={isLoggingOut}>
-                {isLoggingOut ? "Signing out..." : "Logout"}
+                {isLoggingOut ? "Signing out..." : "Sign out"}
               </button>
             </div>
           </header>

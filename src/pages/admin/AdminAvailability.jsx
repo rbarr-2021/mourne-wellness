@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useOutletContext } from "react-router-dom"
+import AdminEmptyState from "../../components/AdminEmptyState"
 import AdminEditingHeader from "../../components/AdminEditingHeader"
+import LoadingMessage from "../../components/LoadingMessage"
 import Seo from "../../components/Seo"
+import StatusMessage from "../../components/StatusMessage"
 import { getDailyAvailability } from "../../lib/availability-engine"
 import {
   AVAILABILITY_KIND_CONFIG,
@@ -380,7 +383,7 @@ function AdminAvailability() {
             <div>
               <h2 className="admin-panel__title">Availability Management</h2>
               <p className="section-copy admin-panel__copy">
-                Manage periods when appointments cannot be accepted. This becomes the single source of truth for unavailable time.
+                Manage the times when appointment requests should not be accepted.
               </p>
             </div>
 
@@ -394,10 +397,10 @@ function AdminAvailability() {
             </div>
           </div>
 
-          {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
+          {feedback ? <StatusMessage tone={feedback.includes("couldn't") ? "error" : "success"}>{feedback}</StatusMessage> : null}
 
           {isLoading ? (
-            <p className="section-copy admin-panel__copy">Loading availability exceptions...</p>
+            <LoadingMessage message="Loading your availability calendar..." className="admin-panel__status" />
           ) : (
             <div className="admin-availability-layout">
               <section className="admin-subpanel admin-subpanel--stretch">
@@ -405,7 +408,7 @@ function AdminAvailability() {
                   <div>
                     <h3 className="admin-subpanel__title">Calendar</h3>
                     <p className="section-copy admin-subpanel__copy">
-                      Month, week and day views are available. Drag-and-drop editing is deferred to keep this phase clean and maintainable.
+                      Switch between month, week and day views to review your unavailable time.
                     </p>
                   </div>
                 </div>
@@ -725,7 +728,9 @@ function AdminAvailability() {
                 </div>
 
                 {formattedRecords.length === 0 ? (
-                  <p className="section-copy admin-panel__copy">No availability exceptions match the current filters.</p>
+                  <AdminEmptyState title="No availability exceptions match these filters.">
+                    Try clearing a filter or create a new exception for this date range.
+                  </AdminEmptyState>
                 ) : (
                   <div className="admin-availability-table">
                     <div className="admin-availability-table__head">
@@ -808,7 +813,7 @@ function AdminAvailability() {
               ) : null}
             </AdminEditingHeader>
 
-            {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
+            {feedback ? <StatusMessage tone={feedback.includes("couldn't") ? "error" : "success"}>{feedback}</StatusMessage> : null}
 
             <section className="admin-subpanel admin-subpanel--editing">
               <div className="admin-subpanel__header">
