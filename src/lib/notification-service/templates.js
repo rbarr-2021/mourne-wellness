@@ -1,4 +1,5 @@
 import { formatBookingDate, formatBookingTime, formatBookingCommunicationSummary } from "../bookings"
+import { getRetreatWhatsAppUrl } from "../contact"
 
 function buildBookingReference(booking) {
   return {
@@ -14,13 +15,41 @@ function buildBookingReference(booking) {
   }
 }
 
-export function buildCustomerNotificationTemplate(type, booking) {
+function buildSupportMessage(booking) {
+  const treatmentName = booking?.treatment?.name ?? "my booking"
+  const requestedDate = booking?.requested_date ? formatBookingDate(booking.requested_date) : "my requested appointment"
+
+  return `Hello Beata, I have a question about ${treatmentName} for ${requestedDate}.`
+}
+
+export function buildSupportSection(booking) {
+  return {
+    heading: "Need help?",
+    lines: [
+      "Questions about your booking?",
+      "Need to make a change?",
+      "We're here to help.",
+    ],
+    buttonLabel: "Message Beata on WhatsApp",
+    buttonUrl: getRetreatWhatsAppUrl(buildSupportMessage(booking)),
+    note: "Please don't submit another booking request if you've already requested this appointment.",
+  }
+}
+
+export function buildWhatsAppSupportClosing() {
+  return [
+    "Questions about your booking?",
+    "You can reply to this WhatsApp message or contact Beata directly.",
+  ]
+}
+
+export function buildCustomerEmailTemplate(type, booking) {
   const reference = buildBookingReference(booking)
 
   const templates = {
     BOOKING_RECEIVED: {
       subject: "Your booking request has been received",
-      previewText: "We’ve received your request and Beata will review it personally.",
+      previewText: "We've received your request and Beata will review it personally.",
       heading: "Your booking request has been received",
       message:
         "Thank you for getting in touch. Beata will personally review your request and will contact you soon to guide you through the next step.",
@@ -32,20 +61,20 @@ export function buildCustomerNotificationTemplate(type, booking) {
       heading: "Your deposit is ready",
       message:
         "Your request has been reviewed and your preferred appointment can now move to the deposit stage.",
-      nextStep: "We’ll send your secure payment link separately.",
+      nextStep: "We'll send your secure payment link separately.",
     },
     BOOKING_CONFIRMED: {
       subject: "Your retreat is confirmed",
       previewText: "Your appointment is now confirmed.",
       heading: "Your retreat is confirmed",
       message: "Your appointment is now confirmed and reserved for you.",
-      nextStep: "We’ll be in touch again nearer the time with a gentle reminder.",
+      nextStep: "We'll be in touch again nearer the time with a gentle reminder.",
     },
     APPOINTMENT_REMINDER: {
       subject: "A gentle reminder about your appointment",
       previewText: "Your treatment is coming up soon.",
       heading: "A gentle reminder about your appointment",
-      message: "Your appointment is coming up soon and we’re looking forward to welcoming you.",
+      message: "Your appointment is coming up soon and we're looking forward to welcoming you.",
       nextStep: "If anything has changed, please let us know as soon as you can.",
     },
     BOOKING_CANCELLED: {
@@ -53,7 +82,7 @@ export function buildCustomerNotificationTemplate(type, booking) {
       previewText: "Your appointment is no longer scheduled.",
       heading: "Your booking has been cancelled",
       message: "Your appointment is no longer scheduled.",
-      nextStep: "If you would like to arrange another time, we’ll be happy to help.",
+      nextStep: "If you would like to arrange another time, we'll be happy to help.",
     },
   }
 
@@ -62,7 +91,44 @@ export function buildCustomerNotificationTemplate(type, booking) {
     audience: "customer",
     channel: "email",
     reference,
+    supportSection: buildSupportSection(booking),
     ...templates[type],
+  }
+}
+
+export function buildCustomerWhatsAppTemplate(type, booking) {
+  const reference = buildBookingReference(booking)
+
+  const templates = {
+    BOOKING_RECEIVED: {
+      intro: "Your booking request has been received.",
+      body: "Beata will personally review your request and guide you through the next step.",
+    },
+    DEPOSIT_REQUESTED: {
+      intro: "Your deposit is ready.",
+      body: "Your request has been reviewed and can now move to the deposit stage.",
+    },
+    BOOKING_CONFIRMED: {
+      intro: "Your retreat is confirmed.",
+      body: "Your appointment is now confirmed and reserved for you.",
+    },
+    APPOINTMENT_REMINDER: {
+      intro: "A gentle reminder about your appointment.",
+      body: "We're looking forward to welcoming you soon.",
+    },
+    BOOKING_CANCELLED: {
+      intro: "Your booking has been cancelled.",
+      body: "If you would like to arrange another time, we'll be happy to help.",
+    },
+  }
+
+  return {
+    type,
+    audience: "customer",
+    channel: "whatsapp",
+    reference,
+    ...templates[type],
+    closingLines: buildWhatsAppSupportClosing(),
   }
 }
 

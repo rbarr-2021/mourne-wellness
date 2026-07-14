@@ -658,7 +658,7 @@ function AdminBookings() {
                       </article>
 
                       <article className="admin-compact-list__item">
-                        <strong>Communication Preferences</strong>
+                        <strong>Communication</strong>
                         {selectedBookingCommunicationChannels.map((channel) => (
                           <span key={channel.key}>
                             {channel.icon} {channel.label}: {channel.detail}

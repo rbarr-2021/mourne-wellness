@@ -1,6 +1,7 @@
-import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa"
+﻿import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa"
 import logo from "../assets/logo.png"
 import "../styles/global.css"
+import { getRetreatWhatsAppUrl } from "../lib/contact"
 
 function Footer() {
   return (
@@ -33,16 +34,17 @@ function Footer() {
         >
           <FaFacebook size={20} color="#1877f2" />
         </a>
-        <a href="https://wa.me/447591383215" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <a href={getRetreatWhatsAppUrl()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
           <FaWhatsapp size={20} color="#25D366" />
         </a>
       </div>
 
       <p className="section-copy" style={{ marginTop: "15px", fontSize: "11px" }}>
-        © {new Date().getFullYear()} Retreat By the Mournes. All rights reserved.
+        &copy; {new Date().getFullYear()} Retreat By the Mournes. All rights reserved.
       </p>
     </footer>
   )
 }
 
 export default Footer
+

@@ -1,12 +1,14 @@
 import "../styles/global.css"
 import "../styles/treatments.css"
 import { useEffect, useMemo, useState } from "react"
+import { FaWhatsapp } from "react-icons/fa"
 import LoadingMessage from "../components/LoadingMessage"
 import { useLocation } from "react-router-dom"
 import Seo from "../components/Seo"
 import StatusMessage from "../components/StatusMessage"
 import { formatCurrencyAmount, formatDepositRequirement } from "../lib/businessSettings"
 import { createBookingRequest, getRequestableSlots } from "../lib/booking-service"
+import { getRetreatWhatsAppUrl } from "../lib/contact"
 import { BOOKING_SOURCE, formatBookingDate, getBookingCommunicationChannels } from "../lib/bookings"
 import { getBusinessSettings, listBookingReservations, listPublicAvailabilityPeriods, listPublicTreatments } from "../lib/supabase/database"
 import {
@@ -39,6 +41,13 @@ function getEmptyBookingForm() {
 
 function isValidEmailAddress(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim())
+}
+
+function buildBookingSupportMessage(booking, selectedTreatment) {
+  const treatmentName = booking?.treatment?.name ?? selectedTreatment?.name ?? "my booking"
+  const requestedDate = booking?.requested_date ? formatBookingDate(booking.requested_date) : "my requested appointment"
+
+  return `Hello Beata, I have a question about my booking request for ${treatmentName} on ${requestedDate}.`
 }
 
 function getStepIndex(step) {
@@ -361,6 +370,7 @@ function Treatments() {
   const selectedCommunicationChannels = getBookingCommunicationChannels({
     whatsapp_notifications: successBooking?.whatsapp_notifications ?? bookingForm.whatsappNotifications,
   })
+  const bookingSupportUrl = getRetreatWhatsAppUrl(buildBookingSupportMessage(successBooking, selectedTreatment))
 
   const renderWizardContent = () => {
     if (!selectedTreatment || !selectedOption) {
@@ -397,6 +407,27 @@ function Treatments() {
                 {channel.icon} {channel.label}
               </span>
             ))}
+          </div>
+          <div className="booking-support-card">
+            <div className="booking-support-card__content">
+              <p className="booking-support-card__eyebrow">Need help?</p>
+              <h4 className="booking-support-card__title">Questions about your booking?</h4>
+              <p className="section-copy booking-support-card__copy">
+                Need to make a change? Want to tell Beata something before your appointment? Feel free to get in touch.
+              </p>
+              <a
+                href={bookingSupportUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="booking-support-card__button"
+              >
+                <FaWhatsapp aria-hidden="true" />
+                <span>Message Beata on WhatsApp</span>
+              </a>
+              <p className="booking-support-card__note">
+                Please don't submit another booking request if you've already requested this appointment.
+              </p>
+            </div>
           </div>
         </div>
       )

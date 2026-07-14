@@ -1,4 +1,8 @@
-import { buildAdminNotificationTemplate, buildCustomerNotificationTemplate } from "./templates"
+import {
+  buildAdminNotificationTemplate,
+  buildCustomerEmailTemplate,
+  buildCustomerWhatsAppTemplate,
+} from "./templates"
 
 export const CUSTOMER_NOTIFICATION_TYPES = {
   BOOKING_RECEIVED: "BOOKING_RECEIVED",
@@ -36,7 +40,7 @@ function buildChannels({ booking, includeWhatsApp = false }) {
   return channels
 }
 
-function createNotificationDraft({ type, booking, audience, channels, template }) {
+function createNotificationDraft({ type, booking, audience, channels, templates }) {
   return {
     sent: false,
     provider: null,
@@ -44,107 +48,70 @@ function createNotificationDraft({ type, booking, audience, channels, template }
     type,
     bookingId: booking?.id ?? null,
     channels,
-    template,
+    templates,
   }
 }
 
-export async function sendBookingReceived(booking) {
+function createCustomerNotificationDraft(type, booking) {
   return createNotificationDraft({
-    type: CUSTOMER_NOTIFICATION_TYPES.BOOKING_RECEIVED,
+    type,
     booking,
     audience: "customer",
     channels: buildChannels({ booking, includeWhatsApp: true }),
-    template: buildCustomerNotificationTemplate(CUSTOMER_NOTIFICATION_TYPES.BOOKING_RECEIVED, booking),
+    templates: {
+      email: buildCustomerEmailTemplate(type, booking),
+      whatsapp: buildCustomerWhatsAppTemplate(type, booking),
+    },
   })
+}
+
+export async function sendBookingReceived(booking) {
+  return createCustomerNotificationDraft(CUSTOMER_NOTIFICATION_TYPES.BOOKING_RECEIVED, booking)
 }
 
 export async function sendDepositRequest(booking) {
-  return createNotificationDraft({
-    type: CUSTOMER_NOTIFICATION_TYPES.DEPOSIT_REQUESTED,
-    booking,
-    audience: "customer",
-    channels: buildChannels({ booking, includeWhatsApp: true }),
-    template: buildCustomerNotificationTemplate(CUSTOMER_NOTIFICATION_TYPES.DEPOSIT_REQUESTED, booking),
-  })
+  return createCustomerNotificationDraft(CUSTOMER_NOTIFICATION_TYPES.DEPOSIT_REQUESTED, booking)
 }
 
 export async function sendBookingConfirmed(booking) {
-  return createNotificationDraft({
-    type: CUSTOMER_NOTIFICATION_TYPES.BOOKING_CONFIRMED,
-    booking,
-    audience: "customer",
-    channels: buildChannels({ booking, includeWhatsApp: true }),
-    template: buildCustomerNotificationTemplate(CUSTOMER_NOTIFICATION_TYPES.BOOKING_CONFIRMED, booking),
-  })
+  return createCustomerNotificationDraft(CUSTOMER_NOTIFICATION_TYPES.BOOKING_CONFIRMED, booking)
 }
 
 export async function sendReminder(booking) {
-  return createNotificationDraft({
-    type: CUSTOMER_NOTIFICATION_TYPES.APPOINTMENT_REMINDER,
-    booking,
-    audience: "customer",
-    channels: buildChannels({ booking, includeWhatsApp: true }),
-    template: buildCustomerNotificationTemplate(CUSTOMER_NOTIFICATION_TYPES.APPOINTMENT_REMINDER, booking),
-  })
+  return createCustomerNotificationDraft(CUSTOMER_NOTIFICATION_TYPES.APPOINTMENT_REMINDER, booking)
 }
 
 export async function sendBookingCancelled(booking) {
+  return createCustomerNotificationDraft(CUSTOMER_NOTIFICATION_TYPES.BOOKING_CANCELLED, booking)
+}
+
+function createAdminNotificationDraft(type, booking) {
   return createNotificationDraft({
-    type: CUSTOMER_NOTIFICATION_TYPES.BOOKING_CANCELLED,
+    type,
     booking,
-    audience: "customer",
-    channels: buildChannels({ booking, includeWhatsApp: true }),
-    template: buildCustomerNotificationTemplate(CUSTOMER_NOTIFICATION_TYPES.BOOKING_CANCELLED, booking),
+    audience: "administrator",
+    channels: [
+      {
+        channel: "email",
+        enabled: true,
+        recipient: null,
+        status: "provider_not_connected",
+      },
+    ],
+    templates: {
+      email: buildAdminNotificationTemplate(type, booking),
+    },
   })
 }
 
 export async function notifyAdminNewBookingRequest(booking) {
-  return createNotificationDraft({
-    type: ADMIN_NOTIFICATION_TYPES.NEW_BOOKING_REQUEST,
-    booking,
-    audience: "administrator",
-    channels: [
-      {
-        channel: "email",
-        enabled: true,
-        recipient: null,
-        status: "provider_not_connected",
-      },
-    ],
-    template: buildAdminNotificationTemplate(ADMIN_NOTIFICATION_TYPES.NEW_BOOKING_REQUEST, booking),
-  })
+  return createAdminNotificationDraft(ADMIN_NOTIFICATION_TYPES.NEW_BOOKING_REQUEST, booking)
 }
 
 export async function notifyAdminDepositPaid(booking) {
-  return createNotificationDraft({
-    type: ADMIN_NOTIFICATION_TYPES.DEPOSIT_PAID,
-    booking,
-    audience: "administrator",
-    channels: [
-      {
-        channel: "email",
-        enabled: true,
-        recipient: null,
-        status: "provider_not_connected",
-      },
-    ],
-    template: buildAdminNotificationTemplate(ADMIN_NOTIFICATION_TYPES.DEPOSIT_PAID, booking),
-  })
+  return createAdminNotificationDraft(ADMIN_NOTIFICATION_TYPES.DEPOSIT_PAID, booking)
 }
 
 export async function notifyAdminBookingCancelled(booking) {
-  return createNotificationDraft({
-    type: ADMIN_NOTIFICATION_TYPES.BOOKING_CANCELLED,
-    booking,
-    audience: "administrator",
-    channels: [
-      {
-        channel: "email",
-        enabled: true,
-        recipient: null,
-        status: "provider_not_connected",
-      },
-    ],
-    template: buildAdminNotificationTemplate(ADMIN_NOTIFICATION_TYPES.BOOKING_CANCELLED, booking),
-  })
+  return createAdminNotificationDraft(ADMIN_NOTIFICATION_TYPES.BOOKING_CANCELLED, booking)
 }

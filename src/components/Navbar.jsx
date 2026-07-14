@@ -3,6 +3,7 @@ import { FaHome, FaSpa, FaFacebook, FaInstagram, FaWhatsapp, FaUser } from "reac
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2"
 import { Link } from "react-router-dom"
 import logo from "../assets/logo.png"
+import { getRetreatWhatsAppUrl } from "../lib/contact"
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -58,7 +59,7 @@ function Navbar() {
                 <FaSpa /> Services
               </Link>
 
-              <a href="https://wa.me/447591383215" className="menu-item" onClick={() => setMenuOpen(false)}>
+              <a href={getRetreatWhatsAppUrl()} className="menu-item" onClick={() => setMenuOpen(false)}>
                 <FaWhatsapp color="#25D366" /> Contact
               </a>
 
@@ -84,7 +85,7 @@ function Navbar() {
                 <FaFacebook color="#1877f2" /> Facebook
               </a>
 
-              <a href="https://wa.me/447591383215" className="menu-item" onClick={() => setMenuOpen(false)}>
+              <a href={getRetreatWhatsAppUrl()} className="menu-item" onClick={() => setMenuOpen(false)}>
                 <FaWhatsapp color="#25D366" /> WhatsApp
               </a>
             </div>

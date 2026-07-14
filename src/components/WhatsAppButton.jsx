@@ -1,6 +1,7 @@
 import "./WhatsAppButton.css"
 import { FaWhatsapp } from "react-icons/fa"
 import { useLocation } from "react-router-dom"
+import { getRetreatWhatsAppUrl } from "../lib/contact"
 
 function WhatsAppButton() {
   const location = useLocation()
@@ -11,7 +12,7 @@ function WhatsAppButton() {
 
   return (
     <a
-      href="https://wa.me/447591383215"
+      href={getRetreatWhatsAppUrl()}
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-button"
