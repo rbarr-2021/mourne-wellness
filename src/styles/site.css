@@ -678,6 +678,10 @@
   padding: 0;
 }
 
+.admin-dashboard-welcome {
+  margin-bottom: 22px;
+}
+
 .admin-panel__title {
   margin: 0;
   font-family: var(--font-heading);
@@ -1144,6 +1148,10 @@
   text-decoration: none;
 }
 
+.admin-compact-list__item--link {
+  text-decoration: none;
+}
+
 .admin-action-card__eyebrow {
   color: var(--primary-dark);
   font-size: 12px;
@@ -1160,6 +1168,84 @@
 
 .admin-compact-list--calendar {
   margin-bottom: 18px;
+}
+
+.admin-dashboard-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.admin-dashboard-priority-card {
+  border-color: rgba(198, 166, 100, 0.28);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(248, 249, 247, 0.86));
+}
+
+.admin-attention-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(198, 166, 100, 0.16);
+}
+
+.admin-attention-item p {
+  margin: 8px 0 0;
+}
+
+.admin-attention-item__action {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.admin-dashboard-appointment-card {
+  gap: 10px;
+}
+
+.admin-availability-status-card {
+  display: flex;
+  align-items: center;
+  min-height: 86px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(198, 166, 100, 0.16);
+  color: var(--text-dark);
+}
+
+.admin-availability-status-card--open {
+  background: rgba(111, 143, 122, 0.12);
+}
+
+.admin-availability-status-card--holiday {
+  background: rgba(181, 92, 92, 0.12);
+}
+
+.admin-availability-status-card--blocked {
+  background: rgba(210, 143, 88, 0.14);
+}
+
+.admin-availability-status-card--closed {
+  background: rgba(164, 171, 158, 0.16);
+}
+
+.admin-quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(198, 166, 100, 0.14);
 }
 
 .admin-availability-layout {
@@ -1667,6 +1753,18 @@
   .admin-inline-links {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .admin-attention-item {
+    flex-direction: column;
+  }
+
+  .admin-attention-item__action {
+    width: 100%;
+  }
+
+  .admin-quick-action-grid {
+    grid-template-columns: 1fr;
   }
 
   .admin-mobile-editor-page.is-mobile-focused {
