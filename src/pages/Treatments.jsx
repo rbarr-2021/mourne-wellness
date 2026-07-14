@@ -7,7 +7,7 @@ import Seo from "../components/Seo"
 import StatusMessage from "../components/StatusMessage"
 import { formatCurrencyAmount, formatDepositRequirement } from "../lib/businessSettings"
 import { createBookingRequest, getRequestableSlots } from "../lib/booking-service"
-import { BOOKING_SOURCE, formatBookingDate } from "../lib/bookings"
+import { BOOKING_SOURCE, formatBookingDate, getBookingCommunicationChannels } from "../lib/bookings"
 import { getBusinessSettings, listBookingReservations, listPublicAvailabilityPeriods, listPublicTreatments } from "../lib/supabase/database"
 import {
   buildTreatmentsStructuredData,
@@ -28,12 +28,17 @@ function getEmptyBookingForm() {
     clientName: "",
     clientEmail: "",
     clientPhone: "",
+    whatsappNotifications: false,
     pregnant: "no",
     injuries: "",
     medicalConditions: "",
     anythingElse: "",
     additionalNotes: "",
   }
+}
+
+function isValidEmailAddress(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim())
 }
 
 function getStepIndex(step) {
@@ -255,6 +260,11 @@ function Treatments() {
       return false
     }
 
+    if (!isValidEmailAddress(bookingForm.clientEmail)) {
+      setFeedbackMessage("Please enter a valid email address.")
+      return false
+    }
+
     if (!bookingForm.clientPhone.trim()) {
       setFeedbackMessage("Please enter your mobile number.")
       return false
@@ -303,6 +313,7 @@ function Treatments() {
         clientName: bookingForm.clientName,
         clientEmail: bookingForm.clientEmail,
         clientPhone: bookingForm.clientPhone,
+        whatsappNotifications: bookingForm.whatsappNotifications,
         healthInformation: {
           pregnant: bookingForm.pregnant,
           injuries: bookingForm.injuries,
@@ -347,6 +358,9 @@ function Treatments() {
     "Deposit received",
     "Appointment confirmed",
   ]
+  const selectedCommunicationChannels = getBookingCommunicationChannels({
+    whatsapp_notifications: successBooking?.whatsapp_notifications ?? bookingForm.whatsappNotifications,
+  })
 
   const renderWizardContent = () => {
     if (!selectedTreatment || !selectedOption) {
@@ -376,6 +390,14 @@ function Treatments() {
           <p className="section-copy">
             We will contact you as soon as possible.
           </p>
+          <div className="booking-review-card__section">
+            <strong>We'll contact you using</strong>
+            {selectedCommunicationChannels.filter((channel) => channel.selected).map((channel) => (
+              <span key={channel.key}>
+                {channel.icon} {channel.label}
+              </span>
+            ))}
+          </div>
         </div>
       )
     }
@@ -490,12 +512,29 @@ function Treatments() {
                 </label>
                 <label className="booking-field">
                   <span>Email Address</span>
-                  <input className="booking-input" type="email" value={bookingForm.clientEmail} onChange={(event) => updateBookingForm("clientEmail", event.target.value)} />
+                  <input className="booking-input" type="email" required value={bookingForm.clientEmail} onChange={(event) => updateBookingForm("clientEmail", event.target.value)} />
                 </label>
                 <label className="booking-field">
                   <span>Mobile Number</span>
                   <input className="booking-input" type="tel" value={bookingForm.clientPhone} onChange={(event) => updateBookingForm("clientPhone", event.target.value)} />
                 </label>
+                <div className="booking-field">
+                  <span>Communication Preferences</span>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: "10px", color: "var(--text-dark)", fontSize: "15px", lineHeight: "1.6" }}>
+                    <input
+                      type="checkbox"
+                      checked={bookingForm.whatsappNotifications}
+                      onChange={(event) => updateBookingForm("whatsappNotifications", event.target.checked)}
+                      style={{ marginTop: "4px" }}
+                    />
+                    <span style={{ fontWeight: 400 }}>
+                      Keep me updated on WhatsApp about this booking.
+                    </span>
+                  </label>
+                  <p className="section-copy" style={{ margin: 0 }}>
+                    We'll only send WhatsApp messages relating to this booking, such as confirmation, deposit requests and reminders. No marketing messages.
+                  </p>
+                </div>
               </div>
 
               <div className="booking-panel__actions">
@@ -585,6 +624,15 @@ function Treatments() {
                   <span>{bookingForm.clientName}</span>
                   <span>{bookingForm.clientEmail}</span>
                   <span>{bookingForm.clientPhone}</span>
+                </div>
+
+                <div className="booking-review-card__section">
+                  <strong>Communication Preferences</strong>
+                  {selectedCommunicationChannels.map((channel) => (
+                    <span key={channel.key}>
+                      {channel.icon} {channel.label} {channel.detail}
+                    </span>
+                  ))}
                 </div>
 
                 <div className="booking-review-card__section">

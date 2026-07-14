@@ -101,6 +101,29 @@ export function normalizeHealthInformation(healthInformation) {
   }
 }
 
+export function getBookingCommunicationChannels(booking) {
+  return [
+    {
+      key: "email",
+      icon: "📧",
+      label: "Email",
+      selected: true,
+      detail: "Included",
+    },
+    {
+      key: "whatsapp",
+      icon: "📱",
+      label: "WhatsApp",
+      selected: Boolean(booking?.whatsapp_notifications),
+      detail: booking?.whatsapp_notifications ? "Selected" : "Not Selected",
+    },
+  ]
+}
+
+export function formatBookingCommunicationSummary(booking) {
+  return booking?.whatsapp_notifications ? "📧 Email • 📱 WhatsApp" : "📧 Email Only"
+}
+
 export function combineBookingDateAndTime(dateValue, timeValue) {
   return new Date(`${dateValue}T${String(timeValue).slice(0, 5)}:00`)
 }
@@ -160,6 +183,7 @@ export function normalizeBookingRecord(record) {
     ...record,
     treatment,
     treatment_option: treatmentOption,
+    whatsapp_notifications: Boolean(record.whatsapp_notifications),
     health_information: normalizeHealthInformation(record.health_information),
     additional_notes: record.additional_notes ?? "",
     admin_notes: record.admin_notes ?? "",

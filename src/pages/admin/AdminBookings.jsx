@@ -10,8 +10,10 @@ import {
   BOOKING_SOURCE,
   BOOKING_STATUS,
   buildBookingCalendarEvent,
+  formatBookingCommunicationSummary,
   formatBookingDate,
   formatBookingTime,
+  getBookingCommunicationChannels,
   getBookingDepositStatusMeta,
   getBookingStatusMeta,
 } from "../../lib/bookings"
@@ -33,12 +35,17 @@ function getEmptyManualBooking() {
     clientName: "",
     clientEmail: "",
     clientPhone: "",
+    whatsappNotifications: false,
     pregnant: "no",
     injuries: "",
     medicalConditions: "",
     anythingElse: "",
     additionalNotes: "",
   }
+}
+
+function isValidEmailAddress(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim())
 }
 
 function BookingStatusPill({ status }) {
@@ -315,6 +322,26 @@ function AdminBookings() {
   }
 
   const handleManualCreate = async () => {
+    if (!manualBooking.clientName.trim()) {
+      setFeedback("Please enter the client's full name.")
+      return
+    }
+
+    if (!manualBooking.clientEmail.trim()) {
+      setFeedback("Please enter the client's email address.")
+      return
+    }
+
+    if (!isValidEmailAddress(manualBooking.clientEmail)) {
+      setFeedback("Please enter a valid email address.")
+      return
+    }
+
+    if (!manualBooking.clientPhone.trim()) {
+      setFeedback("Please enter the client's mobile number.")
+      return
+    }
+
     setIsSaving(true)
     setFeedback("")
 
@@ -327,6 +354,7 @@ function AdminBookings() {
         clientName: manualBooking.clientName,
         clientEmail: manualBooking.clientEmail,
         clientPhone: manualBooking.clientPhone,
+        whatsappNotifications: manualBooking.whatsappNotifications,
         healthInformation: {
           pregnant: manualBooking.pregnant,
           injuries: manualBooking.injuries,
@@ -358,6 +386,7 @@ function AdminBookings() {
   const selectedBookingDepositDisplay = formatDepositRequirement(businessSettings, selectedBookingPrice || null)
   const selectedBookingStatusMeta = selectedBooking ? getBookingStatusMeta(selectedBooking.status) : null
   const selectedBookingDepositMeta = selectedBooking ? getBookingDepositStatusMeta(getDepositStatusForBooking(selectedBooking)) : null
+  const selectedBookingCommunicationChannels = selectedBooking ? getBookingCommunicationChannels(selectedBooking) : []
 
   return (
     <>
@@ -476,6 +505,22 @@ function AdminBookings() {
                     <input className="admin-input" value={manualBooking.clientPhone} onChange={(event) => changeManualField("clientPhone", event.target.value)} />
                   </label>
 
+                  <div className="admin-field admin-field--full">
+                    <span className="admin-field__label">Communication Preferences</span>
+                    <label style={{ display: "flex", alignItems: "flex-start", gap: "10px", color: "var(--text-dark)", fontSize: "15px", lineHeight: "1.6" }}>
+                      <input
+                        type="checkbox"
+                        checked={manualBooking.whatsappNotifications}
+                        onChange={(event) => changeManualField("whatsappNotifications", event.target.checked)}
+                        style={{ marginTop: "4px" }}
+                      />
+                      <span>Keep this client updated on WhatsApp about this booking.</span>
+                    </label>
+                    <p className="section-copy admin-subpanel__copy" style={{ margin: 0 }}>
+                      WhatsApp updates are limited to this booking only, such as confirmation, deposit requests and reminders.
+                    </p>
+                  </div>
+
                   <label className="admin-field">
                     <span className="admin-field__label">Are they pregnant?</span>
                     <select className="admin-input" value={manualBooking.pregnant} onChange={(event) => changeManualField("pregnant", event.target.value)}>
@@ -546,6 +591,7 @@ function AdminBookings() {
                           <span>{formatBookingDate(booking.requested_date)}</span>
                           <span>{formatBookingTime(booking.start_time)}</span>
                           <span>{booking.client_name}</span>
+                          <span>{formatBookingCommunicationSummary(booking)}</span>
                         </div>
                       </button>
                     ))}
@@ -575,6 +621,7 @@ function AdminBookings() {
                         <span>{selectedBooking.client_name}</span>
                         <span>{selectedBooking.client_email}</span>
                         <span>{selectedBooking.client_phone}</span>
+                        <span>{formatBookingCommunicationSummary(selectedBooking)}</span>
                       </article>
 
                       <article className="admin-compact-list__item">
@@ -608,6 +655,15 @@ function AdminBookings() {
                         <strong>Pricing</strong>
                         <span>Treatment price: {selectedBooking.treatment_option ? formatCurrencyAmount(selectedBooking.treatment_option.price ?? 0) : "Not available"}</span>
                         <span>Deposit required: {selectedBookingDepositDisplay}</span>
+                      </article>
+
+                      <article className="admin-compact-list__item">
+                        <strong>Communication Preferences</strong>
+                        {selectedBookingCommunicationChannels.map((channel) => (
+                          <span key={channel.key}>
+                            {channel.icon} {channel.label}: {channel.detail}
+                          </span>
+                        ))}
                       </article>
 
                       <article className="admin-compact-list__item">
