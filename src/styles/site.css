@@ -919,6 +919,259 @@
   flex-wrap: wrap;
 }
 
+.admin-availability-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 22px;
+}
+
+.admin-calendar-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-calendar-heading {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 24px;
+  color: var(--text-dark);
+}
+
+.admin-view-toggle {
+  display: inline-flex;
+  justify-self: end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-view-toggle__button {
+  min-height: 40px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(111, 143, 122, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text-dark);
+}
+
+.admin-view-toggle__button.is-active {
+  background: rgba(111, 143, 122, 0.14);
+  border-color: rgba(111, 143, 122, 0.34);
+}
+
+.admin-calendar-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-calendar-grid--month,
+.admin-calendar-grid--week {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.admin-calendar-grid--day {
+  grid-template-columns: 1fr;
+}
+
+.admin-calendar-cell {
+  min-height: 150px;
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(198, 166, 100, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  text-align: left;
+}
+
+.admin-calendar-cell.is-muted {
+  opacity: 0.58;
+}
+
+.admin-calendar-cell__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.admin-calendar-cell__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(111, 143, 122, 0.12);
+  font-size: 12px;
+}
+
+.admin-calendar-events {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-calendar-empty {
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.admin-calendar-event {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dark);
+}
+
+.admin-calendar-event--holiday,
+.admin-availability-pill--holiday {
+  background: rgba(181, 92, 92, 0.16);
+}
+
+.admin-calendar-event--personal,
+.admin-availability-pill--personal {
+  background: rgba(210, 143, 88, 0.18);
+}
+
+.admin-calendar-event--lunch,
+.admin-availability-pill--lunch {
+  background: rgba(214, 189, 113, 0.24);
+}
+
+.admin-calendar-event--training,
+.admin-availability-pill--training {
+  background: rgba(118, 150, 198, 0.18);
+}
+
+.admin-calendar-event--maintenance,
+.admin-availability-pill--maintenance {
+  background: rgba(147, 122, 181, 0.18);
+}
+
+.admin-calendar-event--blocked,
+.admin-availability-pill--blocked {
+  background: rgba(144, 150, 156, 0.18);
+}
+
+.admin-calendar-event--other,
+.admin-availability-pill--other {
+  background: rgba(164, 171, 158, 0.18);
+}
+
+.admin-availability-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--text-dark);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.admin-availability-table {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-availability-table__head,
+.admin-availability-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1.1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-availability-table__head {
+  padding: 0 12px 8px;
+  color: var(--text-dark);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-availability-table__row {
+  padding: 14px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(198, 166, 100, 0.16);
+  color: var(--text-dark);
+}
+
+.admin-availability-test {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.admin-slot-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-slot-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(111, 143, 122, 0.14);
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-availability-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-availability-summary__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  color: var(--text-dark);
+}
+
+.admin-availability-summary__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-availability-summary__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(198, 166, 100, 0.14);
+}
+
 @media (max-width: 1024px) {
   .navbar-inner {
     width: calc(100% - 24px);
@@ -975,14 +1228,29 @@
 
   .admin-form-grid--two-column,
   .admin-form-grid--four-column,
+  .admin-availability-layout,
   .admin-treatments-layout,
   .admin-day-row,
-  .admin-day-row__controls {
+  .admin-day-row__controls,
+  .admin-calendar-toolbar,
+  .admin-calendar-grid--month,
+  .admin-calendar-grid--week,
+  .admin-availability-table__head,
+  .admin-availability-table__row,
+  .admin-availability-summary__item {
     grid-template-columns: 1fr;
   }
 
   .admin-field--toggles {
     justify-content: flex-start;
+  }
+
+  .admin-view-toggle {
+    justify-self: stretch;
+  }
+
+  .admin-calendar-cell {
+    min-height: 0;
   }
 
   .navbar-inner {

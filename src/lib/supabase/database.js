@@ -1,5 +1,6 @@
 import supabase from "./client"
 import { buildBusinessSettingsPayload, normalizeBusinessSettingsRecord } from "../businessSettings"
+import { normalizeAvailabilityException } from "../availability"
 import { normalizeTreatmentRecord, sortTreatments } from "../treatments"
 
 export async function getBusinessSettings() {
@@ -129,13 +130,45 @@ export async function listAvailabilityExceptions({ from, to } = {}) {
     query = query.lte("end_datetime", to)
   }
 
-  return query
+  const response = await query
+
+  if (response.data) {
+    return {
+      ...response,
+      data: response.data.map(normalizeAvailabilityException),
+    }
+  }
+
+  return response
 }
 
 export async function upsertAvailabilityException(payload) {
-  return supabase.from("availability_exceptions").upsert(payload).select().single()
+  const response = await supabase.from("availability_exceptions").upsert(payload).select().single()
+
+  if (response.data) {
+    return {
+      ...response,
+      data: normalizeAvailabilityException(response.data),
+    }
+  }
+
+  return response
 }
 
-export async function deleteAvailabilityException(id) {
-  return supabase.from("availability_exceptions").delete().eq("id", id)
+export async function setAvailabilityExceptionStatus(id, status) {
+  const response = await supabase
+    .from("availability_exceptions")
+    .update({ status })
+    .eq("id", id)
+    .select()
+    .single()
+
+  if (response.data) {
+    return {
+      ...response,
+      data: normalizeAvailabilityException(response.data),
+    }
+  }
+
+  return response
 }
