@@ -8,6 +8,9 @@ import PublicLayout from "./components/PublicLayout"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AdminLayout from "./components/AdminLayout"
 import AdminLogin from "./pages/AdminLogin"
+import AdminForgotPassword from "./pages/AdminForgotPassword"
+import AdminAuthCallback from "./pages/AdminAuthCallback"
+import AdminResetPassword from "./pages/AdminResetPassword"
 import AdminDashboard from "./pages/admin/AdminDashboard"
 import AdminAvailability from "./pages/admin/AdminAvailability"
 import AdminBookings from "./pages/admin/AdminBookings"
@@ -21,6 +24,9 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+          <Route path="/admin/auth/callback" element={<AdminAuthCallback />} />
+          <Route path="/admin/reset-password" element={<AdminResetPassword />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>

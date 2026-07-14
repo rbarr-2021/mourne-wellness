@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getSession, onAuthStateChange, signInWithPassword, signOut } from "../lib/supabase/auth"
+import { getSession, onAuthStateChange, resetPasswordForEmail, signInWithPassword, signOut, updatePassword } from "../lib/supabase/auth"
 import { AuthContext } from "./AuthContext"
 
 function AuthProvider({ children }) {
@@ -40,6 +40,8 @@ function AuthProvider({ children }) {
     isAuthenticated: Boolean(session?.user),
     loading,
     signInWithPassword,
+    resetPasswordForEmail,
+    updatePassword,
     signOut,
   }
 

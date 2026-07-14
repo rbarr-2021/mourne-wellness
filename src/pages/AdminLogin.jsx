@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import Seo from "../components/Seo"
 import { useAuth } from "../components/useAuth"
 import { getAuthErrorMessage } from "../lib/supabase/helpers"
@@ -7,12 +7,17 @@ import { getAuthErrorMessage } from "../lib/supabase/helpers"
 function AdminLogin() {
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { isAuthenticated, loading, signInWithPassword } = useAuth()
   const [formValues, setFormValues] = useState({ email: "", password: "" })
   const [errorMessage, setErrorMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const redirectTo = location.state?.from?.pathname ?? "/admin"
+  const successMessage =
+    searchParams.get("message") === "password-reset-success"
+      ? "Your password has been updated successfully. Please sign in."
+      : ""
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
@@ -66,6 +71,8 @@ function AdminLogin() {
           </p>
 
           <form className="admin-auth-form" onSubmit={handleSubmit}>
+            {successMessage ? <p className="admin-auth-success">{successMessage}</p> : null}
+
             <label className="admin-field">
               <span className="admin-field__label">Email</span>
               <input
@@ -97,6 +104,12 @@ function AdminLogin() {
             <button type="submit" className="cta-button admin-auth-submit" disabled={isSubmitting || loading}>
               {isSubmitting ? "Signing in..." : "Sign in"}
             </button>
+
+            <div className="admin-auth-actions">
+              <Link className="admin-auth-link" to="/admin/forgot-password">
+                Forgot your password?
+              </Link>
+            </div>
           </form>
         </div>
       </section>

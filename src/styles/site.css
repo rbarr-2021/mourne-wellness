@@ -552,6 +552,50 @@
   line-height: 1.6;
 }
 
+.admin-auth-success {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(107, 162, 146, 0.12);
+  border: 1px solid rgba(107, 162, 146, 0.22);
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.admin-auth-note {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.admin-auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-auth-link {
+  color: var(--primary-dark);
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin-auth-link:hover {
+  color: var(--text-dark);
+}
+
+.admin-auth-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
 .admin-auth-submit,
 .admin-logout {
   width: auto;
