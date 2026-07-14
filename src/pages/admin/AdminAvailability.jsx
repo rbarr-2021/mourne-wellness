@@ -147,6 +147,10 @@ function AdminAvailability() {
     () => records.filter((record) => record.status === AVAILABILITY_STATUS.ACTIVE),
     [records]
   )
+  const upcomingActiveRecords = useMemo(
+    () => activeCalendarEvents.map(formatAvailabilityException).slice(0, 4),
+    [activeCalendarEvents]
+  )
 
   const resetForm = (nextDate = new Date()) => {
     const isoDate = toDateInputValue(nextDate)
@@ -290,6 +294,30 @@ function AdminAvailability() {
     setCalendarDate(nextDate)
   }
 
+  const jumpToQuickRange = (mode) => {
+    const today = new Date()
+
+    if (mode === "today") {
+      setCalendarView(CALENDAR_VIEWS.DAY)
+      setCalendarDate(today)
+      openFromDate(today)
+      return
+    }
+
+    if (mode === "tomorrow") {
+      const tomorrow = new Date(today)
+      tomorrow.setDate(today.getDate() + 1)
+      setCalendarView(CALENDAR_VIEWS.DAY)
+      setCalendarDate(tomorrow)
+      openFromDate(tomorrow)
+      return
+    }
+
+    setCalendarView(CALENDAR_VIEWS.WEEK)
+    setCalendarDate(today)
+    openFromDate(today)
+  }
+
   const calendarHeading = useMemo(() => {
     if (calendarView === CALENDAR_VIEWS.DAY) {
       return calendarDate.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
@@ -318,7 +346,7 @@ function AdminAvailability() {
       />
 
       <div className="admin-panel">
-        <div className="admin-panel__header">
+        <div className="admin-panel__header admin-panel__header--stacked">
           <div>
             <h2 className="admin-panel__title">Availability Management</h2>
             <p className="section-copy admin-panel__copy">
@@ -326,9 +354,14 @@ function AdminAvailability() {
             </p>
           </div>
 
-          <button type="button" className="ghost-button" onClick={() => resetForm(calendarDate)}>
-            New Exception
-          </button>
+          <div className="admin-inline-links" aria-label="Availability actions">
+            <button type="button" className="ghost-button" onClick={() => jumpToQuickRange("today")}>
+              Today
+            </button>
+            <button type="button" className="ghost-button" onClick={() => resetForm(calendarDate)}>
+              New Exception
+            </button>
+          </div>
         </div>
 
         {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
@@ -346,6 +379,31 @@ function AdminAvailability() {
                   </p>
                 </div>
               </div>
+
+              <div className="admin-mobile-quick-strip" aria-label="Availability quick views">
+                <button type="button" className="ghost-button" onClick={() => jumpToQuickRange("today")}>
+                  Today
+                </button>
+                <button type="button" className="ghost-button" onClick={() => jumpToQuickRange("tomorrow")}>
+                  Tomorrow
+                </button>
+                <button type="button" className="ghost-button" onClick={() => jumpToQuickRange("week")}>
+                  This Week
+                </button>
+              </div>
+
+              {upcomingActiveRecords.length > 0 ? (
+                <div className="admin-compact-list admin-compact-list--calendar">
+                  {upcomingActiveRecords.map((record) => (
+                    <div key={record.id} className="admin-compact-list__item">
+                      <strong>{record.reason}</strong>
+                      <span>
+                        {record.dateLabel} • {record.timeLabel}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
 
               <div className="admin-calendar-toolbar">
                 <div className="admin-action-row">
@@ -571,7 +629,7 @@ function AdminAvailability() {
                 {errors.duplicate ? <p className="admin-inline-error">{errors.duplicate}</p> : null}
                 {errors.pastWarning ? <p className="admin-auth-note">{errors.pastWarning}</p> : null}
 
-                <div className="admin-form-actions">
+                <div className="admin-form-actions admin-form-actions--sticky-mobile">
                   <button type="submit" className="cta-button" disabled={isSaving}>
                     {isSaving ? "Saving exception..." : formValues.id ? "Save Exception" : "Create Exception"}
                   </button>
@@ -653,18 +711,18 @@ function AdminAvailability() {
 
                   {formattedRecords.map((record) => (
                     <div key={record.id} className="admin-availability-table__row">
-                      <span>{record.dateLabel}</span>
-                      <span>{record.timeLabel}</span>
-                      <span>
+                      <span data-label="Date">{record.dateLabel}</span>
+                      <span data-label="Time">{record.timeLabel}</span>
+                      <span data-label="Type">
                         <AvailabilityTypePill kind={record.kind} />
                       </span>
-                      <span>{record.reason}</span>
-                      <span>
+                      <span data-label="Reason">{record.reason}</span>
+                      <span data-label="Status">
                         <span className={`admin-status-pill admin-status-pill--${record.status.toLowerCase()}`}>
                           {record.status.charAt(0) + record.status.slice(1).toLowerCase()}
                         </span>
                       </span>
-                      <span className="admin-action-row">
+                      <span className="admin-action-row" data-label="Actions">
                         <button type="button" className="ghost-button" onClick={() => openFromRecord(record)}>
                           Edit
                         </button>
@@ -679,6 +737,10 @@ function AdminAvailability() {
             </section>
           </div>
         )}
+
+        <button type="button" className="admin-fab" onClick={() => resetForm(calendarDate)} aria-label="Create new availability exception">
+          +
+        </button>
       </div>
     </>
   )

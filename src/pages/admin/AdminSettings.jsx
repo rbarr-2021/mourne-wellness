@@ -109,7 +109,7 @@ function AdminSettings() {
       />
 
       <div className="admin-panel">
-        <div className="admin-panel__header">
+        <div className="admin-panel__header admin-panel__header--stacked">
           <div>
             <h2 className="admin-panel__title">Business Settings</h2>
             <p className="section-copy admin-panel__copy">
@@ -267,7 +267,7 @@ function AdminSettings() {
               </label>
             </section>
 
-            <div className="admin-form-actions admin-subpanel--full">
+            <div className="admin-form-actions admin-form-actions--sticky-mobile admin-subpanel--full">
               {feedback ? <p className={feedback.includes("successfully") ? "admin-auth-success" : "admin-auth-error"}>{feedback}</p> : null}
               <button type="submit" className="cta-button admin-auth-submit" disabled={isSaving}>
                 {isSaving ? "Saving business settings..." : "Save Business Settings"}

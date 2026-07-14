@@ -4,11 +4,11 @@ import { useAuth } from "./useAuth"
 import Seo from "./Seo"
 
 const adminLinks = [
-  { to: "/admin", label: "Dashboard", end: true },
-  { to: "/admin/settings", label: "Business Settings" },
-  { to: "/admin/treatments", label: "Treatments" },
-  { to: "/admin/availability", label: "Availability" },
-  { to: "/admin/bookings", label: "Bookings" },
+  { to: "/admin", label: "Dashboard", shortLabel: "Home", icon: "●", end: true },
+  { to: "/admin/settings", label: "Business Settings", shortLabel: "Settings", icon: "◌" },
+  { to: "/admin/treatments", label: "Treatments", shortLabel: "Treatments", icon: "✦" },
+  { to: "/admin/availability", label: "Availability", shortLabel: "Calendar", icon: "◫" },
+  { to: "/admin/bookings", label: "Bookings", shortLabel: "More", icon: "···" },
 ]
 
 function AdminLayout() {
@@ -28,7 +28,7 @@ function AdminLayout() {
       <section className="admin-shell">
         <div className="admin-shell__inner">
           <header className="admin-topbar">
-            <div>
+            <div className="admin-topbar__content">
               <p className="admin-kicker">Secure Administrator Area</p>
               <h1 className="admin-title">Retreat by the Mournes Admin</h1>
               <p className="section-copy admin-subtitle">
@@ -36,12 +36,14 @@ function AdminLayout() {
               </p>
             </div>
 
-            <button type="button" className="ghost-button admin-logout" onClick={handleLogout} disabled={isLoggingOut}>
-              {isLoggingOut ? "Signing out..." : "Logout"}
-            </button>
+            <div className="admin-topbar__actions">
+              <button type="button" className="ghost-button admin-logout" onClick={handleLogout} disabled={isLoggingOut}>
+                {isLoggingOut ? "Signing out..." : "Logout"}
+              </button>
+            </div>
           </header>
 
-          <nav className="admin-nav" aria-label="Administrator">
+          <nav className="admin-nav admin-nav--desktop" aria-label="Administrator">
             {adminLinks.map((link) => (
               <NavLink
                 key={link.to}
@@ -58,6 +60,22 @@ function AdminLayout() {
             <Outlet />
           </div>
         </div>
+
+        <nav className="admin-bottom-nav" aria-label="Administrator mobile navigation">
+          {adminLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) => `admin-bottom-nav__link ${isActive ? "is-active" : ""}`}
+            >
+              <span className="admin-bottom-nav__icon" aria-hidden="true">
+                {link.icon}
+              </span>
+              <span className="admin-bottom-nav__label">{link.shortLabel}</span>
+            </NavLink>
+          ))}
+        </nav>
       </section>
     </>
   )

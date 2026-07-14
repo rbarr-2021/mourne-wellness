@@ -191,6 +191,7 @@ function AdminTreatments() {
   const previewOptions = draft?.options ?? []
   const isSelectedTreatmentNew = selectedTreatmentId === "new"
   const statusLabel = draft?.status ? draft.status.charAt(0) + draft.status.slice(1).toLowerCase() : "Draft"
+  const activeTreatmentCount = treatments.filter((treatment) => treatment.status === TREATMENT_STATUS.ACTIVE).length
 
   return (
     <>
@@ -202,7 +203,7 @@ function AdminTreatments() {
       />
 
       <div className="admin-panel">
-        <div className="admin-panel__header">
+        <div className="admin-panel__header admin-panel__header--stacked">
           <div>
             <h2 className="admin-panel__title">Treatment Management</h2>
             <p className="section-copy admin-panel__copy">
@@ -210,9 +211,14 @@ function AdminTreatments() {
             </p>
           </div>
 
-          <button type="button" className="ghost-button" onClick={createNewTreatment}>
-            New Treatment
-          </button>
+          <div className="admin-inline-links" aria-label="Treatment actions">
+            <span className="admin-auth-note">
+              {activeTreatmentCount} active treatment{activeTreatmentCount === 1 ? "" : "s"}
+            </span>
+            <button type="button" className="ghost-button" onClick={createNewTreatment}>
+              New Treatment
+            </button>
+          </div>
         </div>
 
         {isLoading || !draft ? (
@@ -239,11 +245,13 @@ function AdminTreatments() {
                       <strong>{treatment.name}</strong>
                       <StatusBadge status={treatment.status} />
                     </div>
-                    <p className="admin-treatment-list__meta">
-                      {treatment.category}
-                      {treatment.featured ? " | Featured" : ""}
-                      {treatment.booking_enabled ? " | Booking enabled" : " | Booking paused"}
-                    </p>
+                    <p className="admin-treatment-list__meta">{treatment.category}</p>
+                    <div className="admin-treatment-list__stats">
+                      <span>{treatment.options?.[0]?.duration_minutes ?? 0} min</span>
+                      <span>{formatCurrency(treatment.options?.[0]?.price ?? 0)}</span>
+                      <span>{treatment.featured ? "Featured" : "Standard"}</span>
+                      <span>{treatment.booking_enabled ? "Booking on" : "Booking off"}</span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -431,7 +439,7 @@ function AdminTreatments() {
                 </article>
               </div>
 
-              <div className="admin-form-actions">
+              <div className="admin-form-actions admin-form-actions--sticky-mobile">
                 {feedback ? <p className={feedback.includes("couldn't") ? "admin-auth-error" : "admin-auth-success"}>{feedback}</p> : null}
 
                 <div className="admin-action-row">
@@ -472,6 +480,10 @@ function AdminTreatments() {
             </section>
           </div>
         )}
+
+        <button type="button" className="admin-fab" onClick={createNewTreatment} aria-label="Create new treatment">
+          +
+        </button>
       </div>
     </>
   )
