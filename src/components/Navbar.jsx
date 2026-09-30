@@ -70,7 +70,7 @@ function Navbar() {
               <hr style={{ border: 0, borderTop: "1px solid rgba(198, 166, 100, 0.22)", margin: "10px 0" }} />
 
               <a
-                href="https://www.instagram.com/p/DWveVvPiNCq/"
+                href="https://www.instagram.com/retreat_by_the_mournes?stkn=c3cyeWRleTQ4M3h0"
                 className="menu-item"
                 onClick={() => setMenuOpen(false)}
               >
@@ -97,3 +97,4 @@ function Navbar() {
 }
 
 export default Navbar
+

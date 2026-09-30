@@ -1,4 +1,4 @@
-﻿import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa"
+import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa"
 import logo from "../assets/logo.png"
 import "../styles/global.css"
 import { getRetreatWhatsAppUrl } from "../lib/contact"
@@ -23,7 +23,7 @@ function Footer() {
       </div>
 
       <div className="footer-socials">
-        <a href="https://www.instagram.com/p/DWveVvPiNCq/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <a href="https://www.instagram.com/retreat_by_the_mournes?stkn=c3cyeWRleTQ4M3h0" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <FaInstagram size={20} color="#c13584" />
         </a>
         <a
@@ -47,4 +47,5 @@ function Footer() {
 }
 
 export default Footer
+
 

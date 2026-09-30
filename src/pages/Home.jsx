@@ -51,7 +51,7 @@ function Home() {
         },
         areaServed: "Northern Ireland",
         sameAs: [
-          "https://www.instagram.com/p/DWveVvPiNCq/",
+          "https://www.instagram.com/retreat_by_the_mournes?stkn=c3cyeWRleTQ4M3h0",
           "https://www.facebook.com/people/Holistic-Sports-Therapy-by-Beata/61581068248993/",
         ],
         openingHoursSpecification: buildOpeningHoursSpecification(openingHours),
@@ -87,3 +87,4 @@ function Home() {
 }
 
 export default Home
+
