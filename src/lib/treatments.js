@@ -105,7 +105,6 @@ export const LEGACY_TREATMENTS = [
       { label: "90 min", durationMinutes: 90, price: 80, depositAmount: 0, displayOrder: 20 },
     ],
   },
-
   {
     category: "Signature Treatment",
     name: "Mourne Recovery Therapy",
@@ -204,7 +203,7 @@ export function formatCurrency(value) {
   const numericValue = Number(value ?? 0)
   const hasDecimals = Math.abs(numericValue % 1) > Number.EPSILON
 
-  return `Â£${numericValue.toFixed(hasDecimals ? 2 : 0)}`
+  return `\u00A3${numericValue.toFixed(hasDecimals ? 2 : 0)}`
 }
 
 export function sortTreatmentOptions(options = []) {

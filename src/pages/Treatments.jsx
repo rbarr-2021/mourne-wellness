@@ -1,165 +1,152 @@
 import "../styles/global.css"
-import "../styles/treatments.css"
-import { useEffect, useMemo, useState } from "react"
-import { FaWhatsapp } from "react-icons/fa"
-import LoadingMessage from "../components/LoadingMessage"
+import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
-import Seo from "../components/Seo"
-import StatusMessage from "../components/StatusMessage"
-import { formatCurrencyAmount, formatDepositRequirement } from "../lib/businessSettings"
-import { createBookingRequest, getRequestableSlots } from "../lib/booking-service"
-import { getRetreatWhatsAppUrl } from "../lib/contact"
-import { BOOKING_SOURCE, formatBookingDate, getBookingCommunicationChannels } from "../lib/bookings"
-import { getBusinessSettings, listBookingReservations, listPublicAvailabilityPeriods, listPublicTreatments } from "../lib/supabase/database"
-import {
-  buildTreatmentsStructuredData,
-  FACIAL_TREATMENT_NAME,
-  FEATURED_INTRODUCTION,
-  FEATURED_TREATMENT_NAME,
-  LEGACY_TREATMENTS,
-  mapTreatmentToPublicTreatment,
-} from "../lib/treatments"
 
-const fallbackTreatments = LEGACY_TREATMENTS.map(mapTreatmentToPublicTreatment)
-const BOOKING_STEPS = ["Duration", "Date", "Time", "Details", "Health", "Review"]
+const treatments = [
+  {
+    category: "Signature Experiences",
+    name: "Neck, Head, and Face Massage",
+    description: "Melt away tension and restore a natural glow with a calming massage for the neck, head, and face.",
+    prices: [
+      { time: "60 min", price: "\u00A355" },
+      { time: "90 min", price: "\u00A380" },
+    ],
+  },
+  {
+    category: "Signature Experiences",
+    name: "Back, Neck, and Head with Hot Stone Massage",
+    description: "Release tension and calm the mind with soothing hot stones.",
+    prices: [{ time: "60 min", price: "\u00A365" }],
+  },
+  {
+    category: "Signature Experiences",
+    name: "Full Body Massage (Lomi Lomi Inspired)",
+    description: "Flowing, rhythmic movements designed to restore balance and relax the body.",
+    prices: [
+      { time: "60 min", price: "\u00A355" },
+      { time: "90 min", price: "\u00A380" },
+    ],
+  },
+  {
+    category: "Signature Experiences",
+    name: "Full Body Hot Stone Massage",
+    description: "Deep relaxation using heated stones to ease muscle tension.",
+    prices: [{ time: "70 min", price: "\u00A370" }],
+  },
+  {
+    category: "Signature Experiences",
+    name: "Nurturing Full Body Pregnancy Massage",
+    description: "A soothing massage designed to support relaxation and wellbeing during pregnancy.",
+    prices: [{ time: "70 min", price: "\u00A360" }],
+  },
+  {
+    category: "Specialist Recovery",
+    name: "Therapeutic Deep Tissue Full Body Therapy",
+    description: "Target deep muscle tension and restore balance. Best for stress and recovery.",
+    prices: [
+      { time: "60 min", price: "\u00A355" },
+      { time: "90 min", price: "\u00A380" },
+    ],
+  },
+  {
+    category: "Specialist Recovery",
+    name: "Sports Massage Therapy",
+    description: "Focused treatment to ease muscle tension and support recovery.",
+    prices: [
+      { time: "60 min", price: "\u00A355" },
+      { time: "90 min", price: "\u00A380" },
+    ],
+  },
+  {
+    category: "Specialist Recovery",
+    name: "Myofascial Release Therapy",
+    description: "Restorative treatment to release deep tension and improve mobility.",
+    prices: [
+      { time: "60 min", price: "\u00A355" },
+      { time: "90 min", price: "\u00A380" },
+    ],
+  },
+  {
+    category: "Signature Treatment",
+    name: "Mourne Recovery Therapy",
+    description: "A tailored blend of sports massage and myofascial release for full-body reset.",
+    prices: [{ time: "90 min", price: "\u00A380" }],
+  },
+  {
+    category: "Signature Treatment",
+    name: "Mourne Rocks Retreat & Recovery",
+    description:
+      "A restorative two-hour treatment designed to release muscular tension while nourishing the skin and promoting deep relaxation. This signature experience combines a back sports massage with hot stones to ease tightness and stiffness in the back, shoulders, and neck, together with a Nourishing & Therapeutic Facial using Neal's Yard Remedies Organic skincare. The facial includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp to help reduce puffiness, release tension, and restore a natural glow. Perfect for those seeking both therapeutic bodywork and a deeply relaxing facial experience in the tranquil surroundings of Retreat by the Mournes.",
+    prices: [{ time: "2 hours", price: "\u00A3115" }],
+  },
+  {
+    category: "Nurture & Restore",
+    name: "Gentle Back, Neck, and Head Massage",
+    description: "Gentle treatment to ease tension and restore calm.",
+    prices: [{ time: "60 min", price: "\u00A355" }],
+  },
+  {
+    category: "Nurture & Restore",
+    name: "Head & Neck Massage with Essential Oils",
+    description: "Calming massage to relax the mind and support restful sleep.",
+    prices: [{ time: "60 min", price: "\u00A355" }],
+  },
+  {
+    category: "Nurture & Restore",
+    name: "Nourishing & Therapeutic Facial",
+    description:
+      "A deeply relaxing facial designed to nourish your skin while easing tension and promoting overall wellbeing. Using Neal's Yard Remedies Organic skincare, this treatment includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp. The extended neck, shoulder, and head massage helps to ease stiffness, release built-up tension, and encourage deep relaxation. Perfect for reducing puffiness, relieving stress, and leaving your skin feeling hydrated, refreshed, and naturally radiant.",
+    prices: [{ time: "75 min", price: "\u00A375" }],
+  },
+  {
+    category: "Express Rituals",
+    name: "Tension Release Back Therapy",
+    description: "Quick treatment to relieve back, neck, and shoulder tension.",
+    prices: [{ time: "30 min", price: "\u00A330" }],
+  },
+  {
+    category: "Express Rituals",
+    name: "Revitalizing Head & Face Massage",
+    description: "Relaxing treatment to ease tension and refresh your skin.",
+    prices: [{ time: "30 min", price: "\u00A330" }],
+  },
+  {
+    category: "Express Rituals",
+    name: "Grounding Foot Ritual",
+    description: "Revives tired feet and restores comfort.",
+    prices: [{ time: "30 min", price: "\u00A330" }],
+  },
+  {
+    category: "Express Rituals",
+    name: "Grounding Hand Ritual",
+    description: "Relieves tension in hands and wrists.",
+    prices: [{ time: "30 min", price: "\u00A330" }],
+  },
+]
 
-function getEmptyBookingForm() {
-  return {
-    requestedDate: "",
-    startTime: "",
-    clientName: "",
-    clientEmail: "",
-    clientPhone: "",
-    whatsappNotifications: false,
-    pregnant: "no",
-    injuries: "",
-    medicalConditions: "",
-    anythingElse: "",
-    additionalNotes: "",
-  }
-}
+const categories = [
+  "Signature Experiences",
+  "Specialist Recovery",
+  "Signature Treatment",
+  "Nurture & Restore",
+  "Express Rituals",
+]
 
-function isValidEmailAddress(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim())
-}
-
-function buildBookingSupportMessage(booking, selectedTreatment) {
-  const treatmentName = booking?.treatment?.name ?? selectedTreatment?.name ?? "my booking"
-  const requestedDate = booking?.requested_date ? formatBookingDate(booking.requested_date) : "my requested appointment"
-
-  return `Hello Beata, I have a question about my booking request for ${treatmentName} on ${requestedDate}.`
-}
-
-function getStepIndex(step) {
-  return BOOKING_STEPS.indexOf(step)
-}
+const featuredIntroduction =
+  "Our signature two-hour treatment combining therapeutic sports massage, soothing hot stone therapy and a deeply nourishing Neal's Yard Remedies Organic facial. Designed to restore tired muscles, calm the mind and leave you feeling completely refreshed."
 
 function Treatments() {
   const location = useLocation()
   const targetCategory = location.state?.targetCategory ?? null
-  const [treatments, setTreatments] = useState(fallbackTreatments)
-  const [businessSettings, setBusinessSettings] = useState(null)
-  const [availabilityPeriods, setAvailabilityPeriods] = useState([])
-  const [reservations, setReservations] = useState([])
-  const [isPageLoading, setIsPageLoading] = useState(true)
-  const [pageError, setPageError] = useState("")
+  const defaultTreatment = targetCategory
+    ? treatments.find((treatment) => treatment.category === targetCategory) ?? null
+    : null
+  const featuredTreatment = treatments.find((treatment) => treatment.name === "Mourne Rocks Retreat & Recovery")
+
   const [manualSelection, setManualSelection] = useState(null)
-  const [bookingForm, setBookingForm] = useState(getEmptyBookingForm())
-  const [bookingStep, setBookingStep] = useState("Duration")
-  const [availableSlots, setAvailableSlots] = useState([])
-  const [availabilityMessage, setAvailabilityMessage] = useState("")
-  const [isAvailabilityLoading, setIsAvailabilityLoading] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [feedbackMessage, setFeedbackMessage] = useState("")
-  const [successBooking, setSuccessBooking] = useState(null)
-  const [isMobileWizardOpen, setIsMobileWizardOpen] = useState(false)
-
-  useEffect(() => {
-    const loadTreatments = async () => {
-      setIsPageLoading(true)
-      setPageError("")
-
-      try {
-        const [{ data: treatmentData }, { data: settingsData }, { data: periodsData }, { data: reservationsData }] = await Promise.all([
-          listPublicTreatments(),
-          getBusinessSettings(),
-          listPublicAvailabilityPeriods(),
-          listBookingReservations(),
-        ])
-
-        if (treatmentData?.length) {
-          setTreatments(treatmentData.map(mapTreatmentToPublicTreatment))
-        }
-
-        setBusinessSettings(settingsData ?? null)
-        setAvailabilityPeriods(periodsData ?? [])
-        setReservations(reservationsData ?? [])
-      } catch (error) {
-        setPageError(error.message || "We couldn't load the booking page just now.")
-      } finally {
-        setIsPageLoading(false)
-      }
-    }
-
-    loadTreatments()
-  }, [])
-
-  const structuredData = useMemo(
-    () => buildTreatmentsStructuredData(treatments.length ? treatments : fallbackTreatments),
-    [treatments]
-  )
-
-  const featuredTreatment = useMemo(
-    () =>
-      treatments.find((treatment) => treatment.name === FEATURED_TREATMENT_NAME) ??
-      treatments.find((treatment) => treatment.featured) ??
-      null,
-    [treatments]
-  )
-
-  const defaultTreatment = useMemo(() => {
-    if (!targetCategory) return null
-
-    return treatments.find((treatment) => treatment.category === targetCategory) ?? null
-  }, [targetCategory, treatments])
-
-  const categoryGroups = useMemo(() => {
-    const groups = []
-    const byCategory = new Map()
-
-    treatments.forEach((treatment) => {
-      if (!byCategory.has(treatment.category)) {
-        const group = { category: treatment.category, treatments: [] }
-        byCategory.set(treatment.category, group)
-        groups.push(group)
-      }
-
-      byCategory.get(treatment.category).treatments.push(treatment)
-    })
-
-    return groups
-  }, [treatments])
-
-  const selectedTreatmentId = manualSelection?.treatmentId ?? null
-  const selectedOptionId = manualSelection?.optionId ?? null
-
-  const selectedTreatment = useMemo(() => {
-    if (selectedTreatmentId) {
-      return treatments.find((treatment) => treatment.id === selectedTreatmentId) ?? defaultTreatment
-    }
-
-    return defaultTreatment
-  }, [defaultTreatment, selectedTreatmentId, treatments])
-
-  const selectedOption = useMemo(() => {
-    if (!selectedTreatment) return null
-
-    if (selectedOptionId) {
-      return selectedTreatment.prices.find((option) => option.id === selectedOptionId) ?? selectedTreatment.prices[0] ?? null
-    }
-
-    return selectedTreatment.prices[0] ?? null
-  }, [selectedOptionId, selectedTreatment])
+  const selectionMatchesCategory = manualSelection?.category === targetCategory
+  const selectedTreatment = selectionMatchesCategory ? manualSelection.treatment : defaultTreatment
+  const selectedOption = selectionMatchesCategory ? manualSelection.option : defaultTreatment?.prices[0] ?? null
 
   useEffect(() => {
     if (!targetCategory) return
@@ -172,718 +159,303 @@ function Treatments() {
     window.scrollTo({ top: y, behavior: "smooth" })
   }, [targetCategory])
 
-  useEffect(() => {
-    const loadSlots = async () => {
-      if (!selectedTreatment || !selectedOption || !bookingForm.requestedDate || !businessSettings) {
-        setAvailableSlots([])
-        return
-      }
-
-      setIsAvailabilityLoading(true)
-      setFeedbackMessage("")
-
-      try {
-        const slots = await getRequestableSlots({
-          requestedDate: bookingForm.requestedDate,
-          treatmentId: selectedTreatment.id,
-          treatmentOptionId: selectedOption.id,
-          businessSettings,
-          availabilityExceptions: availabilityPeriods,
-          reservations,
-        })
-
-        setAvailableSlots(slots)
-        setAvailabilityMessage(
-          slots.length > 0
-            ? ""
-            : "This date has no available appointment times for the selected treatment. Please choose another date."
-        )
-      } catch (error) {
-        setAvailableSlots([])
-        setAvailabilityMessage(error.message || "We couldn't load appointment times just now.")
-      }
-
-      setIsAvailabilityLoading(false)
-    }
-
-    loadSlots()
-  }, [availabilityPeriods, bookingForm.requestedDate, businessSettings, reservations, selectedOption, selectedTreatment])
-
-  const selectTreatment = (treatment, priceOption = null, openWizard = false) => {
-    const nextOption = priceOption ?? treatment.prices[0] ?? null
-
+  const selectTreatment = (treatment, priceOption = treatment.prices[0]) => {
     setManualSelection({
-      treatmentId: treatment.id,
-      optionId: nextOption?.id ?? null,
+      category: targetCategory,
+      treatment,
+      option: priceOption,
     })
-    setBookingForm(getEmptyBookingForm())
-    setBookingStep("Duration")
-    setAvailableSlots([])
-    setAvailabilityMessage("")
-    setFeedbackMessage("")
-    setSuccessBooking(null)
-    setIsMobileWizardOpen(openWizard)
   }
 
-  const selectOption = (priceOption) => {
-    setManualSelection((current) => ({
-      treatmentId: current?.treatmentId ?? selectedTreatment?.id ?? null,
-      optionId: priceOption.id,
-    }))
-    setBookingForm((current) => ({
-      ...current,
-      startTime: "",
-    }))
-    setAvailableSlots([])
-    setAvailabilityMessage("")
-    setBookingStep("Date")
-  }
-
-  const updateBookingForm = (field, value) => {
-    setBookingForm((current) => ({
-      ...current,
-      [field]: value,
-    }))
-    setFeedbackMessage("")
-  }
-
-  const chooseDate = (value) => {
-    updateBookingForm("requestedDate", value)
-    updateBookingForm("startTime", "")
-    setBookingStep("Time")
-  }
-
-  const chooseTime = (slot) => {
-    updateBookingForm("startTime", slot.label)
-    setBookingStep("Details")
-  }
-
-  const validateDetailsStep = () => {
-    if (!bookingForm.clientName.trim()) {
-      setFeedbackMessage("Please enter your full name.")
-      return false
-    }
-
-    if (!bookingForm.clientEmail.trim()) {
-      setFeedbackMessage("Please enter your email address.")
-      return false
-    }
-
-    if (!isValidEmailAddress(bookingForm.clientEmail)) {
-      setFeedbackMessage("Please enter a valid email address.")
-      return false
-    }
-
-    if (!bookingForm.clientPhone.trim()) {
-      setFeedbackMessage("Please enter your mobile number.")
-      return false
-    }
-
-    return true
-  }
-
-  const goToReview = () => {
-    if (!validateDetailsStep()) {
-      return
-    }
-
-    setBookingStep("Health")
-  }
-
-  const continueToReview = () => {
-    setBookingStep("Review")
-  }
-
-  const goBackStep = () => {
-    const currentIndex = getStepIndex(bookingStep)
-
-    if (currentIndex <= 0) {
-      return
-    }
-
-    setBookingStep(BOOKING_STEPS[currentIndex - 1])
-  }
-
-  const submitBookingRequest = async () => {
-    if (!selectedTreatment || !selectedOption) {
-      setFeedbackMessage("Please choose a treatment and duration first.")
-      return
-    }
-
-    setIsSubmitting(true)
-    setFeedbackMessage("")
-
-    try {
-      const booking = await createBookingRequest({
-        treatmentId: selectedTreatment.id,
-        treatmentOptionId: selectedOption.id,
-        requestedDate: bookingForm.requestedDate,
-        startTime: bookingForm.startTime,
-        clientName: bookingForm.clientName,
-        clientEmail: bookingForm.clientEmail,
-        clientPhone: bookingForm.clientPhone,
-        whatsappNotifications: bookingForm.whatsappNotifications,
-        healthInformation: {
-          pregnant: bookingForm.pregnant,
-          injuries: bookingForm.injuries,
-          medicalConditions: bookingForm.medicalConditions,
-          anythingElse: bookingForm.anythingElse,
-        },
-        additionalNotes: bookingForm.additionalNotes,
-        source: BOOKING_SOURCE.WEBSITE,
-        businessSettings,
-        availabilityExceptions: availabilityPeriods,
-        reservations,
-      })
-
-      setReservations((current) => [booking, ...current])
-      setSuccessBooking(booking)
-      setBookingStep("Review")
-      setIsMobileWizardOpen(true)
-    } catch (error) {
-      setFeedbackMessage(error.message || "We couldn't send your booking request just now.")
-    }
-
-    setIsSubmitting(false)
-  }
-
-  const openMobileWizard = () => {
+  const bookTreatment = () => {
     if (!selectedTreatment || !selectedOption) return
 
-    setIsMobileWizardOpen(true)
+    const message = `Hi Beata, I'd like to book: ${selectedTreatment.name} (${selectedOption.time}) - ${selectedOption.price}.`
+    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
   }
 
-  const closeMobileWizard = () => {
-    setIsMobileWizardOpen(false)
+  const bookFeaturedTreatment = () => {
+    if (!featuredTreatment) return
+
+    const featuredOption = featuredTreatment.prices[0]
+    const message = `Hi Beata, I'd like to book: ${featuredTreatment.name} (${featuredOption.time}) - ${featuredOption.price}.`
+    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
   }
 
-  const activeStepIndex = Math.max(getStepIndex(bookingStep), 0)
-  const depositDisplay = formatDepositRequirement(businessSettings, selectedOption?.rawPrice ?? null)
-  const selectedPriceDisplay = selectedOption ? formatCurrencyAmount(selectedOption.rawPrice ?? 0) : ""
-  const bookingProcessSteps = [
-    "Booking request submitted",
-    "Beata reviews your request",
-    "Secure payment link sent",
-    "Deposit received",
-    "Appointment confirmed",
-  ]
-  const selectedCommunicationChannels = getBookingCommunicationChannels({
-    whatsapp_notifications: successBooking?.whatsapp_notifications ?? bookingForm.whatsappNotifications,
-  })
-  const bookingSupportUrl = getRetreatWhatsAppUrl(buildBookingSupportMessage(successBooking, selectedTreatment))
+  return (
+    <section style={{ padding: "100px 20px", background: "linear-gradient(to bottom, #f8f8f8, #ffffff)" }}>
+      <h1 style={{ textAlign: "center", fontFamily: "var(--font-heading)", marginBottom: "40px" }}>
+        Book Your Treatment
+      </h1>
 
-  const renderWizardContent = () => {
-    if (!selectedTreatment || !selectedOption) {
-      return <p className="booking-panel__placeholder">Select a treatment to begin your booking request.</p>
-    }
-
-    if (successBooking) {
-      return (
-        <div className="booking-success-card">
-          <p className="booking-success-card__eyebrow">Booking Request Received</p>
-          <h3 className="booking-success-card__title">Thank you.</h3>
-          <p className="section-copy">
-            Your booking request has been received.
-          </p>
-          <p className="section-copy">
-            Beata will personally review your request and contact you shortly regarding confirmation and deposit payment.
-          </p>
-          <p className="section-copy">
-            Your requested appointment time has been temporarily reserved while your request is being reviewed.
-          </p>
-          <p className="section-copy">
-            If your request is accepted you will receive a secure payment link for your {depositDisplay} deposit.
-          </p>
-          <p className="section-copy">
-            Your appointment will be confirmed once the deposit has been received.
-          </p>
-          <p className="section-copy">
-            We will contact you as soon as possible.
-          </p>
-          <div className="booking-review-card__section">
-            <strong>We'll contact you using</strong>
-            {selectedCommunicationChannels.filter((channel) => channel.selected).map((channel) => (
-              <span key={channel.key}>
-                {channel.icon} {channel.label}
-              </span>
-            ))}
-          </div>
-          <div className="booking-support-card">
-            <div className="booking-support-card__content">
-              <p className="booking-support-card__eyebrow">Need help?</p>
-              <h4 className="booking-support-card__title">Questions about your booking?</h4>
-              <p className="section-copy booking-support-card__copy">
-                Need to make a change? Want to tell Beata something before your appointment? Feel free to get in touch.
-              </p>
-              <a
-                href={bookingSupportUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="booking-support-card__button"
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, 0.8fr)",
+          gap: "40px",
+          maxWidth: "1100px",
+          margin: "0 auto",
+          alignItems: "start",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          {featuredTreatment && (
+            <section
+              style={{
+                marginBottom: "18px",
+                padding: "32px",
+                borderRadius: "24px",
+                background: "linear-gradient(135deg, rgba(236, 232, 225, 0.75), rgba(255,255,255,0.95))",
+                border: "1px solid rgba(198, 166, 100, 0.38)",
+                boxShadow: "0 18px 45px rgba(0,0,0,0.06)",
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 14px",
+                  borderRadius: "999px",
+                  background: "rgba(255,255,255,0.72)",
+                  border: "1px solid rgba(198, 166, 100, 0.35)",
+                  color: "var(--text-dark)",
+                  fontSize: "12px",
+                  letterSpacing: "0.8px",
+                  textTransform: "uppercase",
+                  fontWeight: "600",
+                }}
               >
-                <FaWhatsapp aria-hidden="true" />
-                <span>Message Beata on WhatsApp</span>
-              </a>
-              <p className="booking-support-card__note">
-                Please don't submit another booking request if you've already requested this appointment.
+                Signature Treatment
+              </div>
+
+              <div
+                style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
+                  justifyContent: "space-between",
+                  gap: "12px",
+                }}
+              >
+                <h2
+                  style={{
+                    margin: 0,
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "clamp(30px, 4vw, 42px)",
+                    lineHeight: "1.12",
+                    color: "var(--text-dark)",
+                  }}
+                >
+                  {featuredTreatment.name}
+                </h2>
+                <p
+                  style={{
+                    margin: 0,
+                    fontFamily: "var(--font-body)",
+                    fontSize: "clamp(16px, 2vw, 18px)",
+                    color: "var(--primary-dark)",
+                    letterSpacing: "0.3px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {featuredTreatment.prices[0].time} {"\u2022"} {featuredTreatment.prices[0].price}
+                </p>
+              </div>
+
+              <p
+                style={{
+                  marginTop: "18px",
+                  marginBottom: "16px",
+                  fontSize: "16px",
+                  lineHeight: "1.8",
+                  color: "var(--text-light)",
+                }}
+              >
+                {featuredIntroduction}
               </p>
+
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "15px",
+                  lineHeight: "1.85",
+                  color: "var(--text-light)",
+                }}
+              >
+                {featuredTreatment.description}
+              </p>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "14px",
+                  marginTop: "26px",
+                }}
+              >
+                <button
+                  onClick={bookFeaturedTreatment}
+                  style={{
+                    padding: "14px 24px",
+                    borderRadius: "14px",
+                    border: "1px solid #6f8f7a",
+                    background: "#6f8f7a",
+                    color: "#fff",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    letterSpacing: "0.3px",
+                    transition: "all 0.25s ease",
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.background = "#5f7f6c"
+                    event.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.background = "#6f8f7a"
+                    event.currentTarget.style.transform = "translateY(0)"
+                  }}
+                >
+                  Book This Treatment
+                </button>
+              </div>
+            </section>
+          )}
+
+          {categories.map((category) => (
+            <div key={category}>
+              <h2 id={category} style={{ margin: "20px 0 10px", fontFamily: "var(--font-heading)" }}>
+                {category}
+              </h2>
+
+              {treatments
+                .filter((treatment) => treatment.category === category)
+                .map((treatment) => (
+                  <div
+                    key={treatment.name}
+                    id={treatment.name}
+                    onClick={() => selectTreatment(treatment)}
+                    style={{
+                      padding: "20px",
+                      borderRadius: "14px",
+                      background: selectedTreatment === treatment ? "#6f8f7a" : "#f5f5f5",
+                      color: selectedTreatment === treatment ? "#fff" : "#2a2a2a",
+                      cursor: "pointer",
+                      boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
+                      transition: "all 0.25s ease",
+                      transform: "translateY(0) scale(1)",
+                    }}
+                    onMouseEnter={(event) => {
+                      if (selectedTreatment !== treatment) {
+                        event.currentTarget.style.transform = "translateY(-6px) scale(1.02)"
+                        event.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,0.10)"
+                        event.currentTarget.style.background = "#eeeeee"
+                      }
+                    }}
+                    onMouseLeave={(event) => {
+                      if (selectedTreatment !== treatment) {
+                        event.currentTarget.style.transform = "translateY(0) scale(1)"
+                        event.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.04)"
+                        event.currentTarget.style.background = "#f5f5f5"
+                      }
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
+                      <span style={{ opacity: 0.4 }}>&rarr;</span>
+                    </div>
+                    <p style={{ fontSize: "12px", opacity: 0.6 }}>
+                      {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
+                    </p>
+                    <p style={{ fontSize: "13px", opacity: 0.8 }}>{treatment.description}</p>
+                  </div>
+                ))}
             </div>
-          </div>
-        </div>
-      )
-    }
-
-    return (
-      <>
-        <div className="booking-panel__header">
-          <p className="booking-panel__eyebrow">Booking Request</p>
-          <h3 className="booking-panel__title">{selectedTreatment.name}</h3>
-          <p className="booking-panel__description">{selectedTreatment.description}</p>
-        </div>
-
-        <div className="booking-information-card">
-          <strong>How booking works</strong>
-          <ol className="booking-information-card__list">
-            <li>Send your booking request.</li>
-            <li>Beata personally reviews every request.</li>
-            <li>If accepted you will receive a secure payment link.</li>
-            <li>Your appointment is confirmed once your {depositDisplay} deposit has been received.</li>
-          </ol>
-        </div>
-
-        <div className="booking-progress" aria-label="Booking progress">
-          {BOOKING_STEPS.map((step, index) => (
-            <span key={step} className={`booking-progress__step ${index <= activeStepIndex ? "is-active" : ""}`}>
-              {step}
-            </span>
           ))}
         </div>
 
-        <div className="booking-panel__section">
-          {bookingStep === "Duration" ? (
+        <div
+          style={{
+            position: "sticky",
+            top: "100px",
+            alignSelf: "start",
+            padding: "30px",
+            borderRadius: "18px",
+            background: "rgba(255,255,255,0.8)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
+          }}
+        >
+          {!selectedTreatment ? (
+            <p style={{ color: "#777" }}>Select a treatment to begin booking</p>
+          ) : (
             <>
-              <h4 className="booking-panel__section-title">Choose your duration</h4>
-              <div className="booking-options">
+              <h3 style={{ fontFamily: "var(--font-heading)" }}>{selectedTreatment.name}</h3>
+              <p style={{ fontSize: "13px", color: "#666" }}>{selectedTreatment.description}</p>
+
+              <div style={{ display: "flex", gap: "10px", marginTop: "20px", flexWrap: "wrap" }}>
                 {selectedTreatment.prices.map((priceOption) => (
                   <button
-                    type="button"
-                    className={`booking-option-button ${selectedOption?.id === priceOption.id ? "is-selected" : ""}`}
-                    key={`${selectedTreatment.id}-${priceOption.id}`}
-                    onClick={() => selectOption(priceOption)}
+                    key={`${selectedTreatment.name}-${priceOption.time}`}
+                    onClick={() => selectTreatment(selectedTreatment, priceOption)}
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: "999px",
+                      border: selectedOption === priceOption ? "1px solid #6f8f7a" : "1px solid #d6d6d6",
+                      background: selectedOption === priceOption ? "#6f8f7a" : "#f7f7f7",
+                      color: selectedOption === priceOption ? "#fff" : "#333",
+                      cursor: "pointer",
+                      transition: "all 0.25s ease",
+                    }}
                   >
                     {priceOption.time} - {priceOption.price}
                   </button>
                 ))}
               </div>
-              <div className="booking-price-card">
-                <div className="booking-price-card__row">
-                  <span>Treatment price</span>
-                  <strong>{selectedPriceDisplay}</strong>
-                </div>
-                <div className="booking-price-card__row">
-                  <span>Deposit to confirm booking</span>
-                  <strong>{depositDisplay}</strong>
-                </div>
-              </div>
-            </>
-          ) : null}
 
-          {bookingStep === "Date" ? (
-            <>
-              <h4 className="booking-panel__section-title">Choose a preferred date</h4>
-              <label className="booking-field">
-                <span>Date</span>
-                <input
-                  className="booking-input"
-                  type="date"
-                  value={bookingForm.requestedDate}
-                  min={new Date().toISOString().slice(0, 10)}
-                  onChange={(event) => chooseDate(event.target.value)}
-                />
-              </label>
-            </>
-          ) : null}
-
-          {bookingStep === "Time" ? (
-            <>
-              <h4 className="booking-panel__section-title">Choose an available time</h4>
-              <label className="booking-field">
-                <span>Date</span>
-                <input
-                  className="booking-input"
-                  type="date"
-                  value={bookingForm.requestedDate}
-                  min={new Date().toISOString().slice(0, 10)}
-                  onChange={(event) => chooseDate(event.target.value)}
-                />
-              </label>
-
-              {isAvailabilityLoading ? <LoadingMessage message="Loading available appointment times..." className="booking-status-message" /> : null}
-              {availabilityMessage ? <StatusMessage tone="error" className="booking-status-message">{availabilityMessage}</StatusMessage> : null}
-
-              {availableSlots.length > 0 ? (
-                <div className="booking-time-grid">
-                  {availableSlots.map((slot) => (
-                    <button type="button" key={slot.start.toISOString()} className="booking-time-button" onClick={() => chooseTime(slot)}>
-                      {slot.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </>
-          ) : null}
-
-          {bookingStep === "Details" ? (
-            <>
-              <h4 className="booking-panel__section-title">Your details</h4>
-              <div className="booking-form-grid">
-                <label className="booking-field">
-                  <span>Full Name</span>
-                  <input className="booking-input" value={bookingForm.clientName} onChange={(event) => updateBookingForm("clientName", event.target.value)} />
-                </label>
-                <label className="booking-field">
-                  <span>Email Address</span>
-                  <input className="booking-input" type="email" required value={bookingForm.clientEmail} onChange={(event) => updateBookingForm("clientEmail", event.target.value)} />
-                </label>
-                <label className="booking-field">
-                  <span>Mobile Number</span>
-                  <input className="booking-input" type="tel" value={bookingForm.clientPhone} onChange={(event) => updateBookingForm("clientPhone", event.target.value)} />
-                </label>
-                <div className="booking-field">
-                  <span>Communication Preferences</span>
-                  <label style={{ display: "flex", alignItems: "flex-start", gap: "10px", color: "var(--text-dark)", fontSize: "15px", lineHeight: "1.6" }}>
-                    <input
-                      type="checkbox"
-                      checked={bookingForm.whatsappNotifications}
-                      onChange={(event) => updateBookingForm("whatsappNotifications", event.target.checked)}
-                      style={{ marginTop: "4px" }}
-                    />
-                    <span style={{ fontWeight: 400 }}>
-                      Keep me updated on WhatsApp about this booking.
-                    </span>
-                  </label>
-                  <p className="section-copy" style={{ margin: 0 }}>
-                    We'll only send WhatsApp messages relating to this booking, such as confirmation, deposit requests and reminders. No marketing messages.
-                  </p>
-                </div>
-              </div>
-
-              <div className="booking-panel__actions">
-                <button type="button" className="featured-secondary-button" onClick={goBackStep}>
-                  Back
-                </button>
-                <button type="button" className="featured-primary-button" onClick={goToReview}>
-                  Continue
-                </button>
-              </div>
-            </>
-          ) : null}
-
-          {bookingStep === "Health" ? (
-            <>
-              <h4 className="booking-panel__section-title">Health information</h4>
-              <div className="booking-form-grid">
-                <label className="booking-field">
-                  <span>Are you pregnant?</span>
-                  <select className="booking-input" value={bookingForm.pregnant} onChange={(event) => updateBookingForm("pregnant", event.target.value)}>
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                    <option value="prefer_not_to_say">Prefer not to say</option>
-                  </select>
-                </label>
-                <label className="booking-field">
-                  <span>Do you have any injuries?</span>
-                  <textarea className="booking-input booking-textarea" value={bookingForm.injuries} onChange={(event) => updateBookingForm("injuries", event.target.value)} />
-                </label>
-                <label className="booking-field">
-                  <span>Any medical conditions?</span>
-                  <textarea className="booking-input booking-textarea" value={bookingForm.medicalConditions} onChange={(event) => updateBookingForm("medicalConditions", event.target.value)} />
-                </label>
-                <label className="booking-field">
-                  <span>Anything else Beata should know?</span>
-                  <textarea className="booking-input booking-textarea" value={bookingForm.anythingElse} onChange={(event) => updateBookingForm("anythingElse", event.target.value)} />
-                </label>
-                <label className="booking-field">
-                  <span>Additional notes (optional)</span>
-                  <textarea className="booking-input booking-textarea" value={bookingForm.additionalNotes} onChange={(event) => updateBookingForm("additionalNotes", event.target.value)} />
-                </label>
-              </div>
-
-              <div className="booking-panel__actions">
-                <button type="button" className="featured-secondary-button" onClick={goBackStep}>
-                  Back
-                </button>
-                <button type="button" className="featured-primary-button" onClick={continueToReview}>
-                  Review Booking
-                </button>
-              </div>
-            </>
-          ) : null}
-
-          {bookingStep === "Review" ? (
-            <>
-              <h4 className="booking-panel__section-title">Review your booking request</h4>
-              <div className="booking-review-card">
-                <div className="booking-review-card__section">
-                  <strong>Treatment</strong>
-                  <span>{selectedTreatment.name}</span>
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Duration</strong>
-                  <span>{selectedOption.time}</span>
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Price</strong>
-                  <span>{selectedPriceDisplay}</span>
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Deposit Required</strong>
-                  <span>{depositDisplay}</span>
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Requested Appointment</strong>
-                  <span>{formatBookingDate(bookingForm.requestedDate)}</span>
-                  <span>{bookingForm.startTime}</span>
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Customer</strong>
-                  <span>{bookingForm.clientName}</span>
-                  <span>{bookingForm.clientEmail}</span>
-                  <span>{bookingForm.clientPhone}</span>
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Communication Preferences</strong>
-                  {selectedCommunicationChannels.map((channel) => (
-                    <span key={channel.key}>
-                      {channel.icon} {channel.label} {channel.detail}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Health Information</strong>
-                  <span>Pregnant: {bookingForm.pregnant}</span>
-                  <span>Injuries: {bookingForm.injuries || "None provided"}</span>
-                  <span>Medical conditions: {bookingForm.medicalConditions || "None provided"}</span>
-                  <span>Anything else: {bookingForm.anythingElse || "None provided"}</span>
-                  {bookingForm.additionalNotes ? <span>Additional notes: {bookingForm.additionalNotes}</span> : null}
-                </div>
-
-                <div className="booking-review-card__section">
-                  <strong>Booking Process</strong>
-                  <div className="booking-process-list">
-                    {bookingProcessSteps.map((step) => (
-                      <span key={step}>&#10003; {step}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {feedbackMessage ? <StatusMessage tone="error" className="booking-status-message">{feedbackMessage}</StatusMessage> : null}
-
-              <div className="booking-panel__actions">
-                <button type="button" className="featured-secondary-button" onClick={goBackStep}>
-                  Back
-                </button>
-                <button type="button" className="featured-primary-button" onClick={submitBookingRequest} disabled={isSubmitting}>
-                  {isSubmitting ? "Sending..." : "Send Booking Request"}
-                </button>
-              </div>
-            </>
-          ) : null}
-        </div>
-
-        {feedbackMessage && bookingStep !== "Review" ? <StatusMessage tone="error" className="booking-status-message">{feedbackMessage}</StatusMessage> : null}
-      </>
-    )
-  }
-
-  return (
-    <section className="treatments-page">
-      <Seo
-        title="Treatments | Retreat by the Mournes"
-        description="Discover therapeutic massage, sports massage, facials and signature wellness treatments using Neal's Yard Remedies Organic products."
-        path="/treatments"
-        structuredData={structuredData}
-      />
-      <h1 className="treatments-title">Book Your Treatment</h1>
-
-      {isPageLoading ? (
-        <div className="treatments-status-wrap">
-          <LoadingMessage message="Loading treatments and booking options..." />
-        </div>
-      ) : null}
-
-      {!isPageLoading && pageError ? (
-        <div className="treatments-status-wrap">
-          <StatusMessage tone="error">{pageError}</StatusMessage>
-        </div>
-      ) : null}
-
-      <div className="treatments-layout">
-        <div className={`treatments-list ${selectedTreatment ? "has-mobile-booking-bar" : ""}`}>
-          {featuredTreatment ? (
-            <section className="featured-treatment">
-              <div className="featured-label-row">
-                Signature Treatment
-                <span className="treatment-new-badge">New</span>
-              </div>
-
-              <div className="featured-header">
-                <h2 className="featured-name">{featuredTreatment.name}</h2>
-                <p className="featured-meta">
-                  {featuredTreatment.prices[0]?.time} &bull; {featuredTreatment.prices[0]?.price}
+              <div style={{ marginTop: "25px", paddingTop: "15px", borderTop: "1px solid #eee" }}>
+                <p>
+                  <strong>Selected:</strong>
+                  <br />
+                  {selectedOption?.time} - {selectedOption?.price}
                 </p>
               </div>
 
-              <p className="featured-intro">{FEATURED_INTRODUCTION}</p>
-              <p className="featured-description">{featuredTreatment.description}</p>
-              <div className="treatment-pricing-summary">
-                <div>
-                  <span>Treatment price</span>
-                  <strong>{featuredTreatment.prices[0]?.price}</strong>
-                </div>
-                <div>
-                  <span>Deposit to confirm booking</span>
-                  <strong>{formatDepositRequirement(businessSettings, featuredTreatment.prices[0]?.rawPrice ?? null)}</strong>
-                </div>
-              </div>
-
-              <div className="featured-actions">
-                <button
-                  className="featured-primary-button"
-                  onClick={() => selectTreatment(featuredTreatment, featuredTreatment.prices[0] ?? null, true)}
-                  disabled={featuredTreatment.bookingEnabled === false}
-                >
-                  {featuredTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Request This Treatment"}
-                </button>
-
-                <button className="featured-secondary-button" onClick={() => selectTreatment(featuredTreatment)}>
-                  View In Booking Panel
-                </button>
-              </div>
-            </section>
-          ) : null}
-
-          {categoryGroups.map((group) => (
-            <div key={group.category}>
-              <h2 id={group.category} style={{ margin: "20px 0 10px", fontFamily: "var(--font-heading)" }}>
-                {group.category}
-              </h2>
-
-              {group.treatments.map((treatment) => (
-                <div
-                  key={treatment.id}
-                  id={treatment.name}
-                  onClick={() => selectTreatment(treatment)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault()
-                      selectTreatment(treatment)
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={selectedTreatment?.id === treatment.id}
-                  className={`treatment-card ${selectedTreatment?.id === treatment.id ? "is-selected" : ""}`}
-                  style={{
-                    padding: "20px",
-                    borderRadius: "14px",
-                    background: selectedTreatment?.id === treatment.id ? "#6f8f7a" : "#f5f5f5",
-                    color: selectedTreatment?.id === treatment.id ? "#fff" : "#2a2a2a",
-                    cursor: "pointer",
-                    boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
-                    transition: "all 0.25s ease",
-                    transform: "translateY(0) scale(1)",
-                  }}
-                  onMouseEnter={(event) => {
-                    if (selectedTreatment?.id !== treatment.id) {
-                      event.currentTarget.style.transform = "translateY(-6px) scale(1.02)"
-                      event.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,0.10)"
-                      event.currentTarget.style.background = "#eeeeee"
-                    }
-                  }}
-                  onMouseLeave={(event) => {
-                    if (selectedTreatment?.id !== treatment.id) {
-                      event.currentTarget.style.transform = "translateY(0) scale(1)"
-                      event.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.04)"
-                      event.currentTarget.style.background = "#f5f5f5"
-                    }
-                  }}
-                >
-                  {treatment.name === FACIAL_TREATMENT_NAME ? (
-                    <div className="treatment-card__eyebrow-row">
-                      <span className="treatment-card__eyebrow">Facial Treatment</span>
-                      <span className="treatment-new-badge">New</span>
-                    </div>
-                  ) : null}
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
-                    {selectedTreatment?.id === treatment.id ? (
-                      <span className="treatment-card__selected-badge">&#10003; Selected</span>
-                    ) : (
-                      <span style={{ opacity: 0.4 }}>&rarr;</span>
-                    )}
-                  </div>
-                  <p style={{ fontSize: "12px", opacity: 0.6 }}>
-                    {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
-                  </p>
-                  <p style={{ fontSize: "12px", opacity: 0.75, margin: "4px 0 0" }}>
-                    Deposit to confirm booking {formatDepositRequirement(businessSettings, treatment.prices[0]?.rawPrice ?? null)}
-                  </p>
-                  <p style={{ fontSize: "13px", opacity: 0.8 }}>{treatment.description}</p>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-
-        <div className="booking-panel">{renderWizardContent()}</div>
-      </div>
-
-      {selectedTreatment && selectedOption && !successBooking ? (
-        <div className="mobile-booking-bar" aria-live="polite">
-          <div className="mobile-booking-bar__content">
-            <div className="mobile-booking-bar__details">
-              <p className="mobile-booking-bar__eyebrow">Ready to Book</p>
-              <p className="mobile-booking-bar__title">{selectedTreatment.name}</p>
-              <p className="mobile-booking-bar__meta">
-                {selectedOption.time} &bull; {selectedOption.price}
-              </p>
-              <p className="mobile-booking-bar__deposit">Deposit to confirm booking {depositDisplay}</p>
-            </div>
-
-            <button type="button" className="mobile-booking-bar__button" onClick={openMobileWizard} disabled={selectedTreatment.bookingEnabled === false}>
-              {selectedTreatment.bookingEnabled === false ? "Booking Coming Soon" : "Request Appointment"}
-            </button>
-          </div>
-        </div>
-      ) : null}
-
-      {isMobileWizardOpen ? (
-        <div className="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
-          <div className="booking-modal__backdrop" onClick={closeMobileWizard} />
-          <div className="booking-modal__panel">
-            <div className="booking-modal__header">
-              <h2 id="booking-modal-title">Booking Request</h2>
-              <button type="button" className="featured-secondary-button" onClick={closeMobileWizard}>
-                Close
+              <button
+                onClick={bookTreatment}
+                style={{
+                  marginTop: "24px",
+                  width: "100%",
+                  padding: "14px 18px",
+                  borderRadius: "14px",
+                  border: "1px solid #6f8f7a",
+                  background: "#6f8f7a",
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  letterSpacing: "0.3px",
+                  transition: "all 0.25s ease",
+                }}
+                onMouseEnter={(event) => {
+                  event.currentTarget.style.background = "#5f7f6c"
+                  event.currentTarget.style.transform = "translateY(-2px)"
+                }}
+                onMouseLeave={(event) => {
+                  event.currentTarget.style.background = "#6f8f7a"
+                  event.currentTarget.style.transform = "translateY(0)"
+                }}
+              >
+                Confirm & Book via WhatsApp
               </button>
-            </div>
-            {renderWizardContent()}
-          </div>
+            </>
+          )}
         </div>
-      ) : null}
+      </div>
     </section>
   )
 }
 
 export default Treatments
-
