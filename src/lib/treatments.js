@@ -105,16 +105,7 @@ export const LEGACY_TREATMENTS = [
       { label: "90 min", durationMinutes: 90, price: 80, depositAmount: 0, displayOrder: 20 },
     ],
   },
-  {
-    category: "Specialist Recovery",
-    name: "Race Day Reset",
-    description: "Hot and cold therapy with targeted muscle work for recovery.",
-    featured: false,
-    displayOrder: 90,
-    bookingEnabled: true,
-    status: TREATMENT_STATUS.ACTIVE,
-    options: [{ label: "70 min", durationMinutes: 70, price: 70, depositAmount: 0, displayOrder: 10 }],
-  },
+
   {
     category: "Signature Treatment",
     name: "Mourne Recovery Therapy",
@@ -213,7 +204,7 @@ export function formatCurrency(value) {
   const numericValue = Number(value ?? 0)
   const hasDecimals = Math.abs(numericValue % 1) > Number.EPSILON
 
-  return `£${numericValue.toFixed(hasDecimals ? 2 : 0)}`
+  return `Â£${numericValue.toFixed(hasDecimals ? 2 : 0)}`
 }
 
 export function sortTreatmentOptions(options = []) {
