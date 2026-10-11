@@ -23,7 +23,7 @@ function Footer() {
       </div>
 
       <div className="footer-socials">
-        <a href="https://www.instagram.com/retreat_by_the_mournes?stkn=c3cyeWRleTQ4M3h0" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <a href="https://www.instagram.com/retreat_by_the_mournes/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <FaInstagram size={20} color="#c13584" />
         </a>
         <a
@@ -47,5 +47,6 @@ function Footer() {
 }
 
 export default Footer
+
 
 
