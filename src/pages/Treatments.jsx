@@ -76,9 +76,19 @@ const treatments = [
   {
     category: "Signature Treatment",
     name: "Mourne Rocks Retreat & Recovery",
+    isNew: true,
     description:
       "A restorative two-hour treatment designed to release muscular tension while nourishing the skin and promoting deep relaxation. This signature experience combines a back sports massage with hot stones to ease tightness and stiffness in the back, shoulders, and neck, together with a Nourishing & Therapeutic Facial using Neal's Yard Remedies Organic skincare. The facial includes a cleanse, exfoliation, nourishing mask, gentle facial lymphatic drainage, and therapeutic massage to the face, neck, shoulders, and scalp to help reduce puffiness, release tension, and restore a natural glow. Perfect for those seeking both therapeutic bodywork and a deeply relaxing facial experience in the tranquil surroundings of Retreat by the Mournes.",
     prices: [{ time: "2 hours", price: "\u00A3115" }],
+  },
+  {
+    category: "Signature Treatment",
+    name: "The Mourne Head-to-Toe Retreat",
+    subtitle: "From Cold Mountain Feet to Warm, Grounded Feet",
+    isNew: true,
+    description:
+      "After a day exploring the Mournes, retreat into warmth with a deeply restorative treatment designed to soothe tired feet, ease tension and restore calm. Enjoy gentle foot exfoliation, a warming foot and lower-leg massage with hot stones, myofascial release for the back, and a soothing massage of the shoulders, neck, head, scalp, forearms and hands. Inspired by the comfort of a warm retreat after time outdoors, this is your invitation to slow down, switch off and feel nurtured from head to toe.",
+    prices: [{ time: "90 min", price: "\u00A390" }],
   },
   {
     category: "Nurture & Restore",
@@ -136,6 +146,68 @@ const categories = [
 const featuredIntroduction =
   "Our signature two-hour treatment combining therapeutic sports massage, soothing hot stone therapy and a deeply nourishing Neal's Yard Remedies Organic facial. Designed to restore tired muscles, calm the mind and leave you feeling completely refreshed."
 
+const enhancementCatalog = {
+  hotStones: {
+    id: "hotStones",
+    name: "Targeted Hot Stone Therapy",
+    description: "Warm, focused stone work for areas holding tension.",
+    price: 12,
+    minutes: 15,
+  },
+  scalpRitual: {
+    id: "scalpRitual",
+    name: "Scalp, Head & Face Ritual",
+    description: "A deeply relaxing finish for the scalp, head and face.",
+    price: 18,
+    minutes: 20,
+  },
+  footRevival: {
+    id: "footRevival",
+    name: "Foot & Lower-Leg Revival",
+    description: "Restorative care for tired feet and lower legs.",
+    price: 18,
+    minutes: 20,
+  },
+  extraTime: {
+    id: "extraTime",
+    name: "Extra 15 Minutes",
+    description: "Additional time focused on the area that needs it most.",
+    price: 15,
+    minutes: 15,
+  },
+  recoveryBoots: {
+    id: "recoveryBoots",
+    name: "Recovery Boots",
+    description: "Post-treatment recovery support for tired legs.",
+    price: 15,
+    minutes: 25,
+    comingSoon: true,
+  },
+}
+
+const treatmentEnhancements = {
+  "Neck, Head, and Face Massage": ["footRevival"],
+  "Back, Neck, and Head with Hot Stone Massage": ["footRevival"],
+  "Full Body Massage (Lomi Lomi Inspired)": ["hotStones", "scalpRitual"],
+  "Full Body Hot Stone Massage": ["scalpRitual"],
+  "Nurturing Full Body Pregnancy Massage": [],
+  "Therapeutic Deep Tissue Full Body Therapy": ["hotStones", "recoveryBoots"],
+  "Sports Massage Therapy": ["hotStones", "recoveryBoots"],
+  "Myofascial Release Therapy": ["hotStones", "recoveryBoots"],
+  "Mourne Recovery Therapy": ["hotStones", "scalpRitual", "recoveryBoots"],
+  "Mourne Rocks Retreat & Recovery": ["recoveryBoots"],
+  "The Mourne Head-to-Toe Retreat": ["recoveryBoots"],
+  "Gentle Back, Neck, and Head Massage": ["hotStones", "footRevival"],
+  "Head & Neck Massage with Essential Oils": ["hotStones", "footRevival"],
+  "Nourishing & Therapeutic Facial": ["footRevival"],
+  "Tension Release Back Therapy": ["hotStones", "extraTime"],
+  "Revitalizing Head & Face Massage": ["footRevival", "extraTime"],
+  "Grounding Foot Ritual": ["scalpRitual", "extraTime"],
+  "Grounding Hand Ritual": ["footRevival", "extraTime"],
+}
+
+const parsePrice = (price = "") =>
+  Number(String(price).replace(/[^\d.]/g, "")) || 0
 function Treatments() {
   const location = useLocation()
   const targetCategory = location.state?.targetCategory ?? null
@@ -145,10 +217,47 @@ function Treatments() {
   const featuredTreatment = treatments.find((treatment) => treatment.name === "Mourne Rocks Retreat & Recovery")
 
   const [manualSelection, setManualSelection] = useState(null)
+  const [selectedEnhancements, setSelectedEnhancements] = useState([])
+  const [enhancementsOpen, setEnhancementsOpen] = useState(false)
   const bookingPanelRef = useRef(null)
   const selectionMatchesCategory = manualSelection?.category === targetCategory
   const selectedTreatment = selectionMatchesCategory ? manualSelection.treatment : defaultTreatment
   const selectedOption = selectionMatchesCategory ? manualSelection.option : defaultTreatment?.prices[0] ?? null
+
+  const availableEnhancements = selectedTreatment
+    ? (treatmentEnhancements[selectedTreatment.name] ?? [])
+        .map((id) => enhancementCatalog[id])
+        .filter(Boolean)
+    : []
+
+  const selectedEnhancementDetails = availableEnhancements.filter(
+    (enhancement) =>
+      !enhancement.comingSoon &&
+      selectedEnhancements.includes(enhancement.id)
+  )
+
+  const enhancementTotal = selectedEnhancementDetails.reduce(
+    (total, enhancement) => total + enhancement.price,
+    0
+  )
+
+  const enhancementMinutes = selectedEnhancementDetails.reduce(
+    (total, enhancement) => total + enhancement.minutes,
+    0
+  )
+
+  const bookingTotal =
+    parsePrice(selectedOption?.price) + enhancementTotal
+
+  const toggleEnhancement = (enhancement) => {
+    if (enhancement.comingSoon) return
+
+    setSelectedEnhancements((current) =>
+      current.includes(enhancement.id)
+        ? current.filter((id) => id !== enhancement.id)
+        : [...current, enhancement.id]
+    )
+  }
 
   useEffect(() => {
     if (!targetCategory) return
@@ -180,7 +289,11 @@ function Treatments() {
   }, [manualSelection, targetCategory])
 
   const selectTreatment = (treatment, priceOption = treatment.prices[0]) => {
-    setManualSelection({
+        if (selectedTreatment?.name !== treatment.name) {
+      setSelectedEnhancements([])
+      setEnhancementsOpen(false)
+    }
+setManualSelection({
       category: targetCategory,
       treatment,
       option: priceOption,
@@ -190,8 +303,36 @@ function Treatments() {
   const bookTreatment = () => {
     if (!selectedTreatment || !selectedOption) return
 
-    const message = `Hi Beata, I'd like to book: ${selectedTreatment.name} (${selectedOption.time}) - ${selectedOption.price}.`
-    window.open(`https://wa.me/447591383215?text=${encodeURIComponent(message)}`)
+    const enhancementLines = selectedEnhancementDetails.length
+      ? selectedEnhancementDetails
+          .map(
+            (enhancement) =>
+              `- ${enhancement.name} (+\u00A3${enhancement.price})`
+          )
+          .join("\n")
+      : "- None"
+
+    const additionalTimeLine =
+      enhancementMinutes > 0
+        ? `\nAdditional treatment time: approximately ${enhancementMinutes} minutes`
+        : ""
+
+    const message = `Hi Beata, I'd like to request:
+
+${selectedTreatment.name}
+${selectedOption.time} - ${selectedOption.price}
+
+Enhancements:
+${enhancementLines}
+${additionalTimeLine}
+
+Total: \u00A3${bookingTotal}
+
+Please let me know what availability you have. Thank you.`
+
+    window.open(
+      `https://wa.me/447591383215?text=${encodeURIComponent(message)}`
+    )
   }
 
   const bookFeaturedTreatment = () => {
@@ -437,9 +578,33 @@ function Treatments() {
                       }
                     }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <strong style={{ fontFamily: "var(--font-heading)" }}>{treatment.name}</strong>
-                      <span style={{ opacity: 0.4 }}>&rarr;</span>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                          <strong style={{ fontFamily: "var(--font-heading)" }}>
+                            {treatment.name}
+                          </strong>
+
+                          {treatment.isNew && (
+                            <span className="treatment-new-badge">NEW</span>
+                          )}
+                        </div>
+
+                        {treatment.subtitle && (
+                          <p
+                            style={{
+                              margin: "6px 0 0",
+                              fontSize: "12px",
+                              fontStyle: "italic",
+                              opacity: 0.72,
+                            }}
+                          >
+                            {treatment.subtitle}
+                          </p>
+                        )}
+                      </div>
+
+                      <span style={{ opacity: 0.4, flexShrink: 0 }}>&rarr;</span>
                     </div>
                     <p style={{ fontSize: "12px", opacity: 0.6 }}>
                       {treatment.prices[0]?.time} - {treatment.prices[0]?.price}
@@ -489,16 +654,117 @@ function Treatments() {
                   </button>
                 ))}
               </div>
+              {availableEnhancements.length > 0 && (
+                <div className="retreat-enhancements retreat-enhancements--compact">
+                  <button
+                    type="button"
+                    className="retreat-enhancements__trigger"
+                    onClick={() => setEnhancementsOpen((open) => !open)}
+                    aria-expanded={enhancementsOpen}
+                  >
+                    <div>
+                      <span>Enhance your retreat</span>
+                      <small>
+                        {availableEnhancements.every((item) => item.comingSoon)
+                          ? "Recovery Boots · launching soon"
+                          : `${availableEnhancements.length} optional ${
+                              availableEnhancements.length === 1 ? "addition" : "additions"
+                            } available`}
+                      </small>
+                    </div>
 
-              <div style={{ marginTop: "25px", paddingTop: "15px", borderTop: "1px solid #eee" }}>
-                <p>
-                  <strong>Selected:</strong>
-                  <br />
-                  {selectedOption?.time} - {selectedOption?.price}
-                </p>
+                    <span
+                      className={`retreat-enhancements__chevron${
+                        enhancementsOpen ? " is-open" : ""
+                      }`}
+                      aria-hidden="true"
+                    >
+                      ›
+                    </span>
+                  </button>
+
+                  {enhancementsOpen && (
+                    <div className="retreat-enhancements__drawer">
+                      {availableEnhancements.map((enhancement) => {
+                        const isSelected =
+                          selectedEnhancements.includes(enhancement.id)
+
+                        if (enhancement.comingSoon) {
+                          return (
+                            <div
+                              key={enhancement.id}
+                              className="retreat-enhancement-soon"
+                            >
+                              <div>
+                                <strong>{enhancement.name}</strong>
+                                <p>{enhancement.description}</p>
+                              </div>
+
+                              <span>Launching soon</span>
+                            </div>
+                          )
+                        }
+
+                        return (
+                          <button
+                            key={enhancement.id}
+                            type="button"
+                            className={`retreat-enhancement-choice${
+                              isSelected ? " is-selected" : ""
+                            }`}
+                            onClick={() => toggleEnhancement(enhancement)}
+                            aria-pressed={isSelected}
+                          >
+                            <div>
+                              <strong>{enhancement.name}</strong>
+                              <p>{enhancement.description}</p>
+                              <small>+{enhancement.minutes} min</small>
+                            </div>
+
+                            <div className="retreat-enhancement-choice__price">
+                              +{"\u00A3"}{enhancement.price}
+                              <span>{isSelected ? "✓" : "+"}</span>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="retreat-booking-summary retreat-booking-summary--minimal">
+                <span className="retreat-booking-summary__eyebrow">
+                  Your retreat
+                </span>
+
+                <div className="retreat-booking-summary__treatment">
+                  <div>
+                    <strong>{selectedTreatment.name}</strong>
+                    <span>{selectedOption?.time}</span>
+                  </div>
+
+                  <strong>{selectedOption?.price}</strong>
+                </div>
+
+                {selectedEnhancementDetails.map((enhancement) => (
+                  <div
+                    className="retreat-booking-summary__enhancement"
+                    key={enhancement.id}
+                  >
+                    <span>{enhancement.name}</span>
+                    <strong>+{"\u00A3"}{enhancement.price}</strong>
+                  </div>
+                ))}
+
+                <div className="retreat-booking-summary__total">
+                  <span>Total</span>
+                  <strong>
+                    {"\u00A3"}{bookingTotal}
+                  </strong>
+                </div>
               </div>
-
-              <button
+<button
                 onClick={bookTreatment}
                 style={{
                   marginTop: "24px",
@@ -523,7 +789,7 @@ function Treatments() {
                   event.currentTarget.style.transform = "translateY(0)"
                 }}
               >
-                Confirm & Book via WhatsApp
+                Request via WhatsApp
               </button>
             </>
           )}

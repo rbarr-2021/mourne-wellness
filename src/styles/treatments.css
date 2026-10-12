@@ -715,3 +715,259 @@
     transform: translateY(0);
   }
 }
+
+/* =========================================================
+   RETREAT BOOKING - QUIET LUXURY
+   ========================================================= */
+
+.retreat-enhancements--compact {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(198, 166, 100, 0.18);
+}
+
+.retreat-enhancements__trigger {
+  appearance: none;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-dark);
+}
+
+.retreat-enhancements__trigger > div {
+  min-width: 0;
+}
+
+.retreat-enhancements__trigger span {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.retreat-enhancements__trigger small {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #888;
+}
+
+.retreat-enhancements__chevron {
+  flex: 0 0 auto;
+  font-size: 27px !important;
+  line-height: 1;
+  color: var(--primary-dark);
+  transform: rotate(0deg);
+  transition: transform 180ms ease;
+}
+
+.retreat-enhancements__chevron.is-open {
+  transform: rotate(90deg);
+}
+
+.retreat-enhancements__drawer {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.retreat-enhancement-choice {
+  appearance: none;
+  width: 100%;
+  padding: 15px 0;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.retreat-enhancement-choice:first-child {
+  border-top: 0;
+}
+
+.retreat-enhancement-choice strong,
+.retreat-enhancement-soon strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.retreat-enhancement-choice p,
+.retreat-enhancement-soon p {
+  margin: 5px 0 0;
+  max-width: 30rem;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #858585;
+}
+
+.retreat-enhancement-choice small {
+  display: block;
+  margin-top: 7px;
+  font-size: 10px;
+  color: var(--primary-dark);
+}
+
+.retreat-enhancement-choice__price {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.retreat-enhancement-choice__price span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(107, 162, 146, 0.34);
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.retreat-enhancement-choice.is-selected
+  .retreat-enhancement-choice__price span {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.retreat-enhancement-soon {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0 3px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.retreat-enhancement-soon > span {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 166, 100, 0.28);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8b7139;
+}
+
+.retreat-booking-summary--minimal {
+  margin-top: 28px;
+  padding: 19px 0 0;
+  border: 0;
+  border-top: 1px solid rgba(198, 166, 100, 0.18);
+  border-radius: 0;
+  background: transparent;
+}
+
+.retreat-booking-summary__eyebrow {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b7139;
+}
+
+.retreat-booking-summary__treatment,
+.retreat-booking-summary__enhancement,
+.retreat-booking-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.retreat-booking-summary__treatment > div {
+  min-width: 0;
+}
+
+.retreat-booking-summary__treatment strong {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.retreat-booking-summary__treatment > strong {
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.retreat-booking-summary__treatment span {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #888;
+}
+
+.retreat-booking-summary__enhancement {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 11px;
+  color: var(--primary-dark);
+}
+
+.retreat-booking-summary__enhancement strong {
+  flex: 0 0 auto;
+}
+
+.retreat-booking-summary__total {
+  align-items: baseline;
+  margin-top: 17px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(198, 166, 100, 0.24);
+}
+
+.retreat-booking-summary__total span {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--text-dark);
+}
+
+.retreat-booking-summary__total strong {
+  font-family: var(--font-heading);
+  font-size: 23px;
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+@media (max-width: 600px) {
+  .treatments-booking-panel {
+    padding: 24px !important;
+  }
+
+  .retreat-enhancements__trigger span {
+    font-size: 17px;
+  }
+
+  .retreat-booking-summary__treatment strong {
+    font-size: 14px;
+  }
+}
