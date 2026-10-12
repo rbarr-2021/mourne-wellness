@@ -63,6 +63,10 @@ function Navbar() {
                 <FaGift /> Gift Vouchers
               </Link>
 
+              <Link to="/retreat-journeys" className="menu-item" onClick={() => setMenuOpen(false)}>
+                <FaSpa /> Retreat Journeys
+              </Link>
+
               <a href={getRetreatWhatsAppUrl()} className="menu-item" onClick={() => setMenuOpen(false)}>
                 <FaWhatsapp color="#25D366" /> Contact
               </a>

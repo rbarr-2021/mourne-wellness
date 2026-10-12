@@ -12,6 +12,7 @@ const Home = lazy(() => import("./pages/Home"))
 const Treatments = lazy(() => import("./pages/Treatments"))
 const About = lazy(() => import("./pages/About"))
 const GiftVouchers = lazy(() => import("./pages/GiftVouchers"))
+const RetreatJourneys = lazy(() => import("./pages/RetreatJourneys"))
 const AdminLogin = lazy(() => import("./pages/AdminLogin"))
 const AdminForgotPassword = lazy(() => import("./pages/AdminForgotPassword"))
 const AdminAuthCallback = lazy(() => import("./pages/AdminAuthCallback"))
@@ -49,6 +50,7 @@ function App() {
               <Route path="/treatments" element={<Treatments />} />
               <Route path="/about" element={<About />} />
               <Route path="/gift-vouchers" element={<GiftVouchers />} />
+              <Route path="/retreat-journeys" element={<RetreatJourneys />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
