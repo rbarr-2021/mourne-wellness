@@ -610,199 +610,32 @@
   display: none;
 }
 
-@media (max-width: 1024px) {
-  .treatments-layout {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .booking-panel {
-    position: static;
-    top: auto;
-    order: -1;
-  }
-
-  .featured-treatment {
-    padding: 28px;
-  }
+.treatments-booking-panel {
+  position: sticky;
+  top: 100px;
 }
 
-@media (max-width: 767px) {
-  .treatments-page {
-    padding: 92px 16px 56px;
-    overflow-x: clip;
-  }
-
-  .treatments-title {
-    margin-bottom: 28px;
-  }
-
+/* Keep the desktop grid; stack the list and WhatsApp panel on mobile. */
+@media (max-width: 768px) {
   .treatments-layout {
-    gap: 22px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
   }
 
-  .featured-treatment {
-    padding: 22px 18px;
-    border-radius: 20px;
-  }
-
-  .featured-label-row,
-  .treatment-card__eyebrow-row {
-    align-items: center;
-  }
-
-  .featured-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .featured-name {
-    width: 100%;
-    flex: 1 1 auto;
-    font-size: clamp(28px, 8vw, 34px);
-    line-height: 1.18;
-    overflow-wrap: anywhere;
-  }
-
-  .featured-meta {
-    width: 100%;
-    white-space: normal;
-  }
-
-  .featured-intro,
-  .featured-description {
-    width: 100%;
-  }
-
-  .booking-information-card,
-  .booking-price-card,
-  .treatment-pricing-summary,
-  .booking-support-card__content {
-    padding: 16px;
-  }
-
-  .booking-price-card__row,
-  .treatment-pricing-summary > div {
-    flex-wrap: wrap;
-  }
-
-  .featured-actions {
-    flex-direction: column;
-  }
-
-  .featured-primary-button,
-  .featured-secondary-button {
-    width: 100%;
-  }
-
-  .booking-panel {
-    display: none;
-  }
-
-  .booking-options {
-    gap: 8px;
-  }
-
-  .booking-option-button {
-    width: 100%;
-  }
-
-  .booking-time-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .booking-panel__actions {
-    flex-direction: column;
-  }
-
-  .booking-panel__actions > * {
-    width: 100%;
-    flex: none;
-  }
-
-  .booking-support-card__button {
-    width: 100%;
-  }
-
-  .treatments-list.has-mobile-booking-bar {
-    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px));
-  }
-
-  .mobile-booking-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 950;
-    display: block;
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: linear-gradient(to top, rgba(250, 249, 247, 0.96), rgba(250, 249, 247, 0));
-    pointer-events: none;
-    animation: mobileBookingBarSlideUp 0.35s ease;
-  }
-
-  .mobile-booking-bar__content {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px;
-    border-radius: 22px 22px 0 0;
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.14);
-    border: 1px solid rgba(198, 166, 100, 0.18);
-    pointer-events: auto;
-  }
-
-  .mobile-booking-bar__details {
+  .treatments-layout > * {
     min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
 
-  .mobile-booking-bar__eyebrow {
-    margin: 0 0 4px;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-light);
+  .featured-treatment-card {
+    padding: 24px !important;
   }
 
-  .mobile-booking-bar__title {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: 20px;
-    line-height: 1.25;
-    color: var(--text-dark);
-    overflow-wrap: anywhere;
-  }
-
-  .mobile-booking-bar__meta {
-    margin: 6px 0 0;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--primary-dark);
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-
-  .mobile-booking-bar__deposit {
-    margin: 6px 0 0;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--text-light);
-  }
-
-  .mobile-booking-bar__button {
-    min-height: 48px;
-    width: 100%;
-    border: 1px solid #6f8f7a;
-    border-radius: 14px;
-    background: #6f8f7a;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    transition: background 0.25s ease, transform 0.25s ease;
+  .treatments-booking-panel {
+    position: static;
+    top: auto;
+    padding: 24px !important;
   }
 }
 

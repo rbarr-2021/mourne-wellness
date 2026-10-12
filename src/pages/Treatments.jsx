@@ -1,4 +1,5 @@
 import "../styles/global.css"
+import "../styles/treatments.css"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
@@ -188,19 +189,11 @@ function Treatments() {
         Book Your Treatment
       </h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.2fr) minmax(320px, 0.8fr)",
-          gap: "40px",
-          maxWidth: "1100px",
-          margin: "0 auto",
-          alignItems: "start",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+      <div className="treatments-layout">
+        <div className="treatments-list" style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           {featuredTreatment && (
             <section
+              className="featured-treatment-card"
               style={{
                 marginBottom: "18px",
                 padding: "32px",
@@ -226,6 +219,7 @@ function Treatments() {
                   fontWeight: "600",
                 }}
               >
+                <span aria-hidden="true">{"\u2606"}</span>
                 Signature Treatment
               </div>
 
@@ -260,7 +254,7 @@ function Treatments() {
                     fontWeight: "600",
                   }}
                 >
-                  {featuredTreatment.prices[0].time} {"\u2022"} {featuredTreatment.prices[0].price}
+                  {featuredTreatment.prices[0].time}{" \u2022 "}{featuredTreatment.prices[0].price}
                 </p>
               </div>
 
@@ -320,6 +314,32 @@ function Treatments() {
                 >
                   Book This Treatment
                 </button>
+
+                <button
+                  onClick={() => selectTreatment(featuredTreatment)}
+                  style={{
+                    padding: "14px 24px",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(111, 143, 122, 0.28)",
+                    background: "rgba(255,255,255,0.7)",
+                    color: "var(--text-dark)",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    letterSpacing: "0.3px",
+                    transition: "all 0.25s ease",
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.background = "#ffffff"
+                    event.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.background = "rgba(255,255,255,0.7)"
+                    event.currentTarget.style.transform = "translateY(0)"
+                  }}
+                >
+                  View In Booking Panel
+                </button>
               </div>
             </section>
           )}
@@ -377,9 +397,8 @@ function Treatments() {
         </div>
 
         <div
+          className="treatments-booking-panel"
           style={{
-            position: "sticky",
-            top: "100px",
             alignSelf: "start",
             padding: "30px",
             borderRadius: "18px",
