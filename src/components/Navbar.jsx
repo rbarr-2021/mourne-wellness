@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { FaHome, FaSpa, FaFacebook, FaInstagram, FaWhatsapp, FaUser } from "react-icons/fa"
+import { FaHome, FaSpa, FaFacebook, FaInstagram, FaWhatsapp, FaUser, FaGift } from "react-icons/fa"
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2"
 import { Link } from "react-router-dom"
 import logo from "../assets/logo.png"
@@ -57,6 +57,10 @@ function Navbar() {
 
               <Link to="/treatments" className="menu-item" onClick={() => setMenuOpen(false)}>
                 <FaSpa /> Services
+              </Link>
+
+              <Link to="/gift-vouchers" className="menu-item" onClick={() => setMenuOpen(false)}>
+                <FaGift /> Gift Vouchers
               </Link>
 
               <a href={getRetreatWhatsAppUrl()} className="menu-item" onClick={() => setMenuOpen(false)}>

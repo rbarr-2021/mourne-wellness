@@ -6,6 +6,7 @@ import Contact from "../components/Contact"
 import WhatsAppButton from "../components/WhatsAppButton"
 import AboutTestimonials from "../components/AboutTestimonials"
 import Seo from "../components/Seo"
+import GiftVoucherFeature from "../components/GiftVoucherFeature"
 import {
   RetreatArrival,
   RetreatTreatmentStory,
@@ -92,6 +93,8 @@ function Home() {
       <Services />
 
       <RetreatTreatmentStory />
+
+      <GiftVoucherFeature />
 
       <RetreatSensoryBreak />
 
