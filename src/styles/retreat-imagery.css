@@ -1,0 +1,388 @@
+.retreat-eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.retreat-arrival,
+.retreat-treatment-story,
+.retreat-beata-story,
+.retreat-spaces {
+  background: var(--bg-main);
+}
+
+.retreat-editorial-image {
+  overflow: hidden;
+}
+
+.retreat-editorial-image img,
+.retreat-treatment-story__image img,
+.retreat-beata-story__image img,
+.retreat-sensory img,
+.retreat-spaces__item img,
+.retreat-cabin-detail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Inset editorial images only; keep hero and sensory sections square. */
+.retreat-editorial-image img,
+.retreat-treatment-story__image img,
+.retreat-beata-story__image img,
+.retreat-spaces__item img,
+.retreat-cabin-detail img {
+  border-radius: 4px;
+}
+
+/* ARRIVAL — MOBILE FIRST */
+
+.retreat-arrival {
+  padding: 0 16px 48px;
+}
+
+.retreat-editorial-image--arrival {
+  width: 100%;
+  height: min(82vw, 460px);
+  border-radius: 4px;
+}
+
+.retreat-editorial-image--arrival img {
+  object-position: center;
+}
+
+.retreat-arrival-copy {
+  max-width: 560px;
+  padding: 34px 8px 0;
+}
+
+.retreat-arrival-copy h2,
+.retreat-treatment-story__copy h2,
+.retreat-beata-story__copy h2,
+.retreat-spaces__intro h2 {
+  margin: 0 0 18px;
+  font-family: var(--font-heading);
+  color: var(--text-dark);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.retreat-arrival-copy h2 {
+  font-size: clamp(34px, 10vw, 52px);
+}
+
+.retreat-arrival-copy p,
+.retreat-treatment-story__copy p,
+.retreat-beata-story__copy p,
+.retreat-spaces__intro p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* TREATMENT STORY */
+
+.retreat-treatment-story,
+.retreat-beata-story {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 28px 16px 56px;
+}
+
+.retreat-treatment-story__image,
+.retreat-beata-story__image {
+  overflow: hidden;
+  min-height: 320px;
+}
+
+.retreat-treatment-story__image img {
+  object-position: center;
+}
+
+.retreat-beata-story__image img {
+  object-position: center 35%;
+}
+
+.retreat-treatment-story__copy,
+.retreat-beata-story__copy {
+  padding: 32px 8px 0;
+}
+
+.retreat-treatment-story__copy h2,
+.retreat-beata-story__copy h2,
+.retreat-spaces__intro h2 {
+  font-size: clamp(31px, 8vw, 46px);
+}
+
+.retreat-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(90, 137, 118, 0.42);
+  color: var(--text-dark);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* SENSORY IMAGE */
+
+.retreat-sensory {
+  position: relative;
+  height: 48vh;
+  min-height: 340px;
+  max-height: 520px;
+  overflow: hidden;
+}
+
+.retreat-sensory img {
+  object-position: center;
+}
+
+.retreat-sensory::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(20, 28, 24, 0.42),
+    rgba(20, 28, 24, 0.04) 58%
+  );
+}
+
+.retreat-sensory__overlay {
+  position: absolute;
+  z-index: 1;
+  left: 24px;
+  right: 24px;
+  bottom: 38px;
+}
+
+.retreat-sensory__overlay p {
+  margin: 0;
+  max-width: 480px;
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 9vw, 48px);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+/* THREE IMAGE STORY */
+
+.retreat-spaces {
+  padding: 56px 16px;
+}
+
+.retreat-spaces__intro {
+  max-width: 620px;
+  margin-bottom: 40px;
+}
+
+.retreat-spaces__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.retreat-spaces__item {
+  margin: 0;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.retreat-spaces__item--large {
+  grid-column: 1 / -1;
+  height: 42vh;
+  max-height: 680px;
+}
+
+.retreat-spaces__item:not(.retreat-spaces__item--large) {
+  height: 32vw;
+  min-height: 150px;
+  max-height: 400px;
+}
+
+/* ARRIVAL DETAIL */
+
+.retreat-cabin-detail {
+  position: relative;
+  width: min(100% - 32px, 900px);
+  margin: 0 auto 48px;
+}
+
+.retreat-cabin-detail img {
+  height: min(105vw, 620px);
+  object-position: center;
+}
+
+.retreat-cabin-detail__copy {
+  padding: 22px 4px 0;
+}
+
+.retreat-cabin-detail__copy p {
+  margin: 0;
+  color: var(--text-dark);
+  font-family: var(--font-heading);
+  font-size: 22px;
+}
+
+/* TABLET + DESKTOP */
+
+@media (min-width: 768px) {
+  .retreat-arrival {
+    padding: 40px 28px 110px;
+  }
+
+  .retreat-editorial-image--arrival {
+    width: min(1180px, 100%);
+    height: min(72vw, 760px);
+    margin: 0 auto;
+  }
+
+  .retreat-arrival-copy {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding-top: 44px;
+  }
+
+  .retreat-treatment-story,
+  .retreat-beata-story {
+    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+    width: min(1180px, calc(100% - 56px));
+    margin: 0 auto;
+    padding: 80px 0 120px;
+    align-items: center;
+  }
+
+  .retreat-treatment-story__image,
+  .retreat-beata-story__image {
+    height: 700px;
+  }
+
+  .retreat-treatment-story__copy,
+  .retreat-beata-story__copy {
+    padding: 40px 0 40px 64px;
+  }
+
+  .retreat-beata-story {
+    grid-template-columns: minmax(320px, 0.88fr) minmax(0, 1.12fr);
+  }
+
+  .retreat-beata-story__image {
+    grid-column: 2;
+  }
+
+  .retreat-beata-story__copy {
+    grid-row: 1;
+    grid-column: 1;
+    padding: 40px 64px 40px 0;
+  }
+
+  .retreat-sensory {
+    width: min(1320px, calc(100% - 56px));
+    height: 78vh;
+    margin: 20px auto 80px;
+  }
+
+  .retreat-sensory__overlay {
+    left: 60px;
+    bottom: 52px;
+  }
+
+  .retreat-spaces {
+    width: min(1180px, calc(100% - 56px));
+    margin: 0 auto;
+    padding: 110px 0;
+  }
+
+  .retreat-spaces__grid {
+    grid-template-columns: 1.4fr 0.8fr;
+    grid-template-rows: repeat(2, 310px);
+    gap: 12px;
+  }
+
+  .retreat-spaces__item--large {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    height: auto;
+    max-height: none;
+  }
+
+  .retreat-spaces__item:not(.retreat-spaces__item--large) {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .retreat-cabin-detail {
+    width: min(1180px, calc(100% - 56px));
+    margin-bottom: 110px;
+  }
+
+  .retreat-cabin-detail img {
+    height: 640px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .retreat-treatment-story,
+  .retreat-beata-story {
+    gap: 70px;
+  }
+
+  .retreat-treatment-story__copy,
+  .retreat-beata-story__copy {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retreat-text-link {
+    transition: none;
+  }
+}
+
+/* Mobile image sizing only */
+@media (max-width: 640px) {
+  .retreat-arrival__image {
+    height: 300px;
+  }
+
+  .retreat-story__image {
+    min-height: 280px;
+    height: 280px;
+  }
+
+  .retreat-sensory {
+    height: 320px;
+    min-height: 320px;
+  }
+
+  .retreat-spaces__large {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .retreat-spaces__item {
+    min-height: 180px;
+  }
+
+  .retreat-spaces__item--small {
+    height: 180px;
+    min-height: 180px;
+  }
+
+  .retreat-arrival-detail__image {
+    height: 280px;
+  }
+}

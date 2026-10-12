@@ -9,12 +9,12 @@ export const BUSINESS_DAYS = [
 ]
 
 export const DEFAULT_OPENING_HOURS = {
-  monday: { open: "10:00", close: "21:00", closed: false },
-  tuesday: { open: "10:00", close: "21:00", closed: false },
-  wednesday: { open: "", close: "", closed: true },
-  thursday: { open: "10:00", close: "21:00", closed: false },
-  friday: { open: "10:00", close: "16:00", closed: false },
-  saturday: { open: "09:00", close: "13:00", closed: false },
+  monday: { open: "11:00", close: "17:00", closed: false },
+  tuesday: { open: "11:00", close: "20:00", closed: false },
+  wednesday: { open: "11:00", close: "17:00", closed: false },
+  thursday: { open: "11:00", close: "20:00", closed: false },
+  friday: { open: "11:00", close: "20:00", closed: false },
+  saturday: { open: "08:30", close: "13:00", closed: false },
   sunday: { open: "", close: "", closed: true },
 }
 
@@ -61,6 +61,18 @@ export function formatDepositRequirement(settings, treatmentPrice) {
   }
 
   return formatCurrencyAmount(depositValue)
+}
+
+export function getDepositAmountForPrice(settings, treatmentPrice = 0) {
+  const depositType = getDefaultDepositType(settings)
+  const depositValue = getDefaultDepositValue(settings)
+  const numericPrice = Number(treatmentPrice ?? 0)
+
+  if (depositType === "percentage") {
+    return Number(((numericPrice * depositValue) / 100).toFixed(2))
+  }
+
+  return Number(depositValue.toFixed ? depositValue.toFixed(2) : Number(depositValue).toFixed(2))
 }
 
 export function normalizeOpeningHours(openingHours = {}) {

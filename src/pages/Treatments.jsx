@@ -1,6 +1,6 @@
 import "../styles/global.css"
 import "../styles/treatments.css"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 
 const treatments = [
@@ -145,6 +145,7 @@ function Treatments() {
   const featuredTreatment = treatments.find((treatment) => treatment.name === "Mourne Rocks Retreat & Recovery")
 
   const [manualSelection, setManualSelection] = useState(null)
+  const bookingPanelRef = useRef(null)
   const selectionMatchesCategory = manualSelection?.category === targetCategory
   const selectedTreatment = selectionMatchesCategory ? manualSelection.treatment : defaultTreatment
   const selectedOption = selectionMatchesCategory ? manualSelection.option : defaultTreatment?.prices[0] ?? null
@@ -159,6 +160,24 @@ function Treatments() {
     const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
     window.scrollTo({ top: y, behavior: "smooth" })
   }, [targetCategory])
+
+  useEffect(() => {
+    if (!manualSelection || manualSelection.category !== targetCategory) return
+
+    const panel = bookingPanelRef.current
+    if (!panel) return
+
+    // Run after the selected treatment renders, and clear the fixed site header.
+    const header = document.querySelector(".navbar")
+    const headerBottom = header?.getBoundingClientRect().bottom ?? 0
+    const clearance = Math.max(0, headerBottom) + 16
+    const panelTop = panel.getBoundingClientRect().top
+
+    window.scrollTo({
+      top: Math.max(0, window.scrollY + panelTop - clearance),
+      behavior: "smooth",
+    })
+  }, [manualSelection, targetCategory])
 
   const selectTreatment = (treatment, priceOption = treatment.prices[0]) => {
     setManualSelection({
@@ -203,6 +222,12 @@ function Treatments() {
                 boxShadow: "0 18px 45px rgba(0,0,0,0.06)",
               }}
             >
+              <button
+                type="button"
+                className="featured-treatment-select"
+                aria-label={`Select ${featuredTreatment.name} for booking`}
+                onClick={() => selectTreatment(featuredTreatment)}
+              />
               <div
                 style={{
                   display: "inline-flex",
@@ -233,17 +258,46 @@ function Treatments() {
                   gap: "12px",
                 }}
               >
-                <h2
+                <div
                   style={{
-                    margin: 0,
-                    fontFamily: "var(--font-heading)",
-                    fontSize: "clamp(30px, 4vw, 42px)",
-                    lineHeight: "1.12",
-                    color: "var(--text-dark)",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    gap: "10px",
+                    minWidth: 0,
+                    maxWidth: "100%",
                   }}
                 >
-                  {featuredTreatment.name}
-                </h2>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontFamily: "var(--font-heading)",
+                      fontSize: "clamp(30px, 4vw, 42px)",
+                      lineHeight: "1.12",
+                      color: "var(--text-dark)",
+                    }}
+                  >
+                    {featuredTreatment.name}
+                  </h2>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      flexShrink: 0,
+                      padding: "5px 10px",
+                      borderRadius: "999px",
+                      border: "1px solid rgba(198, 166, 100, 0.45)",
+                      background: "#f4eddf",
+                      color: "#80652e",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "10px",
+                      fontWeight: "600",
+                      letterSpacing: "1.2px",
+                      lineHeight: "1.4",
+                    }}
+                  >
+                    NEW
+                  </span>
+                </div>
                 <p
                   style={{
                     margin: 0,
@@ -282,6 +336,7 @@ function Treatments() {
               </p>
 
               <div
+                className="featured-treatment-actions"
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
@@ -398,6 +453,7 @@ function Treatments() {
 
         <div
           className="treatments-booking-panel"
+          ref={bookingPanelRef}
           style={{
             alignSelf: "start",
             padding: "30px",

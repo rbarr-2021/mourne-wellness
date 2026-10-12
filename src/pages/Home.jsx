@@ -6,6 +6,14 @@ import Contact from "../components/Contact"
 import WhatsAppButton from "../components/WhatsAppButton"
 import AboutTestimonials from "../components/AboutTestimonials"
 import Seo from "../components/Seo"
+import {
+  RetreatArrival,
+  RetreatTreatmentStory,
+  RetreatBeataStory,
+  RetreatSensoryBreak,
+  RetreatSpaces,
+  RetreatArrivalDetail,
+} from "../components/RetreatImagery"
 import { buildOpeningHoursSpecification, DEFAULT_OPENING_HOURS } from "../lib/businessSettings"
 import { getBusinessSettings } from "../lib/supabase/database"
 
@@ -78,8 +86,23 @@ function Home() {
       />
       <Hero />
       <TrustSection />
+
+      <RetreatArrival />
+
       <Services />
+
+      <RetreatTreatmentStory />
+
+      <RetreatSensoryBreak />
+
+      <RetreatBeataStory />
+
       <AboutTestimonials />
+
+      <RetreatSpaces />
+
+      <RetreatArrivalDetail />
+
       <Contact />
       <WhatsAppButton />
     </>
