@@ -392,3 +392,25 @@
   background: #fff;
   color: var(--primary-dark);
 }
+
+.journey-card__how {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(198, 166, 100, 0.18);
+}
+
+.journey-card__how > span {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a7140;
+}
+
+.journey-card__how p {
+  margin: 9px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #707070;
+}

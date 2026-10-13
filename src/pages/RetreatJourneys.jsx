@@ -12,13 +12,15 @@ const journeys = [
     title: "The Recovery Journey",
     price: "\u00A3240",
     description:
-      "A considered series of three 90-minute recovery-focused treatments for those who want ongoing support with muscular tension, training recovery and mobility.",
+      "Three 90-minute recovery treatments designed to support ongoing muscular tension, mobility and physical recovery. Each visit is tailored to how your body feels on the day, allowing Beata to adapt the treatment as your needs change.",
     details: [
-      "Three 90-minute recovery treatments",
-      "Treatment approach adapted at each visit",
-      "Ideal for ongoing tension, training recovery and mobility support",
-      "Designed to be experienced over several weeks",
+      "Three separate 90-minute recovery treatments",
+      "Treatments may include Sports Massage Therapy, Therapeutic Deep Tissue Therapy, Myofascial Release Therapy or Mourne Recovery Therapy",
+      "The treatment approach is adapted at each visit",
+      "Ideal for ongoing muscular tension, training recovery and mobility support",
     ],
+    howItWorks:
+      "Your three treatments are booked as separate appointments over several weeks. Beata can advise on the most appropriate spacing between visits.",
     image: recoveryImage,
     imageAlt:
       "Therapeutic treatment at Retreat by the Mournes",
@@ -28,30 +30,34 @@ const journeys = [
     title: "The Mourne Reset",
     price: "\u00A3170",
     description:
-      "A two-part restorative experience combining focused therapeutic bodywork with a slower, deeply nurturing head-to-toe retreat.",
+      "A two-part restorative journey combining focused therapeutic recovery with a slower, deeply nurturing head-to-toe retreat. Begin by working into areas of muscular tension, then return for a treatment designed to calm, restore and reset.",
     details: [
-      "Mourne Recovery Therapy",
-      "The Mourne Head-to-Toe Retreat",
+      "Visit One: Mourne Recovery Therapy — 90 minutes",
+      "Visit Two: The Mourne Head-to-Toe Retreat — 90 minutes",
       "A balance of therapeutic recovery and restorative care",
-      "Best experienced across two separate visits",
+      "Designed to be experienced across two separate visits",
     ],
+    howItWorks:
+      "The two treatments are booked separately, allowing time between visits for your body to respond. Beata can guide you on suitable timing.",
     image: resetImage,
     imageAlt:
       "Restorative hands-on treatment at Retreat by the Mournes",
     signature: true,
   },
   {
-    eyebrow: "Personalised Care",
-    title: "A Personal Retreat Journey",
-    price: "From \u00A3225",
+    eyebrow: "Rest & Restore",
+    title: "The Rest & Restore Journey",
+    price: "\u00A3235",
     description:
-      "A personalised series of treatments created around how you want to feel, whether the focus is recovery, rest, stress relief or a combination of both.",
+      "A three-part restorative journey for those who want to slow down, release tension and create space for deeper rest. Each visit offers a different form of care, moving from full-body relaxation through nourishing facial therapy to calming head, neck and face work.",
     details: [
-      "A treatment journey shaped around your individual needs",
-      "A considered blend of recovery and restorative treatments",
-      "Your plan can evolve from visit to visit",
-      "Ideal for those seeking longer-term wellbeing support",
+      "Visit One: Full Body Massage, Lomi Lomi Inspired — 90 minutes",
+      "Visit Two: Nourishing & Therapeutic Facial — 75 minutes",
+      "Visit Three: Neck, Head & Face Massage — 90 minutes",
+      "Designed for relaxation, stress relief and restorative wellbeing",
     ],
+    howItWorks:
+      "The three treatments are enjoyed as separate appointments over several weeks, creating an unhurried journey of ongoing rest and restoration.",
     image: personalImage,
     imageAlt:
       "Treatment room at Retreat by the Mournes",
@@ -160,6 +166,11 @@ function RetreatJourneys() {
                       <p>{detail}</p>
                     </div>
                   ))}
+                </div>
+
+                <div className="journey-card__how">
+                  <span>How it works</span>
+                  <p>{journey.howItWorks}</p>
                 </div>
 
                 <a
